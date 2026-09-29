@@ -10,6 +10,7 @@ import { BsDatabaseFillGear } from "react-icons/bs";
 import FileCard from '../components/FileCard';
 import InfoButton from '../components/InfoButton';
 import CTA from '../components/CTA';
+import { FaFileUpload } from "react-icons/fa";
 
 const UploadFile = () => {
 
@@ -60,11 +61,15 @@ const UploadFile = () => {
         !fileUploaded ?
         <div className='w-screen h-screen flex items-center justify-center'>
             <div className='flex flex-col items-center'>
-                <img src={imglogo} alt="img logo" className='w-30'/>
+                {/* <img src={imglogo} alt="img logo" className='w-30'/> */}
+
+                {/* <div className={`bg-green-100 p-5 rounded-3xl`}>
+                    <FaFileUpload className='text-green-500' size={40}/>
+                </div> */}
 
                 <CTA 
-                    title={'Upload Your Data. Explore It Your Way.'}
-                    desc={'Search, sort, filter, and paginate your data with ease'}
+                    title={'Upload. Explore. Transform.'}
+                    desc={'Search, sort, filter, and transform your data with ease.'}
                 />
 
                 <input 
@@ -75,7 +80,7 @@ const UploadFile = () => {
                     className='hidden'
                 />
 
-                <button onClick={handleUploadClick} className='text-base flex items-center gap-2 font-medium mt-10 hover:cursor-pointer hover:shadow-lg text-black/70 outline-1 py-2 px-5 rounded-full outline-black/20'>
+                <button onClick={handleUploadClick} className='text-base flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg text-black/70 outline-1 py-2 px-5 rounded-full outline-black/20'>
                     <CiFileOn size={20}/>
                     Upload a file
                 </button>
