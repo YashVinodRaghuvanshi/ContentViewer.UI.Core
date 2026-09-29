@@ -1,8 +1,20 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import imglogo from '../assets/img file.png'
 import { CiFileOn } from "react-icons/ci";
+import { BsFillFileEarmarkExcelFill } from "react-icons/bs";
+import { FaFileCsv } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
+import { MdArrowOutward } from "react-icons/md";
+import { FaTable } from "react-icons/fa";
+import { BsDatabaseFillGear } from "react-icons/bs";
+import FileCard from '../components/FileCard';
+import InfoButton from '../components/InfoButton';
+import CTA from '../components/CTA';
 
 const UploadFile = () => {
+
+    const [fileUploaded, setFileUploaded] = useState(false)
+    const [selectedFileInfo, setSelectedFileInfo] = useState(null)
 
     const fileInputRef = useRef(null)
 
@@ -10,34 +22,109 @@ const UploadFile = () => {
         fileInputRef.current.click();
     }
 
+    const formateFileSize = (bytes) => {
+        if (bytes < 1024) {
+            return `${bytes} Bytes`
+        }
+
+        if (bytes < 1024 * 1024) {
+            return `${(bytes / 1024).toFixed(2)} KB`
+        }
+
+        if (bytes < 1024 * 1024 * 1024) {
+            return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
+        }
+
+        return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`
+    }
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
 
-        if(!file) return 
+        if(!file) return
+
+        console.log(file)
+        
+        setFileUploaded(true)
+
+        setSelectedFileInfo({
+            name : file?.name,
+            size : formateFileSize(file?.size),
+            type : file?.name?.split('.')[1]
+        })
     }
 
   return (
-    <div className='w-screen h-screen flex items-center justify-center'>
-        <div className='flex flex-col items-center'>
-            <img src={imglogo} alt="img logo" className='w-30'/>
-            
-            <div className='mt-12 flex flex-col gap-3 items-center'>
-                <p className='text-2xl font-medium text-black/70'>Upload Your Data. Explore It Your Way.</p>
-                <p className='text-base text-black/50'>Search, sort, filter, and paginate your data with ease</p>
+    <>
+    {
+        !fileUploaded ?
+        <div className='w-screen h-screen flex items-center justify-center'>
+            <div className='flex flex-col items-center'>
+                <img src={imglogo} alt="img logo" className='w-30'/>
+
+                <CTA 
+                    title={'Upload Your Data. Explore It Your Way.'}
+                    desc={'Search, sort, filter, and paginate your data with ease'}
+                />
+
+                <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    accept=".xls, .xlsx, .csv" 
+                    onChange={handleFileChange} 
+                    className='hidden'
+                />
+
+                <button onClick={handleUploadClick} className='text-base flex items-center gap-2 font-medium mt-10 hover:cursor-pointer hover:shadow-lg text-black/70 outline-1 py-2 px-5 rounded-full outline-black/20'>
+                    <CiFileOn size={20}/>
+                    Upload a file
+                </button>
+                
+                <p className='mt-20 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types : .XLS, .XLSX, .CSV</p>
+
             </div>
+            <p className='text-base absolute bottom-10 text-black/30'>Version 1.0.0</p>
+        </div> :
+        <div className='w-screen h-screen flex items-center justify-center'>
+            <div className='flex flex-col items-center'>
 
-            <input type="file" ref={fileInputRef} accept=".xls, .xlsx, .csv" onChange={handleFileChange} className='hidden'/>
+                <CTA 
+                    title={'Let’s work with your data'}
+                    desc={'Your file is ready. Choose an action below to continue.'}
+                />
 
-            <button onClick={handleUploadClick} className='text-base flex items-center gap-2 font-medium mt-10 hover:cursor-pointer hover:shadow-lg text-black/70 outline-1 py-2 px-5 rounded-full outline-black/20'>
-                <CiFileOn size={20}/>
-                Upload a file
-            </button>
-            
-            <p className='mt-20 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types : .XLS, .XLSX, .CSV</p>
+                <FileCard 
+                    selectedFileInfo={selectedFileInfo}
+                    setFileUploaded={setFileUploaded}
+                    type={selectedFileInfo?.type}
+                />
 
+                <div className='flex flex-row gap-4 mt-8'>
+
+                    <InfoButton 
+                        Icon={<FaTable className='text-orange-500' size={22}/>}
+                        bgColor={'bg-orange-100'}
+                        title={'View Data'}
+                        desc={'Explore, search, sort & filter your data'}
+                        handleOnClick={null}
+                    />
+
+                    <InfoButton 
+                        Icon={<BsDatabaseFillGear className='text-purple-500' size={22}/>}
+                        bgColor={'bg-purple-100'}
+                        title={'Process Data'}
+                        desc={'Transform, clean & modify your data'}
+                        handleOnClick={null}
+                    />
+
+                </div>
+            </div>
+            <p className='text-base absolute bottom-10 text-black/30'>Version 1.0.0</p>
         </div>
-        <p className='text-base absolute bottom-10 text-black/30'>Version 1.0.0</p>
-    </div>
+    }
+    
+    </>
+    
   )
 }
 
