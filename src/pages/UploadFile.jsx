@@ -11,6 +11,9 @@ import FileCard from '../components/FileCard';
 import InfoButton from '../components/InfoButton';
 import CTA from '../components/CTA';
 import { FaFileUpload } from "react-icons/fa";
+import UploadImage from '../components/UploadImage';
+import { FaFile } from "react-icons/fa";
+import { TbUpload } from "react-icons/tb";
 
 const UploadFile = () => {
 
@@ -67,26 +70,30 @@ const UploadFile = () => {
                     <FaFileUpload className='text-green-500' size={40}/>
                 </div> */}
 
-                <CTA 
+                <UploadImage />
+
+                <div className='flex flex-col items-center -mt-24'>
+                    <CTA 
                     title={'Upload. Explore. Transform.'}
                     desc={'Search, sort, filter, and transform your data with ease.'}
-                />
+                    />
 
-                <input 
-                    type="file" 
-                    ref={fileInputRef} 
-                    accept=".xls, .xlsx, .csv" 
-                    onChange={handleFileChange} 
-                    className='hidden'
-                />
+                    <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        accept=".xls, .xlsx, .csv" 
+                        onChange={handleFileChange} 
+                        className='hidden'
+                    />
 
-                <button onClick={handleUploadClick} className='text-base flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg text-black/70 outline-1 py-2 px-5 rounded-full outline-black/20'>
-                    <CiFileOn size={20}/>
-                    Upload a file
-                </button>
-                
-                <p className='mt-20 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types : .XLS, .XLSX, .CSV</p>
+                    <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
+                        <TbUpload size={20}/>
+                        Choose a file
+                    </button>
+                    
+                    <p className='mt-8 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types : .XLS, .XLSX, .CSV</p>
 
+                </div>
             </div>
             <p className='text-base absolute bottom-10 text-black/30'>Version 1.0.0</p>
         </div> :
