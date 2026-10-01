@@ -7,6 +7,8 @@ import { FaSearch } from "react-icons/fa";
 import { FaFilter } from "react-icons/fa6";
 import { BsClipboardData } from "react-icons/bs";
 import { FaTable } from "react-icons/fa";
+import { BsCloudUpload } from "react-icons/bs";
+import { PiUploadDuotone } from "react-icons/pi";
 
 const UploadImage = () => {
   return (
@@ -36,7 +38,7 @@ const UploadImage = () => {
                 </div>
 
                 <div className='flex items-center justify-center p-6 rounded-full outline-1 outline-black/10'>
-                    <TbFileUploadFilled size={54}/>
+                    <PiUploadDuotone className='text-green-600' size={46}/>
                 </div>
 
             </div>

@@ -15,11 +15,14 @@ import UploadImage from '../components/UploadImage';
 import { FaFile } from "react-icons/fa";
 import { TbUpload } from "react-icons/tb";
 import UploadImageNested from '../components/UploadImageNested';
+import { useNavigate } from 'react-router-dom';
 
 const UploadFile = () => {
 
     const [fileUploaded, setFileUploaded] = useState(false)
     const [selectedFileInfo, setSelectedFileInfo] = useState(null)
+
+    const navigate = useNavigate();
 
     const fileInputRef = useRef(null)
 
@@ -118,7 +121,7 @@ const UploadFile = () => {
                     />
 
                     <div className='flex items-center gap-4'>
-                        <button onClick={handleUploadClick} className='text-base bg-white text-black flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
+                        <button onClick={() => navigate('/viewdata')} className='text-base bg-white text-black flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
                             <FaTable size={20}/>
                             View Data
                         </button>
