@@ -16,11 +16,17 @@ import { FaFile } from "react-icons/fa";
 import { TbUpload } from "react-icons/tb";
 import UploadImageNested from '../components/UploadImageNested';
 import { useNavigate } from 'react-router-dom';
+import * as XLSX from 'xlsx';
+import useDataStore from '../store/dataStore';
 
 const UploadFile = () => {
 
     const [fileUploaded, setFileUploaded] = useState(false)
     const [selectedFileInfo, setSelectedFileInfo] = useState(null)
+
+    const setColumns = useDataStore((state) => state.setColumns)
+    const setData = useDataStore((state) => state.setData)
+    const clearPrevData = useDataStore((state) => state.clearData)
 
     const navigate = useNavigate();
 
@@ -47,19 +53,55 @@ const UploadFile = () => {
     }
 
     const handleFileChange = (event) => {
+        //clear previous data
+        clearPrevData()
+
         const file = event.target.files[0];
 
         if(!file) return
 
-        console.log(file)
-        
+
+        //read file and extract content
+        const fileReader = new FileReader()
+
+        fileReader.onload = (event) => {
+
+            const workbook = XLSX.read(event.target.result, {
+                type: 'array'
+            })
+
+            const sheetName = workbook.SheetNames[0]
+            
+            const worksheet = workbook.Sheets[sheetName]
+
+            const jsonData = XLSX.utils.sheet_to_json(worksheet)
+
+            const rows = XLSX.utils.sheet_to_json(worksheet, {
+                header: 1
+            })
+
+            const headers = rows[0]
+
+            const generateColumns = headers.map((header) => ({
+                title: header,
+                name: header
+            }))
+
+            setColumns(generateColumns)
+            setData(jsonData)
+
+        }
+
+        fileReader.readAsArrayBuffer(file)
+
         setFileUploaded(true)
 
         setSelectedFileInfo({
             name : file?.name,
             size : formateFileSize(file?.size),
-            type : file?.name?.split('.')[1]
+            type : file?.name?.split('.').pop()
         })
+
     }
 
   return (
