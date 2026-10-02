@@ -24,6 +24,7 @@ const UploadFile = () => {
     const [fileUploaded, setFileUploaded] = useState(false)
     const [selectedFileInfo, setSelectedFileInfo] = useState(null)
 
+    const columns = useDataStore((state) => state.columns)
     const setColumns = useDataStore((state) => state.setColumns)
     const setData = useDataStore((state) => state.setData)
     const clearPrevData = useDataStore((state) => state.clearData)
@@ -152,26 +153,41 @@ const UploadFile = () => {
                         setFileUploaded={setFileUploaded}
                         type={selectedFileInfo?.type}
                         className={'absolute bg-white'}
+                        invalid = {columns.length == 0}
                     />
                 </UploadImageNested>
 
 
                 <div className='flex flex-col -mt-36 items-center z-30'>
                     <CTA 
-                    title={'Let’s work with your data'}
-                    desc={'Your file is ready. Choose an action below to continue.'}
+                    title={columns.length > 0 ? 'Let’s work with your data' : 'No columns available'}
+                    desc={columns.length > 0 ? 'Your file is ready. Choose an action below to continue.' : 'Make sure your file contains column headers and upload it again.'}
                     />
-
-                    <div className='flex items-center gap-4'>
-                        <button onClick={() => navigate('/viewdata')} className='text-base bg-white text-black flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
-                            <FaTable size={20}/>
-                            View Data
-                        </button>
+                    <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        accept=".xls, .xlsx, .csv" 
+                        onChange={handleFileChange} 
+                        className='hidden'
+                    />
+                    {
+                        columns.length > 0 ?
+                        <div className='flex items-center gap-4'>
+                            <button onClick={() => navigate('/viewdata')} className='text-base bg-white text-black flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
+                                <FaTable size={20}/>
+                                View Data
+                            </button>
+                            <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
+                                <BsDatabaseFillGear size={20}/>
+                                Process Data
+                            </button>
+                        </div>
+                        :
                         <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
-                            <BsDatabaseFillGear size={20}/>
-                            Process Data
+                            <TbUpload size={20}/>
+                            Choose a file
                         </button>
-                    </div>
+                    }
 
                     {/* <div className='flex flex-row gap-4 mt-2'>
 
