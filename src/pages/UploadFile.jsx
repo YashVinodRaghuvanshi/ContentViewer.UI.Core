@@ -87,7 +87,8 @@ const UploadFile = () => {
 
                 sheets[sheetName] = {
                     columns,
-                    data: jsonData
+                    data: jsonData,
+                    rows: jsonData?.length || 0
                 }
 
             })
