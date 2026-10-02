@@ -1,5 +1,7 @@
 import React from 'react'
 import useDataStore from '../store/dataStore'
+import { LuSheet } from "react-icons/lu";
+import { PiGridFourDuotone } from "react-icons/pi";
 
 const SheetTabs = () => {
     const sheets = useDataStore((state) => state.sheets)
@@ -21,7 +23,8 @@ const SheetTabs = () => {
     <div className='bg-gray-50 my-4 p-1 rounded-xl flex items-center gap-2'>
         {
             Object.keys(sheets).map((sheetName, ind) => (
-                <button key={sheetName} onClick={() => handleSheetChange(sheetName)} className={`px-4 py-2 text-sm rounded-lg ${activeSheet == sheetName ? 'bg-white outline-1 outline-black/10 font-medium shadow-sm' : 'text-black/70'} hover:cursor-pointer`}>
+                <button key={sheetName} onClick={() => handleSheetChange(sheetName)} className={`px-4 py-2 flex items-center gap-2 text-sm rounded-lg ${activeSheet == sheetName ? 'bg-white outline-1 outline-black/10 font-medium shadow-sm' : 'text-black/70'} hover:cursor-pointer`}>
+                    <PiGridFourDuotone  className={`text-xl ${activeSheet === sheetName ? 'text-green-600' : 'text-black/40'} `}/>
                     {sheetName}
                 </button>
             ))

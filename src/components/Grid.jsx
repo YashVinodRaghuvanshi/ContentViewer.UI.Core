@@ -8,6 +8,7 @@ import { FaAnglesRight } from "react-icons/fa6";
 import { FaAngleDown } from "react-icons/fa6";
 import { IoIosSearch } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
+import SymbolColumn from './SymbolColumn';
 
 const Grid = () => {
 
@@ -102,14 +103,14 @@ const Grid = () => {
         }
     </div>
 
-    <div className={`${data.length > 0 && 'h-full'} rounded-lg border-1 border-black/10 flex flex-col justify-between overflow-hidden`}>
+    <div className={`${data.length > 0 && 'h-full'} border-t-1 border-b-1 border-black/10 flex flex-col justify-between overflow-hidden`}>
         <div className='h-full overflow-auto'>
             <table className='w-full'>
                 <thead>
                         <tr className=''>
                         {
                             columns?.map((col, ind) => 
-                                <td key={col.name} className={`px-6 py-2 bg-gray-50 outline-1 outline-black/10 sticky top-0 z-10 text-sm font-medium`}>{col.title}</td>
+                                <SymbolColumn key={col.name} title={col.title}/>
                             )
                         }
                         </tr>
@@ -117,7 +118,7 @@ const Grid = () => {
                 <tbody>
                 {
                    paginatedData?.map((rows, index) => 
-                            <tr key={index} className='border-b-1 border-black/10'>
+                            <tr key={index} className='border-b-1 border-black/10 hover:bg-green-50'>
                                 {
                                     columns?.map((item, inde) =>  
                                         <td key={inde} className='px-6 py-3 text-sm'>{rows[item.name]}</td>
@@ -145,30 +146,30 @@ const Grid = () => {
         </div>
 
         {/* pagination */}
-        <div className='p-4 flex items-center justify-between border-t-1 border-black/10'>
+        <div className='p-3 flex items-center justify-between border-t-1 border-black/10'>
 
             <div className='flex items-center gap-2'>
-                <button onClick={goToFirstPage} disabled={currentPage === 1} className={`p-2 rounded-lg hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/30'}`}>
+                <button onClick={goToFirstPage} disabled={currentPage === 1} className={`p-2 rounded-lg text-sm hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/30'}`}>
                     <FaAnglesLeft />
                 </button>
-                <button onClick={goToPreviousPage} disabled={currentPage === 1} className={`p-2 rounded-lg hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/30'}`}>
+                <button onClick={goToPreviousPage} disabled={currentPage === 1} className={`p-2 rounded-lg text-sm hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/30'}`}>
                     <FaAngleLeft />
                 </button>
                 
                 <div className='flex flex-wrap items-center gap-2'>
                     {
                         Array.from({length: totalPages}, (_, index) => index + 1).map((page) => (
-                            <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-8 h-8 flex items-center hover:cursor-pointer justify-center rounded-lg font-medium ${(currentPage == page) ? 'bg-gray-100 text-black/80' : 'text-black/40'}`}>
+                            <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-8 h-8 flex items-center hover:cursor-pointer justify-center rounded-xl ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/40 font-medium  text-sm'}`}>
                                 <p>{page}</p>
                             </button>
                         ))
                     }
                 </div>
                 
-                <button onClick={goToNextPage} disabled={currentPage === totalPages} className={`p-2 rounded-lg hover:cursor-pointer hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/30'}`}>
+                <button onClick={goToNextPage} disabled={currentPage === totalPages} className={`p-2 rounded-lg text-sm hover:cursor-pointer hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/30'}`}>
                     <FaAngleRight />
                 </button>
-                <button onClick={goToLastPage} disabled={currentPage == totalPages} className={`p-2 rounded-lg hover:cursor-pointer hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/30'}`}>
+                <button onClick={goToLastPage} disabled={currentPage == totalPages} className={`p-2 rounded-lg text-sm hover:cursor-pointer hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/30'}`}>
                     <FaAnglesRight />
                 </button>
             </div>
