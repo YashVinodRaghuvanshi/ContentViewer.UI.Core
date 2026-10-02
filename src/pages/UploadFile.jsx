@@ -15,7 +15,7 @@ import UploadImage from '../components/UploadImage';
 import { FaFile } from "react-icons/fa";
 import { TbUpload } from "react-icons/tb";
 import UploadImageNested from '../components/UploadImageNested';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import useDataStore from '../store/dataStore';
 
@@ -26,6 +26,8 @@ const UploadFile = () => {
 
     const columns = useDataStore((state) => state.columns)
     const setColumns = useDataStore((state) => state.setColumns)
+    const setSheets = useDataStore((state) => state.setSheets)
+    const setActiveSheet = useDataStore((state) => state.setActiveSheet)
     const setData = useDataStore((state) => state.setData)
     const clearPrevData = useDataStore((state) => state.clearData)
 
@@ -71,25 +73,32 @@ const UploadFile = () => {
                 type: 'array'
             })
 
-            const sheetName = workbook.SheetNames[0]
-            
-            const worksheet = workbook.Sheets[sheetName]
+            const sheets = {}
 
-            const jsonData = XLSX.utils.sheet_to_json(worksheet)
+            //For multiple sheets
+            workbook.SheetNames.forEach((sheetName) => {
+                const worksheet = workbook.Sheets[sheetName]
+                const jsonData = XLSX.utils.sheet_to_json(worksheet)
+                const columns = jsonData.length > 0 ? Object.keys(jsonData[0]).map((key) => ({
+                    title: key,
+                    name: key
+                })) 
+                : []
 
-            const rows = XLSX.utils.sheet_to_json(worksheet, {
-                header: 1
+                sheets[sheetName] = {
+                    columns,
+                    data: jsonData
+                }
+
             })
+            
+            const firstSheet = workbook.SheetNames[0]
 
-            const headers = rows[0]
+            setSheets(sheets)
+            setActiveSheet(firstSheet)
 
-            const generateColumns = headers.map((header) => ({
-                title: header,
-                name: header
-            }))
-
-            setColumns(generateColumns)
-            setData(jsonData)
+            setColumns(sheets[firstSheet].columns)
+            setData(sheets[firstSheet].data)
 
         }
 

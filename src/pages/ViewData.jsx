@@ -1,5 +1,6 @@
 import React from 'react'
 import Grid from '../components/Grid'
+import SheetTabs from '../components/SheetTabs'
 
 const ViewData = () => {
   return (
@@ -10,6 +11,7 @@ const ViewData = () => {
         </div>
 
         <div className='mt-8 w-full h-150'>
+            <SheetTabs />
             <Grid />
         </div>
     </div>
