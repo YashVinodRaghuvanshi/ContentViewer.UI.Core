@@ -148,28 +148,28 @@ const Grid = () => {
         {/* pagination */}
         <div className='p-3 flex items-center justify-between border-t-1 border-black/10'>
 
-            <div className='flex items-center gap-2'>
-                <button onClick={goToFirstPage} disabled={currentPage === 1} className={`p-2 rounded-lg text-sm hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/30'}`}>
+            <div className='flex items-center'>
+                <button onClick={goToFirstPage} disabled={currentPage === 1} className={`p-2 rounded-l-md text-sm border-1 border-gray-300 hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/50'}`}>
                     <FaAnglesLeft />
                 </button>
-                <button onClick={goToPreviousPage} disabled={currentPage === 1} className={`p-2 rounded-lg text-sm hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/30'}`}>
+                <button onClick={goToPreviousPage} disabled={currentPage === 1} className={`p-2 text-sm rounded-r-md outline-1 outline-gray-300 hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/50'}`}>
                     <FaAngleLeft />
                 </button>
                 
-                <div className='flex flex-wrap items-center gap-2'>
+                <div className='flex flex-wrap items-center gap-2 px-3'>
                     {
                         Array.from({length: totalPages}, (_, index) => index + 1).map((page) => (
-                            <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-8 h-8 flex items-center hover:cursor-pointer justify-center rounded-xl ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/40 font-medium  text-sm'}`}>
+                            <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer outline-1 outline-gray-300 justify-center ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/50 font-medium  text-sm'}`}>
                                 <p>{page}</p>
                             </button>
                         ))
                     }
                 </div>
                 
-                <button onClick={goToNextPage} disabled={currentPage === totalPages} className={`p-2 rounded-lg text-sm hover:cursor-pointer hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/30'}`}>
+                <button onClick={goToNextPage} disabled={currentPage === totalPages} className={`p-2 rounded-l-md text-sm hover:cursor-pointer border-1 border-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/50'}`}>
                     <FaAngleRight />
                 </button>
-                <button onClick={goToLastPage} disabled={currentPage == totalPages} className={`p-2 rounded-lg text-sm hover:cursor-pointer hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/30'}`}>
+                <button onClick={goToLastPage} disabled={currentPage == totalPages} className={`p-2 rounded-r-md text-sm hover:cursor-pointer outline-1 outline-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/50'}`}>
                     <FaAnglesRight />
                 </button>
             </div>
