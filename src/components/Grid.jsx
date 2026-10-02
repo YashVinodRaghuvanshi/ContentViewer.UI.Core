@@ -6,26 +6,41 @@ import { FaAngleRight } from "react-icons/fa6";
 import { FaAnglesLeft } from "react-icons/fa6";
 import { FaAnglesRight } from "react-icons/fa6";
 import { FaAngleDown } from "react-icons/fa6";
-
+import { IoIosSearch } from "react-icons/io";
+import { RxCross2 } from "react-icons/rx";
 
 const Grid = () => {
 
     const columns = useDataStore((state) => state.columns)
     const data = useDataStore((state) => state.data)
 
+    const activeSheet = useDataStore((state) => state.activeSheet)
+
+    const [searchTerm, setSearchTerm] = useState('')
+    
+    const filteredData = data.filter((row) => {
+        return Object.values(row).some((value) =>
+            String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    })
+
     const [openDrp, setOpenDrp] = useState(false)
     const [currentPageSize, setCurrentPageSize] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
-    const totalPages = Math.ceil(data.length / currentPageSize)
+    const totalPages = Math.ceil(filteredData.length / currentPageSize)
 
     const startIndex = (currentPage - 1) * currentPageSize
     const endIndex = startIndex + currentPageSize
-    const endRow = Math.min(endIndex, data.length)
+    const endRow = Math.min(endIndex, filteredData.length)
 
-    const paginatedData = data?.slice(startIndex, endIndex)
+    const paginatedData = filteredData?.slice(startIndex, endIndex)
     
     const pageSizes = [5,10,15,20]
     const dropdownRef = useRef(null)
+
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchTerm])
 
     const goToFirstPage = () => {
         setCurrentPage(1)
@@ -75,6 +90,18 @@ const Grid = () => {
     }
 
   return (
+    <>
+    <div className='outline-1 relative outline-black/10 px-3 py-2 flex items-center rounded-lg mb-4'>
+        <IoIosSearch className='absolute text-black/40 text-lg'/>
+        <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search Your Data...' className='pl-6 w-full focus:outline-0'/>
+        {
+            searchTerm.length > 0 &&
+            <button onClick={() => setSearchTerm('')} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
+                <RxCross2 />
+            </button>
+        }
+    </div>
+
     <div className={`${data.length > 0 && 'h-full'} rounded-lg border-1 border-black/10 flex flex-col justify-between overflow-hidden`}>
         <div className='h-full overflow-auto'>
             <table className='w-full'>
@@ -105,6 +132,13 @@ const Grid = () => {
                 data.length == 0 && 
                 <div className='flex items-center justify-center p-4 text-black/70'>
                     <p>No records to display. Your file doesn't contain any data rows.</p>
+                </div>
+            }
+
+            {
+                (searchTerm && filteredData.length == 0) && 
+                <div className='flex items-center justify-center p-4 text-black/70'>
+                    <p>No matching records found for "{searchTerm}"</p>
                 </div>
             }
 
@@ -176,6 +210,7 @@ const Grid = () => {
         </div>
 
     </div>
+    </>
   )
 }
 
