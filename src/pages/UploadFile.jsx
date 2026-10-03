@@ -15,7 +15,7 @@ import UploadImage from '../components/UploadImage';
 import { FaFile } from "react-icons/fa";
 import { TbUpload } from "react-icons/tb";
 import UploadImageNested from '../components/UploadImageNested';
-import { data, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import useDataStore from '../store/dataStore';
 
@@ -79,16 +79,32 @@ const UploadFile = () => {
             workbook.SheetNames.forEach((sheetName) => {
                 const worksheet = workbook.Sheets[sheetName]
                 const jsonData = XLSX.utils.sheet_to_json(worksheet)
-                const columns = jsonData.length > 0 ? Object.keys(jsonData[0]).map((key) => ({
-                    title: key,
-                    name: key
-                })) 
-                : []
+
+                const columnsWhenNoDataRows = XLSX.utils.sheet_to_json(worksheet, {
+                    header: 1,
+                })
+
+                const columnsWhenNoData = columnsWhenNoDataRows[0] || []
+
+                const columns = columnsWhenNoData?.map((col) => ({
+                    title: col,
+                    name: col
+                }))
+
+                // const columns = jsonData.length > 0 ? Object.keys(jsonData[0]).map((key) => ({
+                //     title: key,
+                //     name: key
+                // })) 
+                // : (columnsWhenNoDataRows.length > 0) ? columnsWhenNoData?.map((col) => ({
+                //     title: col,
+                //     name: col
+                // })) : []
 
                 sheets[sheetName] = {
                     columns,
                     data: jsonData,
-                    rows: jsonData?.length || 0
+                    rows: jsonData?.length || 0,
+                    invalid: columns.length === 0
                 }
 
             })

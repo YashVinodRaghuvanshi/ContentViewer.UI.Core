@@ -120,7 +120,7 @@ const Grid = () => {
                         <tr className=''>
                         {
                             columns?.map((col, ind) => 
-                                <SymbolColumn key={col.name} title={col.title}/>
+                                <SymbolColumn key={col.name+ind} title={col.title}/>
                             )
                         }
                         </tr>
