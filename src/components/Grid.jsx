@@ -178,7 +178,7 @@ const Grid = () => {
                 <div className='flex flex-wrap items-center gap-2 px-3'>
                     {
                         Array.from({length: totalPages}, (_, index) => index + 1).map((page) => (
-                            <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer outline-1 outline-gray-300 justify-center ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/50 font-medium  text-sm'}`}>
+                            <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer justify-center ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/30 font-medium  text-sm'}`}>
                                 <p>{page}</p>
                             </button>
                         ))
