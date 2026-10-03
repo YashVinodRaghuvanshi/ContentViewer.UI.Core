@@ -11,6 +11,7 @@ import { RxCross2 } from "react-icons/rx";
 import { LuSettings2 } from "react-icons/lu";
 
 import SymbolColumn from './SymbolColumn';
+import Filter from './Filter';
 
 const Grid = () => {
 
@@ -28,6 +29,8 @@ const Grid = () => {
     })
 
     const [openDrp, setOpenDrp] = useState(false)
+    const [openFilter, setOpenFilter] = useState(false)
+
     const [currentPageSize, setCurrentPageSize] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
     const totalPages = Math.ceil(filteredData.length / currentPageSize)
@@ -94,9 +97,15 @@ const Grid = () => {
 
   return (
     <>
+
+    {
+        openFilter &&
+        <Filter setOpenFilter = {setOpenFilter}/>
+    }
+
     <div className='flex items-center mb-4 gap-2'>
 
-        <button className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/10 px-3 py-2 rounded-lg text-sm'>
+        <button onClick={() => setOpenFilter(true)} className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/10 px-3 py-2 rounded-lg text-sm'>
             <LuSettings2 className='text-black/50'/>
             Filters
         </button>
