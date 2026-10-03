@@ -175,7 +175,7 @@ const Grid = () => {
             </div>
 
             <div className='flex items-center gap-4'>
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center gap-2 pl-4'>
                     <p className='text-sm'>Rows per page</p>
                     <div ref={dropdownRef} className='relative'>
                         <button onClick={() => setOpenDrp(val => !val)} className='flex items-center gap-2 outline-1 outline-black/20 px-3 py-1 rounded-lg'>

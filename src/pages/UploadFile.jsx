@@ -138,7 +138,7 @@ const UploadFile = () => {
                     <input 
                         type="file" 
                         ref={fileInputRef} 
-                        accept=".xls, .xlsx, .csv" 
+                        accept=".xls, .xlsx" 
                         onChange={handleFileChange} 
                         className='hidden'
                     />
@@ -148,7 +148,7 @@ const UploadFile = () => {
                         Choose a file
                     </button>
                     
-                    <p className='mt-8 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types : .XLS, .XLSX, .CSV</p>
+                    <p className='mt-8 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types : .XLS, .XLSX</p>
 
                 </div>
             </div>
@@ -176,7 +176,7 @@ const UploadFile = () => {
                     <input 
                         type="file" 
                         ref={fileInputRef} 
-                        accept=".xls, .xlsx, .csv" 
+                        accept=".xls, .xlsx" 
                         onChange={handleFileChange} 
                         className='hidden'
                     />
