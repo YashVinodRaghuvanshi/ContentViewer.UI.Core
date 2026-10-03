@@ -21,7 +21,7 @@ const SheetTabs = () => {
     }
 
   return (
-    <div className='bg-gray-50 my-4 p-1 rounded-xl flex items-center gap-2'>
+    <div className='bg-gray-50 my-4 p-1 rounded-xl flex flex-wrap items-center gap-2'>
         {
             Object.keys(sheets).map((sheetName, ind) => (
                 <button key={sheetName} onClick={() => handleSheetChange(sheetName)} className={`px-4 py-2 flex items-center gap-2 text-sm rounded-lg ${activeSheet == sheetName ? 'bg-white outline-1 outline-black/10 font-medium shadow-sm' : 'text-black/70'} hover:cursor-pointer`}>

@@ -19,6 +19,7 @@ const Grid = () => {
     const data = useDataStore((state) => state.data)
 
     const activeSheet = useDataStore((state) => state.activeSheet)
+    const sheets = useDataStore((state) => state.sheets)
 
     const [searchTerm, setSearchTerm] = useState('')
     
@@ -41,7 +42,7 @@ const Grid = () => {
 
     const paginatedData = filteredData?.slice(startIndex, endIndex)
     
-    const pageSizes = [5,10,15,20]
+    const pageSizes = [5,10,15,20, 30, 40]
     const dropdownRef = useRef(null)
 
     useEffect(() => {
@@ -103,26 +104,28 @@ const Grid = () => {
         <Filter setOpenFilter = {setOpenFilter}/>
     }
 
-    <div className='flex items-center mb-4 gap-2'>
+    {
+       data.length > 0 && 
+        <div className='flex items-center mb-4 gap-2'>
+            <button onClick={() => setOpenFilter(true)} className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/10 px-3 py-2 rounded-lg text-sm'>
+                <LuSettings2 className='text-black/50'/>
+                Filters
+            </button>
 
-        <button onClick={() => setOpenFilter(true)} className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/10 px-3 py-2 rounded-lg text-sm'>
-            <LuSettings2 className='text-black/50'/>
-            Filters
-        </button>
-
-        <div className='outline-1 relative w-full outline-black/10 px-3 py-2 flex items-center rounded-lg'>
-            <IoIosSearch className='absolute text-black/40 text-lg'/>
-            <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search Your Data...' className='pl-6 w-full text-sm focus:outline-0'/>
-            {
-                searchTerm.length > 0 &&
-                <button onClick={() => setSearchTerm('')} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
-                    <RxCross2 />
-                </button>
-            }
+            <div className='outline-1 relative w-full outline-black/10 px-3 py-2 flex items-center rounded-lg'>
+                <IoIosSearch className='absolute text-black/40 text-lg'/>
+                <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search Your Data...' className='pl-6 w-full text-sm focus:outline-0'/>
+                {
+                    searchTerm.length > 0 &&
+                    <button onClick={() => setSearchTerm('')} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
+                        <RxCross2 />
+                    </button>
+                }
+            </div>
         </div>
-    </div>
+    }
 
-    <div className={`${data.length > 0 && 'h-full'} border-t-1 border-b-1 border-black/10 flex flex-col justify-between overflow-hidden`}>
+    <div className={`flex-1 min-h-0 border-t-1 border-b-1 border-black/10 flex flex-col justify-between overflow-hidden`}>
         <div className='h-full overflow-auto'>
             <table className='w-full'>
                 <thead>
@@ -140,7 +143,7 @@ const Grid = () => {
                             <tr key={index} className='border-b-1 border-black/10 hover:bg-green-50'>
                                 {
                                     columns?.map((item, inde) =>  
-                                        <td key={inde} className='px-6 py-3 text-sm'>{rows[item.name]}</td>
+                                        <td key={inde} className='px-6 py-3 text-xs'>{rows[item.name]}</td>
                                     )
                                 }
                             </tr>)
@@ -149,23 +152,29 @@ const Grid = () => {
                 </tbody>
             </table>
             {
-                data.length == 0 && 
+                data.length === 0 && 
                 <div className='flex items-center justify-center p-4 text-black/70'>
-                    <p>No records to display. Your file doesn't contain any data rows.</p>
+                    {
+                        Object.keys(sheets)?.length > 0 ? 
+                        <p>No records to display in "{activeSheet}". This sheet doesn't contain any data rows.</p>
+                        : <p>No records to display in "{activeSheet}". Your file doesn't contain any data rows.</p>
+                    }
                 </div>
             }
 
             {
-                (searchTerm && filteredData.length == 0) && 
+                (searchTerm && filteredData.length === 0) && 
                 <div className='flex items-center justify-center p-4 text-black/70'>
-                    <p>No matching records found for "{searchTerm}"</p>
+                    {
+                        <p>No matching records found in "{activeSheet}" for "{searchTerm}"</p>
+                    }
                 </div>
             }
 
         </div>
 
         {/* pagination */}
-        <div className='p-3 flex items-center justify-between border-t-1 border-black/10'>
+        <div className='px-3 pt-3 pb-5 flex items-center justify-between border-t-1 border-black/10'>
 
             <div className='flex items-center'>
                 <button onClick={goToFirstPage} disabled={currentPage === 1} className={`p-2 rounded-l-md text-sm border-1 border-gray-300 hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/50'}`}>
@@ -185,44 +194,54 @@ const Grid = () => {
                     }
                 </div>
                 
-                <button onClick={goToNextPage} disabled={currentPage === totalPages} className={`p-2 rounded-l-md text-sm hover:cursor-pointer border-1 border-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/50'}`}>
+                <button onClick={goToNextPage} disabled={(currentPage === totalPages || data.length === 0)} className={`p-2 rounded-l-md text-sm hover:cursor-pointer border-1 border-gray-300 hover:bg-gray-100 ${(currentPage === totalPages || data.length === 0) ? 'text-black/15' : 'text-black/50'}`}>
                     <FaAngleRight />
                 </button>
-                <button onClick={goToLastPage} disabled={currentPage == totalPages} className={`p-2 rounded-r-md text-sm hover:cursor-pointer outline-1 outline-gray-300 hover:bg-gray-100 ${currentPage === totalPages ? 'text-black/15' : 'text-black/50'}`}>
+                <button onClick={goToLastPage} disabled={(currentPage == totalPages || data.length === 0)} className={`p-2 rounded-r-md text-sm hover:cursor-pointer outline-1 outline-gray-300 hover:bg-gray-100 ${(currentPage === totalPages || data.length === 0) ? 'text-black/15' : 'text-black/50'}`}>
                     <FaAnglesRight />
                 </button>
             </div>
 
             <div className='flex items-center gap-4'>
-                <div className='flex items-center gap-2 pl-4'>
-                    <p className='text-sm'>Rows per page</p>
-                    <div ref={dropdownRef} className='relative'>
-                        <button onClick={() => setOpenDrp(val => !val)} className='flex items-center gap-2 outline-1 outline-black/20 px-3 py-1 rounded-lg'>
-                            {currentPageSize}
-                            <FaAngleDown className='text-black/40'/>
-                        </button>
-                        
-                        {
-                            openDrp && 
-                            <div className='p-1 flex flex-col gap-1 outline-1 absolute outline-black/20 bg-white rounded-lg z-10 bottom-8'>
+                
+                {
+                    data?.length > 0 &&
+                    <div className='flex items-center gap-2 pl-4'>
+                        <p className='text-sm'>Rows per page</p>
+                        <div ref={dropdownRef} className='relative'>
+                            <button onClick={() => setOpenDrp(val => !val)} className='flex items-center gap-2 outline-1 outline-black/20 px-3 py-1 rounded-lg'>
+                                {currentPageSize}
+                                <FaAngleDown className='text-black/40'/>
+                            </button>
+                            
                             {
-                                pageSizes?.map((sizes, index) => (
-                                  <button
-                                    key={sizes} 
-                                    onClick={() => handlePageSizeSelection(sizes)}
-                                    className='w-14 text-start bg-white hover:bg-gray-200 rounded-md px-2  py-1 text-sm'>
-                                        {sizes}
-                                  </button>
-                                ))
+                                openDrp && 
+                                <div className='p-1 flex flex-col gap-1 outline-1 absolute outline-black/20 bg-white rounded-lg z-10 bottom-8'>
+                                {
+                                    pageSizes?.map((sizes, index) => (
+                                    <button
+                                        key={sizes} 
+                                        onClick={() => handlePageSizeSelection(sizes)}
+                                        className='w-14 text-start bg-white hover:bg-gray-200 rounded-md px-2  py-1 text-sm'>
+                                            {sizes}
+                                    </button>
+                                    ))
+                                }
+                                </div>
                             }
-                            </div>
-                        }
 
+                        </div>
                     </div>
-                </div>
+                }
+                
                 <div className='w-[2px] h-7 bg-black/10'></div>
                 <div>
-                    <p className='text-sm'>Rows {startIndex + 1} - {endRow} of {data.length}</p>
+                    {
+                        data.length > 0 ? 
+                        <p className='text-sm'>Rows {startIndex + 1} - {endRow} of {data.length}</p>
+                        :
+                        <p className='text-sm'>Rows 0 - 0 of 0</p>
+                    }
                 </div>
 
             </div>
