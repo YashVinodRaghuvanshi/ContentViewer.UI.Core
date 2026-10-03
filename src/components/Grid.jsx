@@ -8,6 +8,8 @@ import { FaAnglesRight } from "react-icons/fa6";
 import { FaAngleDown } from "react-icons/fa6";
 import { IoIosSearch } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
+import { LuSettings2 } from "react-icons/lu";
+
 import SymbolColumn from './SymbolColumn';
 
 const Grid = () => {
@@ -92,15 +94,23 @@ const Grid = () => {
 
   return (
     <>
-    <div className='outline-1 relative outline-black/10 px-3 py-2 flex items-center rounded-lg mb-4'>
-        <IoIosSearch className='absolute text-black/40 text-lg'/>
-        <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search Your Data...' className='pl-6 w-full focus:outline-0'/>
-        {
-            searchTerm.length > 0 &&
-            <button onClick={() => setSearchTerm('')} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
-                <RxCross2 />
-            </button>
-        }
+    <div className='flex items-center mb-4 gap-2'>
+
+        <button className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/10 px-3 py-2 rounded-lg text-sm'>
+            <LuSettings2 className='text-black/50'/>
+            Filters
+        </button>
+
+        <div className='outline-1 relative w-full outline-black/10 px-3 py-2 flex items-center rounded-lg'>
+            <IoIosSearch className='absolute text-black/40 text-lg'/>
+            <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search Your Data...' className='pl-6 w-full text-sm focus:outline-0'/>
+            {
+                searchTerm.length > 0 &&
+                <button onClick={() => setSearchTerm('')} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
+                    <RxCross2 />
+                </button>
+            }
+        </div>
     </div>
 
     <div className={`${data.length > 0 && 'h-full'} border-t-1 border-b-1 border-black/10 flex flex-col justify-between overflow-hidden`}>
