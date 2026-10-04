@@ -12,9 +12,13 @@ const SheetTabs = () => {
     const setData = useDataStore((state) => state.setData)
     const setSheets = useDataStore((state) => state.setSheets)
     const setActiveSheet = useDataStore((state) => state.setActiveSheet)
+    const selectedRowTab = useDataStore((state) => state.selectedRowTab)
+    const setSelectedRowTab = useDataStore((state) => state.setSelectedRowTab)
+
 
     const handleSheetChange = (sheetName) => {
         const selectedSheet = sheets[sheetName]
+        setSelectedRowTab(1)
         setActiveSheet(sheetName)
         setColumns(selectedSheet.columns)
         setData(selectedSheet.data)

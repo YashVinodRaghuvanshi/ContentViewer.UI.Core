@@ -10,6 +10,20 @@ import { IoIosSearch } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import { LuSettings2 } from "react-icons/lu";
 import { TbTableColumn } from "react-icons/tb";
+import { PiSelectionDuotone } from "react-icons/pi";
+import { MdOutlineBorderClear } from "react-icons/md";
+import { HiArrowTurnDownRight } from "react-icons/hi2";
+
+import { AiTwotoneDatabase } from "react-icons/ai";
+import { MdOutlineTabUnselected } from "react-icons/md";
+import { CgDatabase } from "react-icons/cg";
+import { PiSelectionInverseDuotone } from "react-icons/pi";
+import { PiSelectionBold } from "react-icons/pi";
+
+import { FaSquareCheck } from "react-icons/fa6";
+import { FaSquare } from "react-icons/fa6";
+import { FiSquare } from "react-icons/fi";
+import { PiSelectionForegroundDuotone } from "react-icons/pi";
 
 import SymbolColumn from './SymbolColumn';
 import Filter from './Filter';
@@ -24,25 +38,67 @@ const Grid = () => {
     const sheets = useDataStore((state) => state.sheets)
 
     const [searchTerm, setSearchTerm] = useState('')
-    
+    const selectedRowTab = useDataStore((state) => state.selectedRowTab)
+    const setSelectedRowTab = useDataStore((state) => state.setSelectedRowTab)
+
     const filteredData = data.filter((row) => {
         return Object.values(row).some((value) =>
             String(value).toLowerCase().includes(searchTerm.toLowerCase())
         )
     })
 
+    const [selectedRows, setSelectedRows] = useState({})
+    const selectedRowIds = selectedRows[activeSheet] || []
+    const rowFilteredData = filteredData.filter((row) => {
+
+        if(selectedRowTab === 1) {
+            return true 
+        }
+
+        if(selectedRowTab === 2) {
+            return selectedRowIds.includes(row._id)
+        }
+
+        if(selectedRowTab == 3) {
+            return !selectedRowIds.includes(row._id)
+        }
+
+        return true
+
+    })
+
     const [openDrp, setOpenDrp] = useState(false)
     const [openFilter, setOpenFilter] = useState(false)
+    
+    const rowSelection = (row) => {
+        const currentRow = selectedRows[activeSheet] || []
+        if(currentRow.includes(row._id)) {
+            setSelectedRows((prev) => ({
+                ...prev,
+                [activeSheet]: prev[activeSheet].filter((id) => id !== row._id)
+            }))
+        }
+        else 
+        {
+            setSelectedRows((prev) => ({
+                ...prev, 
+                [activeSheet]: [
+                    ...(prev[activeSheet] || []),
+                    row._id
+                ]
+            }))
+        }
+    }
 
     const [currentPageSize, setCurrentPageSize] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
-    const totalPages = Math.ceil(filteredData.length / currentPageSize)
+    const totalPages = Math.ceil(rowFilteredData.length / currentPageSize)
 
     const startIndex = (currentPage - 1) * currentPageSize
     const endIndex = startIndex + currentPageSize
-    const endRow = Math.min(endIndex, filteredData.length)
+    const endRow = Math.min(endIndex, rowFilteredData.length)
 
-    const paginatedData = filteredData?.slice(startIndex, endIndex)
+    const paginatedData = rowFilteredData?.slice(startIndex, endIndex)
 
     const totalColumns = sheets[activeSheet]?.columns || []
     const selectedColumn = useDataStore((state) => state.selectedColumn)
@@ -77,6 +133,43 @@ const Grid = () => {
         setCurrentPage(1)
         setOpenDrp(false);
     }
+
+    const actionAllRows = (id) => {
+        setSelectedRowTab(id)
+        setCurrentPage(1)
+    }
+    const actionSelectedRows = (id) => {
+        setSelectedRowTab(id)
+        setCurrentPage(1)
+    }
+    const actionUnselectedRows = (id) => {
+        setSelectedRowTab(id)
+        setCurrentPage(1)
+    }
+
+    const rowSelectionPanel = [
+        {
+            id:1,
+            title: 'All rows:',
+            count: data?.length,
+            icon: AiTwotoneDatabase,
+            handler: actionAllRows
+        },
+        {
+            id:2,
+            title: 'Selected rows:',
+            count: selectedRows[activeSheet]?.length || 0,
+            icon: PiSelectionInverseDuotone,
+            handler: actionSelectedRows
+        },
+        {
+            id:3,
+            title: 'Unselected rows:',
+            count: data.length - (selectedRows[activeSheet]?.length || 0),
+            icon: PiSelectionBold,
+            handler: actionUnselectedRows
+        }
+    ]
 
     useEffect(() => {
         const handleOutsideClick = (event) => {
@@ -137,11 +230,49 @@ const Grid = () => {
         </div>
     }
 
+    {
+        <div className='flex items-center gap-1 px-2 pb-4'>
+            <HiArrowTurnDownRight className='text-black/40'/>
+
+            <div className='flex items-center gap-2 flex-wrap'>
+                
+                {
+                    rowSelectionPanel?.map((item, index) => {
+                        const Icon = item.icon
+                        const isTabSelected = selectedRowTab === item.id
+                        return (
+                        <div key={item.id} className='flex items-center gap-2 flex-wrap'>
+                                <button onClick={() => item.handler(item.id)} className={`flex items-center gap-1.5 px-2 py-1 rounded-md hover:cursor-pointer hover:bg-gray-100 ${isTabSelected ? 'outline-1 outline-black/20 shadow-sm' : ''}`}>
+                                    <Icon className={`${isTabSelected ? 'text-green-600' :'text-black/40'}`}/>
+                                    <p className={`text-sm ${isTabSelected ? 'text-black/70' : 'text-black/40'}`}>{item.title}</p>
+                                    <p className={`text-sm font-medium ${isTabSelected ? 'text-green-600' : 'text-black/40'}`}>{item.count}</p>
+                                </button>
+                            { item.id < rowSelectionPanel.length && <div className='w-[1px] h-5 bg-black/10'></div>}
+                        </div>
+                    )})
+                }
+            </div>
+        </div>
+    }
+
     <div className={`flex-1 min-h-0 border-t-1 border-b-1 border-black/10 flex flex-col justify-between overflow-hidden`}>
         <div className='h-full overflow-auto'>
             <table className='w-full'>
                 <thead>
                         <tr className=''>
+                        
+                        <td className={`px-6 py-2 w-6 bg-gray-50 outline-1 outline-black/10 sticky top-0 z-10 text-xs font-medium`}>
+                            <div className='flex items-center gap-1'>
+                                <PiSelectionForegroundDuotone className='text-lg text-black/70'/>
+                            </div>
+                        </td>
+
+                        <td className={`px-6 py-2 w-6 bg-gray-50 outline-1 outline-black/10 sticky top-0 z-10 text-xs font-medium`}>
+                            <div className='flex items-center gap-1'>
+                                ID
+                            </div>
+                        </td>
+
                         {
                             visibleColumns?.map((col, ind) => {
                                 return (
@@ -153,16 +284,26 @@ const Grid = () => {
                 </thead>
                 <tbody>
                 {
-                   paginatedData?.map((rows, index) => 
-                            <tr key={index} className='border-b-1 border-black/10 hover:bg-green-50'>
+                   paginatedData?.map((rows, index) => {
+                    const isSelectedRow = selectedRows[activeSheet]?.some((val) => val === rows._id)
+                    return (
+                        <tr onClick={() => rowSelection(rows)} key={rows._id} className={`border-b-1 border-black/10 hover:bg-green-50 ${isSelectedRow ? 'bg-green-100' : ''}`}>
+                            
+                            <td className='px-6 py-1 text-xs'>
                                 {
-                                    visibleColumns?.map((item, inde) => {
-                                        return (
-                                          <td key={inde} className='px-6 py-3 text-xs'>{rows[item.name]}</td>
-                                        )
-                                    })
+                                    isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/20'/>
                                 }
-                            </tr>)
+                            </td>
+
+                            <td className='px-6 py-1 text-xs'>{rows._id}</td>
+                            {
+                                visibleColumns?.map((item, inde) => {
+                                    return (
+                                        <td key={inde} className='px-6 py-3 text-xs'>{rows[item.name]}</td>
+                                    )
+                                })
+                            }
+                        </tr>)})
                 }
                         
                 </tbody>
@@ -175,6 +316,20 @@ const Grid = () => {
                         <p>No records to display in "{activeSheet}". This sheet doesn't contain any data rows.</p>
                         : <p>No records to display in "{activeSheet}". Your file doesn't contain any data rows.</p>
                     }
+                </div>
+            }
+
+            {
+                (rowFilteredData.length === 0 && selectedRowTab === 2) &&
+                <div className='flex items-center justify-center p-4 text-black/70'>
+                    <p>Select one or more rows to see them here.</p>
+                </div>
+            }
+
+            {
+                (rowFilteredData.length === 0 && selectedRowTab === 3) &&
+                <div className='flex items-center justify-center p-4 text-black/70'>
+                    <p>There are no unselected rows to display.</p>
                 </div>
             }
 

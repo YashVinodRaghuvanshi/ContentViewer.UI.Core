@@ -8,6 +8,9 @@ const useDataStore = create((set) => ({
     activeSheet: null,
     
     selectedColumn : {},
+    selectedRowTab : 1,
+
+    setSelectedRowTab: (selectedRowTab) => set({selectedRowTab}),
     setSelectedColumn: (selectedColumn) => set({selectedColumn}),
 
     setColumns: (columns) => set({columns}),

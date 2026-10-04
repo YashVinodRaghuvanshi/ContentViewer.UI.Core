@@ -79,6 +79,10 @@ const UploadFile = () => {
             workbook.SheetNames.forEach((sheetName) => {
                 const worksheet = workbook.Sheets[sheetName]
                 const jsonData = XLSX.utils.sheet_to_json(worksheet)
+                const dataWithId = jsonData.map((row, index) => ({
+                    _id: index + 1,
+                    ...row
+                }))
 
                 const columnsWhenNoDataRows = XLSX.utils.sheet_to_json(worksheet, {
                     header: 1,
@@ -102,8 +106,8 @@ const UploadFile = () => {
 
                 sheets[sheetName] = {
                     columns,
-                    data: jsonData,
-                    rows: jsonData?.length || 0,
+                    data: dataWithId,
+                    rows: dataWithId?.length || 0,
                     invalid: columns.length === 0
                 }
 
