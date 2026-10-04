@@ -9,9 +9,11 @@ import { FaAngleDown } from "react-icons/fa6";
 import { IoIosSearch } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import { LuSettings2 } from "react-icons/lu";
+import { TbTableColumn } from "react-icons/tb";
 
 import SymbolColumn from './SymbolColumn';
 import Filter from './Filter';
+import EditColumns from './EditColumns';
 
 const Grid = () => {
 
@@ -41,6 +43,11 @@ const Grid = () => {
     const endRow = Math.min(endIndex, filteredData.length)
 
     const paginatedData = filteredData?.slice(startIndex, endIndex)
+
+    const totalColumns = sheets[activeSheet]?.columns || []
+    const selectedColumn = useDataStore((state) => state.selectedColumn)
+    const visibleColumns = selectedColumn[activeSheet] || totalColumns
+    const setSelectedColumn = useDataStore((state) => state.setSelectedColumn)
     
     const pageSizes = [5,10,15,20, 30, 40]
     const dropdownRef = useRef(null)
@@ -101,16 +108,21 @@ const Grid = () => {
 
     {
         openFilter &&
-        <Filter setOpenFilter = {setOpenFilter}/>
+        <EditColumns setOpenFilter = {setOpenFilter}/>
     }
 
     {
        data.length > 0 && 
         <div className='flex items-center mb-4 gap-2'>
             <button onClick={() => setOpenFilter(true)} className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/10 px-3 py-2 rounded-lg text-sm'>
+                <TbTableColumn className='text-black/50'/>
+                Columns
+            </button>
+
+            {/* <button onClick={() => setOpenFilter(true)} className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/10 px-3 py-2 rounded-lg text-sm'>
                 <LuSettings2 className='text-black/50'/>
                 Filters
-            </button>
+            </button> */}
 
             <div className='outline-1 relative w-full outline-black/10 px-3 py-2 flex items-center rounded-lg'>
                 <IoIosSearch className='absolute text-black/40 text-lg'/>
@@ -131,9 +143,11 @@ const Grid = () => {
                 <thead>
                         <tr className=''>
                         {
-                            columns?.map((col, ind) => 
-                                <SymbolColumn key={col.name+ind} title={col.title}/>
-                            )
+                            visibleColumns?.map((col, ind) => {
+                                return (
+                                    <SymbolColumn key={col.name+ind} title={col.title}/>
+                                )
+                            })
                         }
                         </tr>
                 </thead>
@@ -142,9 +156,11 @@ const Grid = () => {
                    paginatedData?.map((rows, index) => 
                             <tr key={index} className='border-b-1 border-black/10 hover:bg-green-50'>
                                 {
-                                    columns?.map((item, inde) =>  
-                                        <td key={inde} className='px-6 py-3 text-xs'>{rows[item.name]}</td>
-                                    )
+                                    visibleColumns?.map((item, inde) => {
+                                        return (
+                                          <td key={inde} className='px-6 py-3 text-xs'>{rows[item.name]}</td>
+                                        )
+                                    })
                                 }
                             </tr>)
                 }
@@ -166,7 +182,7 @@ const Grid = () => {
                 (searchTerm && filteredData.length === 0) && 
                 <div className='flex items-center justify-center p-4 text-black/70'>
                     {
-                        <p>No matching records found in "{activeSheet}" for "{searchTerm}"</p>
+                        data.length > 0 && <p>No matching records found in "{activeSheet}" for "{searchTerm}"</p>
                     }
                 </div>
             }
