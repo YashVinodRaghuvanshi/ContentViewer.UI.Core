@@ -39,13 +39,13 @@ const EditColumns = ({setOpenFilter}) => {
     const selectedColumn = useDataStore((state) => state.selectedColumn)
     const setSelectedColumns = useDataStore((state) => state.setSelectedColumn)
 
-    const handleSelection = (columnName) => {
+    const handleSelection = (columnName, columnType) => {
         const present = localSelectedColumn?.some((val) => val.name === columnName)
 
         if(present)
             setLocalSelectedColumn((prev) => prev.filter((val) => val.name != columnName))
         else {
-            setLocalSelectedColumn((prev) => [...prev, {title: columnName, name: columnName}])
+            setLocalSelectedColumn((prev) => [...prev, {title: columnName, name: columnName, type: columnType}])
         }
     }
 
@@ -94,8 +94,9 @@ const EditColumns = ({setOpenFilter}) => {
                     {
                         columns?.map((col, ind) => {
                             const isSelected = localSelectedColumn?.some((val) => val.name === col.name)
+                            
                             return (
-                                <button key={col+ind} onClick={() => handleSelection(col?.name)} className={` outline-1 ${isSelected ? 'shadow-lg outline-green-500 bg-green-100' : 'text-black/50 outline-black/10'} flex items-center pl-3 pr-5 py-2 gap-2 rounded-full text-xs hover:cursor-pointer`}>
+                                <button key={col+ind} onClick={() => handleSelection(col?.name, col?.type)} className={` outline-1 ${isSelected ? 'shadow-lg outline-green-500 bg-green-100' : 'text-black/50 outline-black/10'} flex items-center pl-3 pr-5 py-2 gap-2 rounded-full text-xs hover:cursor-pointer`}>
                                     {
                                         isSelected ? <GoCheckCircleFill className='text-green-600 text-lg'/>  : <FaRegCircle className='text-black/20 text-lg'/>
                                     }

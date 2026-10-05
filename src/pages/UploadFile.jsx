@@ -79,7 +79,9 @@ const UploadFile = () => {
             workbook.SheetNames.forEach((sheetName) => {
                 const worksheet = workbook.Sheets[sheetName]
                 const jsonData = XLSX.utils.sheet_to_json(worksheet)
+                
                 const dataWithId = jsonData.map((row, index) => ({
+                    _chkbox: '_chkbox',
                     _id: index + 1,
                     ...row
                 }))
@@ -92,8 +94,11 @@ const UploadFile = () => {
 
                 const columns = columnsWhenNoData?.map((col) => ({
                     title: col,
-                    name: col
+                    name: col,
+                    type: 'system'
                 }))
+
+                const columnsMap = columns.splice(0,0, {title: '_chkbox', name: '_chkbox', type: 'custom'}, {title: '_id', name: '_id', type: 'custom'})
 
                 // const columns = jsonData.length > 0 ? Object.keys(jsonData[0]).map((key) => ({
                 //     title: key,

@@ -108,6 +108,8 @@ const Grid = () => {
     const pageSizes = [5,10,15,20, 30, 40]
     const dropdownRef = useRef(null)
 
+    const [draggedColumn, setDraggedColumn] = useState(null)
+
     useEffect(() => {
         setCurrentPage(1)
     }, [searchTerm])
@@ -145,6 +147,18 @@ const Grid = () => {
     const actionUnselectedRows = (id) => {
         setSelectedRowTab(id)
         setCurrentPage(1)
+    }
+
+    const handleDrop = (dropIndex) => {
+        const newColumns = [...visibleColumns]
+        const [movedColumn] = newColumns.splice(draggedColumn, 1)
+        newColumns.splice(dropIndex, 0, movedColumn)
+        setSelectedColumn({
+            ...selectedColumn,
+            [activeSheet]: newColumns
+        })
+
+        setDraggedColumn(null)
     }
 
     const rowSelectionPanel = [
@@ -260,23 +274,10 @@ const Grid = () => {
             <table className='w-full'>
                 <thead>
                         <tr className=''>
-                        
-                        <td className={`px-6 py-2 w-6 bg-gray-50 outline-1 outline-black/10 sticky top-0 z-10 text-xs font-medium`}>
-                            <div className='flex items-center gap-1'>
-                                <PiSelectionForegroundDuotone className='text-lg text-black/70'/>
-                            </div>
-                        </td>
-
-                        <td className={`px-6 py-2 w-6 bg-gray-50 outline-1 outline-black/10 sticky top-0 z-10 text-xs font-medium`}>
-                            <div className='flex items-center gap-1'>
-                                ID
-                            </div>
-                        </td>
-
                         {
                             visibleColumns?.map((col, ind) => {
                                 return (
-                                    <SymbolColumn key={col.name+ind} title={col.title}/>
+                                    <SymbolColumn columnType = {col.type} key={col.name+ind} title={col.title} index = {ind} setDraggedColumn = {setDraggedColumn} handleDrop={handleDrop}/>
                                 )
                             })
                         }
@@ -288,18 +289,15 @@ const Grid = () => {
                     const isSelectedRow = selectedRows[activeSheet]?.some((val) => val === rows._id)
                     return (
                         <tr onClick={() => rowSelection(rows)} key={rows._id} className={`border-b-1 border-black/10 hover:bg-green-50 ${isSelectedRow ? 'bg-green-100' : ''}`}>
-                            
-                            <td className='px-6 py-1 text-xs'>
-                                {
-                                    isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/20'/>
-                                }
-                            </td>
 
-                            <td className='px-6 py-1 text-xs'>{rows._id}</td>
                             {
                                 visibleColumns?.map((item, inde) => {
                                     return (
-                                        <td key={inde} className='px-6 py-3 text-xs'>{rows[item.name]}</td>
+                                        <td key={inde} className='px-6 py-3 text-xs'>
+                                            {item.type === 'system' && rows[item.name]}
+                                            {item.name === '_id' && rows._id}
+                                            {item.name === '_chkbox' && (isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/20'/>)}
+                                        </td>
                                     )
                                 })
                             }
