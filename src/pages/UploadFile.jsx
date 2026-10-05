@@ -98,7 +98,7 @@ const UploadFile = () => {
                     type: 'system'
                 }))
 
-                const columnsMap = columns.splice(0,0, {title: '_chkbox', name: '_chkbox', type: 'custom'}, {title: '_id', name: '_id', type: 'custom'})
+                const columnsMap = columns.length > 0 && columns.splice(0,0, {title: '_chkbox', name: '_chkbox', type: 'custom'}, {title: '_id', name: '_id', type: 'custom'})
 
                 // const columns = jsonData.length > 0 ? Object.keys(jsonData[0]).map((key) => ({
                 //     title: key,
