@@ -16,13 +16,12 @@ const SymbolColumn = ({columnType, title, index, setDraggedColumn, handleDrop}) 
         onDragStart={() => setDraggedColumn(index)}
         onDragOver={(event) => event.preventDefault()}
         onDrop={() => handleDrop(index)}
-        className={`px-6 py-2 ${title === '_chkbox' ? 'w-10' : (title === '_id' && 'w-20')} bg-gray-50 outline-1 outline-black/10 cursor-grab sticky top-0 z-10 text-xs font-medium`}
+        className={`px-6 py-2 ${title === '_chkbox' ? 'w-10' : (title === '_id' && 'w-20')} bg-gray-200/20 border-1 border-gray-200 whitespace-nowrap sticky top-0 z-10 text-xs text-black/70 font-medium`}
       >
         {
           columnType === 'system' && 
             <div className='flex items-center gap-1'>
-                {title}
-                <PiArrowElbowRightDownDuotone className='text-lg text-black/40'/>
+                {title[0].toUpperCase() + title.slice(1).toLowerCase() || ''}
             </div>
         }
 

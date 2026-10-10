@@ -269,7 +269,7 @@ const Grid = () => {
         </div>
     }
 
-    <div className={`flex-1 min-h-0 border-t-1 border-b-1 border-black/10 flex flex-col justify-between overflow-hidden`}>
+    <div className={`flex-1 min-h-0 flex flex-col justify-between overflow-hidden`}>
         <div className='h-full overflow-auto'>
             <table className='w-full'>
                 <thead>
@@ -288,15 +288,15 @@ const Grid = () => {
                    paginatedData?.map((rows, index) => {
                     const isSelectedRow = selectedRows[activeSheet]?.some((val) => val === rows._id)
                     return (
-                        <tr onClick={() => rowSelection(rows)} key={rows._id} className={`border-b-1 border-black/10 hover:bg-green-50 ${isSelectedRow ? 'bg-green-100' : ''}`}>
+                        <tr onClick={() => rowSelection(rows)} key={rows._id} className={`hover:bg-green-50 ${isSelectedRow ? 'bg-green-100' : ''}`}>
 
                             {
                                 visibleColumns?.map((item, inde) => {
                                     return (
-                                        <td key={inde} className='px-6 py-3 text-xs'>
+                                        <td key={inde} className='px-6 py-3 text-xs font-medium border-1 text-black/80 border-gray-200/70'>
                                             {item.type === 'system' && rows[item.name]}
                                             {item.name === '_id' && rows._id}
-                                            {item.name === '_chkbox' && (isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/20'/>)}
+                                            {item.name === '_chkbox' && (isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/10'/>)}
                                         </td>
                                     )
                                 })
