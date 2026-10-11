@@ -16,12 +16,15 @@ import { HiArrowTurnDownRight } from "react-icons/hi2";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { BsThreeDots } from "react-icons/bs";
+import { TbListDetails } from "react-icons/tb";
+import { CgEye } from "react-icons/cg";
 
 import { AiTwotoneDatabase } from "react-icons/ai";
 import { MdOutlineTabUnselected } from "react-icons/md";
 import { CgDatabase } from "react-icons/cg";
 import { PiSelectionInverseDuotone } from "react-icons/pi";
 import { PiSelectionBold } from "react-icons/pi";
+import { GrFormView } from "react-icons/gr";
 
 import { FaSquareCheck } from "react-icons/fa6";
 import { FaSquare } from "react-icons/fa6";
@@ -31,6 +34,7 @@ import { PiSelectionForegroundDuotone } from "react-icons/pi";
 import SymbolColumn from './SymbolColumn';
 import Filter from './Filter';
 import EditColumns from './EditColumns';
+import ViewDetails from './ViewDetails';
 
 const Grid = () => {
 
@@ -43,6 +47,9 @@ const Grid = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const selectedRowTab = useDataStore((state) => state.selectedRowTab)
     const setSelectedRowTab = useDataStore((state) => state.setSelectedRowTab)
+
+    const selectedRow = useDataStore((state) => state.selectedRow)
+    const setSelectedRow = useDataStore((state) => state.setSelectedRow)
 
     const filteredData = data.filter((row) => {
         return Object.values(row).some((value) =>
@@ -71,6 +78,7 @@ const Grid = () => {
     })
 
     const [openDrp, setOpenDrp] = useState(false)
+    const [openView, setOpenView] = useState(false)
     const [openFilter, setOpenFilter] = useState(false)
     
     const rowSelection = (row) => {
@@ -242,6 +250,11 @@ const Grid = () => {
     }
 
     {
+        openView &&
+        <ViewDetails setOpenFilter = {setOpenView}/>
+    }
+
+    {
        data.length > 0 && 
         <div className='flex items-center justify-between mb-4 gap-10'>
             <div className='outline-1 relative flex-1 outline-black/10 px-3 h-9 flex items-center rounded-lg'>
@@ -324,6 +337,7 @@ const Grid = () => {
                                             {item.type === 'system' && rows[item.name]}
                                             {item.name === '_id' && rows._id}
                                             {item.name === '_chkbox' && (isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/10'/>)}
+                                            {item.name === '_info' && <button onClick={(e) => {e.stopPropagation(); setSelectedRow(rows); setOpenView(true)}} title='View in detail' className='hover:cursor-pointer'><CgEye className='text-base text-green-600'/></button>}
                                         </td>
                                     )
                                 })
