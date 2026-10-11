@@ -117,19 +117,30 @@ const Grid = () => {
     }, [searchTerm])
 
     const goToFirstPage = () => {
+        setCurrentGroupPage(0)
         setCurrentPage(1)
     }
 
     const goToLastPage = () => {
+        setCurrentGroupPage(totalGroups-1)
         setCurrentPage(totalPages)
     }
 
     const goToPreviousPage = () => {
         setCurrentPage((page) => Math.max(page-1, 1))
+
+        if (currentPage % groupPageSize === 1) {
+            setCurrentGroupPage((prev) => Math.max(prev - 1, 0))
+        }
     }
 
     const goToNextPage = () => {
         setCurrentPage((page) => Math.min(page + 1, totalPages))
+
+        if (currentPage % groupPageSize === 0) {
+            setCurrentGroupPage((prev) => Math.min(prev + 1, totalGroups - 1))
+        }
+        
     }
 
     const handlePageSizeSelection = (sizes) => {
@@ -186,6 +197,15 @@ const Grid = () => {
             handler: actionUnselectedRows
         }
     ]
+
+    const paginationPages = Array.from({length: totalPages}, (_, index) => index + 1)
+    const [currentGroupPage, setCurrentGroupPage] = useState(0)
+    const groupPageSize = 4
+    const totalGroups = Math.ceil((paginationPages.length) / groupPageSize)
+    const startIndexPager = currentGroupPage * groupPageSize
+    const endIndexPager = startIndexPager + groupPageSize
+    const paginationViewPages = paginationPages.slice(startIndexPager, endIndexPager)
+
 
     useEffect(() => {
         const handleOutsideClick = (event) => {
@@ -275,9 +295,9 @@ const Grid = () => {
     }
 
 
-    <div className={`flex-1 min-h-0 flex flex-col justify-between overflow-hidden`}>
+    <div className={`flex-1 min-h-0 flex flex-col justify-between overflow-hidden mb-3 border-l-1 border-r-1 border-b-1 border-gray-200`}>
         <div className='h-full overflow-auto'>
-            <table className='w-full'>
+            <table className='w-full border-separate border-spacing-0'>
                 <thead>
                         <tr className=''>
                         {
@@ -299,7 +319,7 @@ const Grid = () => {
                             {
                                 visibleColumns?.map((item, inde) => {
                                     return (
-                                        <td key={inde} className='px-6 py-3 text-xs font-medium border-1 text-black/80 border-gray-200/70'>
+                                        <td key={inde} className='px-6 py-3 text-xs font-medium border-b-1 text-black/70 border-gray-200'>
                                             {item.type === 'system' && rows[item.name]}
                                             {item.name === '_id' && rows._id}
                                             {item.name === '_chkbox' && (isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/10'/>)}
@@ -349,7 +369,7 @@ const Grid = () => {
         </div>
 
         {/* pagination */}
-        <div className='px-3 pt-3 pb-5 flex items-center justify-between border-t-1 border-black/10'>
+        <div className='px-3 py-3 flex items-center justify-between border-t-1 border-black/10'>
 
             <div className='flex items-center'>
                 <button onClick={goToFirstPage} disabled={currentPage === 1} className={`p-2 rounded-l-md text-sm border-1 border-gray-300 hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/50'}`}>
@@ -361,7 +381,7 @@ const Grid = () => {
                 
                 <div className='flex flex-wrap items-center gap-2 px-3'>
                     {
-                        Array.from({length: totalPages}, (_, index) => index + 1).map((page) => (
+                        paginationViewPages.map((page) => (
                             <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer justify-center ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/30 font-medium  text-sm'}`}>
                                 <p>{page}</p>
                             </button>

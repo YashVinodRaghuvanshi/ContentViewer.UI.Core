@@ -5,6 +5,9 @@ import { PiGridFourDuotone } from "react-icons/pi";
 import { MdReportProblem } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { MdKeyboardArrowLeft } from "react-icons/md";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { FaCaretRight } from "react-icons/fa6";
+import { FaCaretLeft } from "react-icons/fa6";
 
 const SheetTabs = () => {
     const sheets = useDataStore((state) => state.sheets)
@@ -47,8 +50,8 @@ const SheetTabs = () => {
     <div className='mt-4 p-1 rounded-xl flex flex-wrap relative items-center gap-2'>
             {
                 currentPageGroup > 0 &&
-                <button onClick={goToPrevGroup} className='text-black/60 hover:bg-gray-100 p-2 rounded-xl hover:cursor-pointer'>
-                    <MdKeyboardArrowLeft />
+                <button onClick={goToPrevGroup} className='text-black/40 hover:bg-gray-100 p-2 rounded-xl hover:cursor-pointer'>
+                    <FaCaretLeft />
                 </button>
             }
             <div className='flex items-center gap-8 flex-wrap'>
@@ -66,8 +69,8 @@ const SheetTabs = () => {
             </div>
             {
                 currentPageGroup < totalGroups -1 &&
-                <button onClick={goToNextGroup} className='text-black/60 hover:bg-gray-100 p-2 rounded-xl hover:cursor-pointer'>
-                    <MdKeyboardArrowRight />
+                <button onClick={goToNextGroup} className='text-black/40 hover:bg-gray-100 p-2 rounded-xl hover:cursor-pointer'>
+                    <FaCaretRight />
                 </button>
             }
     </div>
