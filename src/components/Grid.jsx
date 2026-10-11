@@ -13,6 +13,8 @@ import { TbTableColumn } from "react-icons/tb";
 import { PiSelectionDuotone } from "react-icons/pi";
 import { MdOutlineBorderClear } from "react-icons/md";
 import { HiArrowTurnDownRight } from "react-icons/hi2";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { CiSearch } from "react-icons/ci";
 
 import { AiTwotoneDatabase } from "react-icons/ai";
 import { MdOutlineTabUnselected } from "react-icons/md";
@@ -171,14 +173,14 @@ const Grid = () => {
         },
         {
             id:2,
-            title: 'Selected rows:',
+            title: 'Mark rows:',
             count: selectedRows[activeSheet]?.length || 0,
             icon: PiSelectionInverseDuotone,
             handler: actionSelectedRows
         },
         {
             id:3,
-            title: 'Unselected rows:',
+            title: 'Unmark rows:',
             count: data.length - (selectedRows[activeSheet]?.length || 0),
             icon: PiSelectionBold,
             handler: actionUnselectedRows
@@ -220,19 +222,9 @@ const Grid = () => {
 
     {
        data.length > 0 && 
-        <div className='flex items-center mb-4 gap-2'>
-            <button onClick={() => setOpenFilter(true)} className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/10 px-3 py-2 rounded-lg text-sm'>
-                <TbTableColumn className='text-black/50'/>
-                Columns
-            </button>
-
-            {/* <button onClick={() => setOpenFilter(true)} className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/10 px-3 py-2 rounded-lg text-sm'>
-                <LuSettings2 className='text-black/50'/>
-                Filters
-            </button> */}
-
-            <div className='outline-1 relative w-full outline-black/10 px-3 py-2 flex items-center rounded-lg'>
-                <IoIosSearch className='absolute text-black/40 text-lg'/>
+        <div className='flex items-center justify-between mb-4 gap-10'>
+            <div className='outline-1 relative flex-1 outline-black/10 px-3 h-9 flex items-center rounded-lg'>
+                <CiSearch className='absolute text-black/60 text-lg'/>
                 <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search Your Data...' className='pl-6 w-full text-sm focus:outline-0'/>
                 {
                     searchTerm.length > 0 &&
@@ -241,33 +233,47 @@ const Grid = () => {
                     </button>
                 }
             </div>
+
+            {
+                <div className='flex items-center gap-1 px-2'>
+                    <div className='flex items-center gap-2 flex-wrap'>
+                        
+                        {
+                            rowSelectionPanel?.map((item, index) => {
+                                const Icon = item.icon
+                                const isTabSelected = selectedRowTab === item.id
+                                return (
+                                <div key={item.id} className='flex items-center gap-2 flex-wrap'>
+                                        <button onClick={() => item.handler(item.id)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100 ${isTabSelected ? 'outline-1 outline-black/20 shadow-sm' : ''}`}>
+                                            <Icon className={`${isTabSelected ? 'text-green-600' :'text-black/40'}`}/>
+                                            <p className={`text-sm ${isTabSelected ? 'text-black/70' : 'text-black/40'}`}>{item.title}</p>
+                                            <p className={`text-sm font-medium ${isTabSelected ? 'text-green-600' : 'text-black/40'}`}>{item.count}</p>
+                                        </button>
+                                    { item.id < rowSelectionPanel.length && <div className='w-[1px] h-5 bg-black/10'></div>}
+                                </div>
+                            )})
+                        }
+
+                        <div className='w-[1px] h-5 bg-black/10'></div>
+                        <button onClick={() => setOpenFilter(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full outline-1 outline-black/20 hover:cursor-pointer hover:bg-gray-100`}>
+                            <TbTableColumn className={`text-black/60`}/>
+                            <p className={`text-sm text-black/70 font-medium`}>Hide Columns</p>
+                            <MdKeyboardArrowRight className={`text-black/60`}/>
+                        </button>
+
+                        <div className='w-[1px] h-5 bg-black/10'></div>
+                        <button onClick={() => setOpenFilter(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full outline-1 outline-black/20 hover:cursor-pointer hover:bg-gray-100`}>
+                            <LuSettings2 className={`text-black/60`}/>
+                            <p className={`text-sm text-black/70 font-medium`}>Add Filters</p>
+                            <MdKeyboardArrowRight className={`text-black/60`}/>
+                        </button>
+
+                    </div>
+                </div>
+            }
         </div>
     }
 
-    {
-        <div className='flex items-center gap-1 px-2 pb-4'>
-            <HiArrowTurnDownRight className='text-black/40'/>
-
-            <div className='flex items-center gap-2 flex-wrap'>
-                
-                {
-                    rowSelectionPanel?.map((item, index) => {
-                        const Icon = item.icon
-                        const isTabSelected = selectedRowTab === item.id
-                        return (
-                        <div key={item.id} className='flex items-center gap-2 flex-wrap'>
-                                <button onClick={() => item.handler(item.id)} className={`flex items-center gap-1.5 px-2 py-1 rounded-md hover:cursor-pointer hover:bg-gray-100 ${isTabSelected ? 'outline-1 outline-black/20 shadow-sm' : ''}`}>
-                                    <Icon className={`${isTabSelected ? 'text-green-600' :'text-black/40'}`}/>
-                                    <p className={`text-sm ${isTabSelected ? 'text-black/70' : 'text-black/40'}`}>{item.title}</p>
-                                    <p className={`text-sm font-medium ${isTabSelected ? 'text-green-600' : 'text-black/40'}`}>{item.count}</p>
-                                </button>
-                            { item.id < rowSelectionPanel.length && <div className='w-[1px] h-5 bg-black/10'></div>}
-                        </div>
-                    )})
-                }
-            </div>
-        </div>
-    }
 
     <div className={`flex-1 min-h-0 flex flex-col justify-between overflow-hidden`}>
         <div className='h-full overflow-auto'>

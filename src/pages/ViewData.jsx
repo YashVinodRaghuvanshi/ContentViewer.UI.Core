@@ -10,8 +10,9 @@ const ViewData = () => {
             <p className='text-black/70'>You can explore your data your own way.</p>
         </div>
 
-        <div className='mt-4 w-full flex-1 min-h-0 flex flex-col'>
+        <div className='mt-1 w-full flex-1 min-h-0 flex flex-col'>
             <SheetTabs />
+            <div className='w-full h-[2px] bg-gray-100 mb-5 mt-1'></div>
             <Grid />
         </div>
     </div>
