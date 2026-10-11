@@ -15,6 +15,7 @@ import { MdOutlineBorderClear } from "react-icons/md";
 import { HiArrowTurnDownRight } from "react-icons/hi2";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
+import { BsThreeDots } from "react-icons/bs";
 
 import { AiTwotoneDatabase } from "react-icons/ai";
 import { MdOutlineTabUnselected } from "react-icons/md";
@@ -380,6 +381,7 @@ const Grid = () => {
                 </button>
                 
                 <div className='flex flex-wrap items-center gap-2 px-3'>
+
                     {
                         paginationViewPages.map((page) => (
                             <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer justify-center ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/30 font-medium  text-sm'}`}>
@@ -387,6 +389,17 @@ const Grid = () => {
                             </button>
                         ))
                     }
+                    
+                    {
+                        (currentPage < paginationPages[paginationPages.length-1] && (currentGroupPage !== totalGroups-1) ) &&
+                        <div className='flex items-end ml-1 gap-1'>
+                            <BsThreeDots className='text-black/30 mb-0.5'/>
+                            <button onClick={() => goToLastPage()} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer justify-center text-black/30 font-medium  text-sm`}>
+                                <p>{paginationPages[paginationPages.length-1]}</p>
+                            </button>
+                        </div>
+                    }
+
                 </div>
                 
                 <button onClick={goToNextPage} disabled={(currentPage === totalPages || data.length === 0)} className={`p-2 rounded-l-md text-sm hover:cursor-pointer border-1 border-gray-300 hover:bg-gray-100 ${(currentPage === totalPages || data.length === 0) ? 'text-black/15' : 'text-black/50'}`}>
