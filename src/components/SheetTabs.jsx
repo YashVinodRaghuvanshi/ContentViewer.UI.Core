@@ -57,7 +57,7 @@ const SheetTabs = () => {
             <div className='flex items-center gap-8 flex-wrap'>
                 {
                     pagableSheet.map((sheetName, ind) => (
-                        <div className='flex flex-col items-center'>
+                        <div key={sheetName+ind} className='flex flex-col items-center'>
                             <button key={sheetName} onClick={() => handleSheetChange(sheetName)} className={`py-2 flex items-center gap-2.5 text-sm rounded-lg ${activeSheet == sheetName ? 'bg-white font-medium' : 'text-black/70'} hover:cursor-pointer`}>
                                 <p className='mix-w-10 max-w-30 truncate'>{sheetName}</p>
                                 <div className={`text-black/50 px-1.5 rounded-md ${activeSheet === sheetName ? (sheets[sheetName]?.invalid) ? 'bg-red-600 text-red-100': 'bg-green-600 text-green-100' : 'bg-gray-400 text-green-100'}`}>{sheets[sheetName]?.rows}</div>

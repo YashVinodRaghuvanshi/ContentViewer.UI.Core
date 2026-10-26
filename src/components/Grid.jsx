@@ -334,7 +334,7 @@ const Grid = () => {
                                 visibleColumns?.map((item, inde) => {
                                     return (
                                         <td key={inde} className='px-6 py-3 text-xs font-medium border-b-1 text-black/70 border-gray-200'>
-                                            {item.type === 'system' && rows[item.name]}
+                                            {item.type === 'system' && <p title={rows[item.name]} className='max-w-120 truncate'>{rows[item.name]}</p>}
                                             {item.name === '_id' && rows._id}
                                             {item.name === '_chkbox' && (isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/10'/>)}
                                             {item.name === '_info' && <button onClick={(e) => {e.stopPropagation(); setSelectedRow(rows); setOpenView(true)}} title='View in detail' className='hover:cursor-pointer'><CgEye className='text-base text-green-600'/></button>}
