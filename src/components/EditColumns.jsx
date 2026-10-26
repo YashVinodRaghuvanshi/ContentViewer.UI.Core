@@ -5,6 +5,8 @@ import { GoCheckCircleFill } from "react-icons/go";
 import { PiSelectionDuotone } from "react-icons/pi";
 import { MdOutlineBorderClear } from "react-icons/md";
 import { HiArrowTurnDownRight } from "react-icons/hi2";
+import { HiEye } from "react-icons/hi";
+import { BsFillEyeSlashFill } from "react-icons/bs";
 
 import useDataStore from '../store/dataStore';
 
@@ -96,9 +98,9 @@ const EditColumns = ({setOpenFilter}) => {
                             const isSelected = localSelectedColumn?.some((val) => val.name === col.name)
                             
                             return (
-                                <button key={col+ind} onClick={() => handleSelection(col?.name, col?.type)} className={` outline-1 ${isSelected ? 'shadow-lg outline-green-500 bg-green-100' : 'text-black/50 outline-black/10'} flex items-center pl-3 pr-5 py-2 gap-2 rounded-full text-xs hover:cursor-pointer`}>
+                                <button key={col+ind} onClick={() => handleSelection(col?.name, col?.type)} className={` outline-1 ${isSelected ? 'outline-green-500 bg-green-100' : 'text-black/50 outline-black/10'} flex items-center pl-3 pr-5 py-2 gap-2 rounded-xl text-xs hover:cursor-pointer`}>
                                     {
-                                        isSelected ? <GoCheckCircleFill className='text-green-600 text-lg'/>  : <FaRegCircle className='text-black/20 text-lg'/>
+                                        isSelected ? <HiEye className='text-green-600 text-lg'/>  : <BsFillEyeSlashFill className='text-black/20 text-lg'/>
                                     }
                                     {col?.name}
                                 </button>
