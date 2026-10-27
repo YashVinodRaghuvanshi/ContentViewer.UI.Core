@@ -12,6 +12,16 @@ const ViewDetails = ({setOpenFilter}) => {
     const clearRowData = useDataStore((state) => state.clearRowData)
 
     const [expandState, setExpandState] = useState([])
+    const readMoreLength = 140
+
+    const readMoreRecord = (row) => {
+        if (expandState.includes(row)) {
+            setExpandState(expandState.filter(val => val !== row))
+        }
+        else {
+            setExpandState([...expandState, row])
+        }
+    }
 
     const closePopup = () => {
         setOpenFilter(false)
@@ -40,12 +50,19 @@ const ViewDetails = ({setOpenFilter}) => {
             <div className='px-3.5 pt-8 mb-20 grid grid-cols-3 gap-6 min-h-0 overflow-y-auto'>
                 {
                    Object.keys(selectedRow).map((row) => {
+                    const content = selectedRow[row]
+
                     if(row !== '_id' && row !== '_chkbox' && row !== '_info')
                         return(
                                 <div key={row} className={`col-span-3 grid grid-cols-3 `}>
                                     <p className='text-base  text-black/60'>{row}</p>
                                     {/* <p className='col-span-2'> */}
-                                        <p className='text-base col-span-2 text-black/90 line-clamp-5'>{selectedRow[row]}</p> 
+                                        <div className='col-span-2'>
+                                            <p className={`text-base col-span-2 text-black/90 ${(content.length  > readMoreLength && !expandState.includes(row)) && 'line-clamp-3'}`}>{content}</p> 
+                                            {
+                                                content?.length > readMoreLength && <button onClick={() => readMoreRecord(row)} className='text-green-600 rounded-2xl font-medium hover:cursor-pointer'>{expandState.includes(row) ? 'Read less' : 'Read more...'}</button>
+                                            }
+                                        </div>
                                         {/* <p className='text-green-600 font-medium'>Read More</p> */}
                                     {/* </p> */}
                                 </div>
