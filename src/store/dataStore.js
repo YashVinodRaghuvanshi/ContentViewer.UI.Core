@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 const useDataStore = create((set) => ({
+    filename: '',
     columns : [],
     data : [],
 
@@ -12,6 +13,7 @@ const useDataStore = create((set) => ({
 
     selectedRow: {},
 
+    setFilename: (filename) => set({filename}),
     setSelectedRowTab: (selectedRowTab) => set({selectedRowTab}),
     setSelectedRow: (selectedRow) => set({selectedRow}),
     setSelectedColumn: (selectedColumn) => set({selectedColumn}),
@@ -28,7 +30,8 @@ const useDataStore = create((set) => ({
         sheets: {},
         activeSheet: null,
         selectedColumn: {},
-        selectedRow: {}
+        selectedRow: {},
+        filename: ''
     })
 
 }))

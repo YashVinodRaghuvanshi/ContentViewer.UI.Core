@@ -260,6 +260,51 @@ const Grid = ({children}) => {
         <div className='flex items-center justify-between mb-4 gap-10'>
             {children}
 
+            <div className='flex items-center gap-2'>
+
+            <div className='flex items-center gap-2'>
+                <button onClick={() => setOpenFilter(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
+                    <TbTableColumn className={`text-black/60`}/>
+                    <p className={`text-sm text-black/70 font-medium`}>Hide Columns</p>
+                </button>
+
+                <div className='w-[1px] h-5 bg-black/10'></div>
+                
+                <button onClick={() => setOpenFilter(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
+                    <LuSettings2 className={`text-black/60`}/>
+                    <p className={`text-sm text-black/70 font-medium`}>Add Filters</p>
+                </button>
+
+                <div className='w-[1px] h-5 bg-black/10'></div>
+                
+                {
+                    !showSearch &&
+                    <button onClick={() => setShowSearch(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
+                        <FiSearch className={`text-black/60`}/>
+                        <p className={`text-sm text-black/70 font-medium`}>Search</p>
+                    </button>
+                }
+
+                {
+                    showSearch && 
+                    <div className='outline-1 relative flex-1 ml-4 outline-black/10 px-3 h-9 flex items-center rounded-lg'>
+                        <CiSearch className='absolute text-black/60 text-lg'/>
+                        <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search Your Data...' className='pl-6 w-full min-w-80 text-sm focus:outline-0'/>
+                        {
+                            searchTerm.length > 0 &&
+                            <button onClick={() => setSearchTerm('')} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
+                                <RxCross2 />
+                            </button>
+                        }
+                        {
+                            
+                            <button onClick={() => setShowSearch(false)} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
+                                <GoSidebarCollapse />
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
             {
                 <div className={`flex items-center gap-1 px-2 ${columns.length === 0 && 'hidden'}`}>
                     <div className='flex items-center gap-2 flex-wrap'>
@@ -282,48 +327,12 @@ const Grid = ({children}) => {
                         }
                         </div>
 
-                        <div className='w-[1px] h-5 bg-black/10'></div>
-                        <button onClick={() => setOpenFilter(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
-                            <TbTableColumn className={`text-black/60`}/>
-                            <p className={`text-sm text-black/70 font-medium`}>Hide Columns</p>
-                        </button>
-                        
-                        <button onClick={() => setOpenFilter(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
-                            <LuSettings2 className={`text-black/60`}/>
-                            <p className={`text-sm text-black/70 font-medium`}>Add Filters</p>
-                        </button>
-
-                        {
-                            !showSearch &&
-                            <button onClick={() => setShowSearch(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
-                                <FiSearch className={`text-black/60`}/>
-                                <p className={`text-sm text-black/70 font-medium`}>Search</p>
-                            </button>
-                        }
-
-                        {
-                            showSearch && 
-                            <div className='outline-1 relative flex-1 outline-black/10 px-3 h-9 flex items-center rounded-lg'>
-                                <CiSearch className='absolute text-black/60 text-lg'/>
-                                <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search Your Data...' className='pl-6 w-full min-w-80 text-sm focus:outline-0'/>
-                                {
-                                    searchTerm.length > 0 &&
-                                    <button onClick={() => setSearchTerm('')} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
-                                        <RxCross2 />
-                                    </button>
-                                }
-                                {
-                                    
-                                    <button onClick={() => setShowSearch(false)} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
-                                        <GoSidebarCollapse />
-                                    </button>
-                                }
-                            </div>
-                        }
+                        {/* <div className='w-[1px] h-5 bg-black/10'></div> */}
 
                     </div>
                 </div>
             }
+             </div>
         </div>
         
         {
@@ -425,7 +434,7 @@ const Grid = ({children}) => {
 
                     {
                         paginationViewPages.map((page) => (
-                            <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-7.5 h-7.5 flex rounded-lg items-center hover:cursor-pointer justify-center ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/30 font-medium  text-sm'}`}>
+                            <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-7.5 h-7.5 flex rounded-lg items-center hover:cursor-pointer justify-center ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/80 text-sm'}`}>
                                 <p>{page}</p>
                             </button>
                         ))
@@ -434,8 +443,8 @@ const Grid = ({children}) => {
                     {
                         (currentPage < paginationPages[paginationPages.length-1] && (currentGroupPage !== totalGroups-1) ) &&
                         <div className='flex items-end ml-1 gap-1'>
-                            <BsThreeDots className='text-black/30 mb-0.5'/>
-                            <button onClick={() => goToLastPage()} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer justify-center text-black/30 font-medium  text-sm`}>
+                            <BsThreeDots className='text-black/70 mb-0.5'/>
+                            <button onClick={() => goToLastPage()} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer justify-center text-black/80 text-sm`}>
                                 <p>{paginationPages[paginationPages.length-1]}</p>
                             </button>
                         </div>

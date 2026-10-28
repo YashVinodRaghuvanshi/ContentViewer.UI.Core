@@ -25,6 +25,7 @@ const UploadFile = () => {
     const [selectedFileInfo, setSelectedFileInfo] = useState(null)
 
     const columns = useDataStore((state) => state.columns)
+    const setFilename = useDataStore((state) => state.setFilename)
     const setColumns = useDataStore((state) => state.setColumns)
     const setSheets = useDataStore((state) => state.setSheets)
     const setActiveSheet = useDataStore((state) => state.setActiveSheet)
@@ -138,7 +139,8 @@ const UploadFile = () => {
             size : formateFileSize(file?.size),
             type : file?.name?.split('.').pop()
         })
-        
+
+        setFilename(file?.name)
 
     }
 
