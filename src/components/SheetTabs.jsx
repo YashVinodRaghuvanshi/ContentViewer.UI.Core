@@ -47,22 +47,21 @@ const SheetTabs = () => {
     }
 
   return (
-    <div className='mt-4 p-1 rounded-xl flex flex-wrap relative items-center gap-2'>
+    <div className='px-1 py-0.5 rounded-lg flex flex-wrap relative items-center gap-2 bg-gray-50 outline-1 outline-black/10'>
             {
                 currentPageGroup > 0 &&
                 <button onClick={goToPrevGroup} className='text-black/40 hover:bg-gray-100 p-2 rounded-xl hover:cursor-pointer'>
                     <FaCaretLeft />
                 </button>
             }
-            <div className='flex items-center gap-8 flex-wrap'>
+            <div className='flex items-center gap-2 flex-wrap'>
                 {
                     pagableSheet.map((sheetName, ind) => (
                         <div key={sheetName+ind} className='flex flex-col items-center'>
-                            <button key={sheetName} onClick={() => handleSheetChange(sheetName)} className={`py-2 flex items-center gap-2.5 text-sm rounded-lg ${activeSheet == sheetName ? 'bg-white font-medium' : 'text-black/70'} hover:cursor-pointer`}>
+                            <button title={sheetName} key={sheetName} onClick={() => handleSheetChange(sheetName)} className={`py-1.5 px-3  flex text-xs items-center gap-1 rounded-md ${activeSheet == sheetName ? 'bg-white font-medium outline-1 outline-black/10' : 'text-black/70'} hover:cursor-pointer`}>
                                 <p className='mix-w-10 max-w-30 truncate'>{sheetName}</p>
-                                <div className={`text-black/50 px-1.5 rounded-md ${activeSheet === sheetName ? (sheets[sheetName]?.invalid) ? 'bg-red-600 text-red-100': 'bg-green-600 text-green-100' : 'bg-gray-400 text-green-100'}`}>{sheets[sheetName]?.rows}</div>
+                                <p>({sheets[sheetName]?.rows})</p>
                             </button>
-                            {activeSheet == sheetName && <div className='w-10 h-[2.5px] rounded-full absolute -bottom-1.5 bg-green-600'></div>}
                         </div>
                     ))
                 }
