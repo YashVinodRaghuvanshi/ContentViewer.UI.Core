@@ -51,6 +51,7 @@ const Grid = ({children}) => {
     const setSelectedRowTab = useDataStore((state) => state.setSelectedRowTab)
 
     const selectedRow = useDataStore((state) => state.selectedRow)
+    const sortOrder = useDataStore((state) => state.sortOrder) || []
     const setSelectedRow = useDataStore((state) => state.setSelectedRow)
 
     const filteredData = data.filter((row) => {
@@ -59,9 +60,43 @@ const Grid = ({children}) => {
         )
     })
 
+    const sortedData = [...filteredData].sort((a,b) => {
+        for (const sort of sortOrder) {
+            if (!sort.order) continue
+
+            const valueA = a[sort.name]
+            const valueB = b[sort.name]
+
+            let result = 0
+
+            if (valueA == null && valueB == null) {
+                result = 0
+            }
+            else if (valueA == null) {
+                result = 1
+            }
+            else if (valueB == null) {
+                result = -1
+            }
+            else if (typeof valueA == 'number' && typeof valueB == 'number') {
+                result = valueA - valueB
+            }
+            else {
+                result = String(valueA).localeCompare(String(valueB), undefined, {numeric: true, sensitivity: 'base'})
+            }
+
+            if (result !== 0) {
+                return sort.order == 'desc' ? -result : result
+            }
+            
+        }
+
+        return 0
+    })
+
     const [selectedRows, setSelectedRows] = useState({})
     const selectedRowIds = selectedRows[activeSheet] || []
-    const rowFilteredData = filteredData.filter((row) => {
+    const rowFilteredData = sortedData.filter((row) => {
 
         if(selectedRowTab === 1) {
             return true 

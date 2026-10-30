@@ -14,11 +14,41 @@ import { PiListNumbersDuotone } from "react-icons/pi";
 import { GoNumber } from "react-icons/go";
 import { MdOutlineNumbers } from "react-icons/md";
 import { TbFileInfo } from "react-icons/tb";
+import { FaSortAmountDownAlt } from "react-icons/fa";
+import { FaSortAmountUp } from "react-icons/fa";
+import { FaSortAlphaUpAlt } from "react-icons/fa";
+import { FaSortAlphaDown } from "react-icons/fa";
+import { TiArrowSortedDown } from "react-icons/ti";
+import { TiArrowSortedUp } from "react-icons/ti";
+import { TiArrowUnsorted } from "react-icons/ti";
+import { LiaArrowsAltVSolid } from "react-icons/lia";
+import { LiaArrowUpSolid } from "react-icons/lia";
+import { LiaArrowDownSolid } from "react-icons/lia";
+
 import { LuView } from "react-icons/lu";
 import { IoInformationOutline } from "react-icons/io5";
+import useDataStore from '../store/dataStore';
 
 const SymbolColumn = ({columnType, title, index, setDraggedColumn, handleDrop}) => {
-  return (
+    const sortOrder = useDataStore((state) => state.sortOrder) || []
+    const setSortOrder = useDataStore((state) => state.setSortOrder)
+    
+    const handleSortOrder = (columnName) => {
+        
+        const filtered = sortOrder.filter(val => val.name !== columnName)
+        
+        if(sortOrder.find(val => val.name === columnName && val.order === 'asc')) {
+            setSortOrder([{name: columnName, order: 'desc'}])
+        }
+        else if(sortOrder.find(val => val.name === columnName && val.order === 'desc')) {
+            setSortOrder([])
+        }
+        else {
+            setSortOrder([{name: columnName, order: 'asc'}])
+        }
+    }
+
+    return (
     <td 
         draggable
         onDragStart={() => setDraggedColumn(index)}
@@ -28,8 +58,10 @@ const SymbolColumn = ({columnType, title, index, setDraggedColumn, handleDrop}) 
       >
         {
           columnType === 'system' && 
-            <div className='flex items-center gap-1'>
+            <div onClick={() => handleSortOrder(title)} className='flex items-center gap-3'>
                 {title[0].toUpperCase() + title.slice(1).toLowerCase() || ''}
+                {sortOrder.find(val => val.name === title && val.order === 'asc') ? <LiaArrowDownSolid title='Ascending' className='text-green-700'/> : 
+                    sortOrder.find(val => val.name === title && val.order === 'desc') ? <LiaArrowUpSolid title='Descending' className='text-green-700'/> : <LiaArrowsAltVSolid title='Unsorted' className='text-black/50'/>}
             </div>
         }
 

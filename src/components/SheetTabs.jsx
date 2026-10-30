@@ -19,6 +19,7 @@ const SheetTabs = () => {
     const setActiveSheet = useDataStore((state) => state.setActiveSheet)
     const selectedRowTab = useDataStore((state) => state.selectedRowTab)
     const setSelectedRowTab = useDataStore((state) => state.setSelectedRowTab)
+    const setSortOrder = useDataStore((state) => state.setSortOrder)
 
     const [currentPageGroup, setCurrentPageGroup] = useState(0)
     const pageNames = Object.keys(sheets)
@@ -44,10 +45,11 @@ const SheetTabs = () => {
         setActiveSheet(sheetName)
         setColumns(selectedSheet.columns)
         setData(selectedSheet.data)
+        setSortOrder([])
     }
 
   return (
-    <div className='px-1 py-0.5 rounded-lg flex flex-wrap relative items-center gap-2 bg-gray-50 outline-1 outline-black/10'>
+    <div className='px-1 py-0.5 rounded-lg flex flex-wrap relative items-center gap-2 bg-gray-50 min-w-50 outline-1 outline-black/10'>
             {
                 currentPageGroup > 0 &&
                 <button onClick={goToPrevGroup} className='text-black/40 hover:bg-gray-100 p-2 rounded-xl hover:cursor-pointer'>
