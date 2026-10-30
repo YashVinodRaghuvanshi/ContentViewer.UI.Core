@@ -54,7 +54,7 @@ const SymbolColumn = ({columnType, title, index, setDraggedColumn, handleDrop}) 
         onDragStart={() => setDraggedColumn(index)}
         onDragOver={(event) => event.preventDefault()}
         onDrop={() => handleDrop(index)}
-        className={`px-6 py-2 ${title === '_chkbox' ? 'w-10' : ''} ${(title === '_id' ? 'w-20' : '')} ${(title === '_info' ? 'w-10' : '')} bg-gray-50 whitespace-nowrap sticky border-t-1 border-b-1 border-gray-200/80 top-0 z-10 text-xs text-black/70 font-medium`}
+        className={`px-6 border-r-1 py-2 ${title === '_chkbox' ? 'w-10' : ''} ${(title === '_id' ? 'w-20' : '')} ${(title === '_info' ? 'w-10' : '')} bg-gray-50 whitespace-nowrap sticky border-t-1 border-b-1 border-gray-200/80 top-0 z-10 text-xs text-black/70 font-medium`}
       >
         {
           columnType === 'system' && 
