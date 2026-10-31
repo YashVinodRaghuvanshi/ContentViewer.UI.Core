@@ -116,6 +116,7 @@ const Grid = ({children}) => {
 
     const [openDrp, setOpenDrp] = useState(false)
     const [openView, setOpenView] = useState(false)
+    const [openFieldSetting, setOpenFieldSetting] = useState(false)
     const [openFilter, setOpenFilter] = useState(false)
     
     const rowSelection = (row) => {
@@ -283,8 +284,13 @@ const Grid = ({children}) => {
     <>
 
     {
+        openFieldSetting &&
+        <EditColumns setOpenFilter = {setOpenFieldSetting}/>
+    }
+
+    {
         openFilter &&
-        <EditColumns setOpenFilter = {setOpenFilter}/>
+        <Filter setOpenFilter = {setOpenFilter}/>
     }
 
     {
@@ -298,7 +304,7 @@ const Grid = ({children}) => {
             <div className='flex items-center gap-2'>
 
             <div className='flex items-center gap-2'>
-                <button onClick={() => setOpenFilter(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
+                <button onClick={() => setOpenFieldSetting(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
                     <TbTableColumn className={`text-black/60`}/>
                     <p className={`text-sm text-black/70 font-medium`}>Hide Columns</p>
                 </button>
