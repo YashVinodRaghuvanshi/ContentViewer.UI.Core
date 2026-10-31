@@ -12,7 +12,9 @@ const useDataStore = create((set) => ({
     selectedRowTab : 1,
 
     selectedRow: {},
-    sortOrder: [],
+    sortOrder: null,
+
+    frozenColumn: null,
 
     setFilename: (filename) => set({filename}),
     setSelectedRowTab: (selectedRowTab) => set({selectedRowTab}),
@@ -20,6 +22,7 @@ const useDataStore = create((set) => ({
     setSelectedColumn: (selectedColumn) => set({selectedColumn}),
 
     setColumns: (columns) => set({columns}),
+    setFrozenColumn: (frozenColumn) => set({frozenColumn}),
     setSortOrder: (sortOrder) => set({sortOrder}),
     setData : (data) => set({data}),
     setSheets : (sheets) => set({sheets}),
@@ -34,7 +37,8 @@ const useDataStore = create((set) => ({
         selectedColumn: {},
         selectedRow: {},
         filename: '',
-        sortOrder: []
+        sortOrder: null,
+        frozenColumn: null
     })
 
 }))

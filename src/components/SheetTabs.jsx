@@ -45,7 +45,7 @@ const SheetTabs = () => {
         setActiveSheet(sheetName)
         setColumns(selectedSheet.columns)
         setData(selectedSheet.data)
-        setSortOrder([])
+        setSortOrder(null)
     }
 
   return (

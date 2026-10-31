@@ -50,8 +50,10 @@ const Grid = ({children}) => {
     const selectedRowTab = useDataStore((state) => state.selectedRowTab)
     const setSelectedRowTab = useDataStore((state) => state.setSelectedRowTab)
 
+    const frozenColumn = useDataStore((state) => state.frozenColumn)
+
     const selectedRow = useDataStore((state) => state.selectedRow)
-    const sortOrder = useDataStore((state) => state.sortOrder) || []
+    const sortOrder = useDataStore((state) => state.sortOrder)
     const setSelectedRow = useDataStore((state) => state.setSelectedRow)
 
     const filteredData = data.filter((row) => {
@@ -61,11 +63,11 @@ const Grid = ({children}) => {
     })
 
     const sortedData = [...filteredData].sort((a,b) => {
-        for (const sort of sortOrder) {
-            if (!sort.order) continue
+       
+            if (!sortOrder?.order) return
 
-            const valueA = a[sort.name]
-            const valueB = b[sort.name]
+            const valueA = a[sortOrder?.name]
+            const valueB = b[sortOrder?.name]
 
             let result = 0
 
@@ -86,10 +88,8 @@ const Grid = ({children}) => {
             }
 
             if (result !== 0) {
-                return sort.order == 'desc' ? -result : result
+                return sortOrder?.order == 'desc' ? -result : result
             }
-            
-        }
 
         return 0
     })
@@ -388,7 +388,16 @@ const Grid = ({children}) => {
                         {
                             visibleColumns?.map((col, ind) => {
                                 return (
-                                    <SymbolColumn columnType = {col.type} key={col.name+ind} title={col.title} index = {ind} setDraggedColumn = {setDraggedColumn} handleDrop={handleDrop}/>
+                                    <SymbolColumn 
+                                        key={col.name+ind} 
+                                        index = {ind} 
+                                        title={col.title} 
+                                        columnType = {col.type} 
+                                        isFrozen = {frozenColumn === col.title} 
+                                        isSorted = {sortOrder?.name === col.title}
+                                        setDraggedColumn = {setDraggedColumn} 
+                                        handleDrop={handleDrop}
+                                    />
                                 )
                             })
                         }
@@ -404,7 +413,7 @@ const Grid = ({children}) => {
                             {
                                 visibleColumns?.map((item, inde) => {
                                     return (
-                                        <td key={inde} className='px-6 py-3 text-xs font-medium border-b-1 border-r-1 text-black/70 border-gray-200'>
+                                        <td key={inde} className={` ${frozenColumn === item.name ? 'sticky left-0 z-20 bg-white' : ''}  px-6 py-3 text-xs font-medium border-b-1 border-r-1 text-black/70 border-gray-200`}>
                                             {item.type === 'system' && <p title={rows[item.name]} className='max-w-120 truncate'>{rows[item.name]}</p>}
                                             {item.name === '_id' && rows._id}
                                             {item.name === '_chkbox' && (isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/10'/>)}
