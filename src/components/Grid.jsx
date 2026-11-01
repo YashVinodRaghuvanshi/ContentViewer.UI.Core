@@ -392,7 +392,7 @@ const Grid = ({children}) => {
                 <thead>
                         <tr className=''>
                         {
-                            visibleColumns?.map((col, ind) => {
+                            visibleColumns?.filter(val => val?.ishidden === false).map((col, ind) => {
                                 return (
                                     <SymbolColumn 
                                         key={col.name+ind} 
@@ -417,7 +417,7 @@ const Grid = ({children}) => {
                         <tr onClick={() => rowSelection(rows)} key={rows._id} className={`hover:bg-green-50 ${isSelectedRow ? 'bg-green-100' : ''}`}>
 
                             {
-                                visibleColumns?.map((item, inde) => {
+                                visibleColumns?.filter(val => val?.ishidden === false).map((item, inde) => {
                                     return (
                                         <td key={inde} className={` ${frozenColumn === item.name ? 'sticky left-0 z-20 bg-white' : ''}  px-6 py-3 text-xs font-medium border-b-1 border-r-1 text-black/70 border-gray-200`}>
                                             {item.type === 'system' && <p title={rows[item.name]} className='max-w-120 truncate'>{rows[item.name]}</p>}

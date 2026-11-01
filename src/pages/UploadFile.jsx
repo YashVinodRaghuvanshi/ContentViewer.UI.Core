@@ -34,6 +34,12 @@ const UploadFile = () => {
 
     const navigate = useNavigate();
 
+    const customFieldsInfo = {
+       checkbox: 'Choose the rows you want to work with.',
+        id: 'A unique number to identify each row.',
+       info: 'See all the information in a row.'
+    }
+
     const fileInputRef = useRef(null)
 
     const handleUploadClick = () => {
@@ -97,10 +103,14 @@ const UploadFile = () => {
                 const columns = columnsWhenNoData?.map((col) => ({
                     title: col,
                     name: col,
-                    type: 'system'
+                    type: 'system',
+                    ishidden: false
                 }))
 
-                const columnsMap = columns.length > 0 && columns.splice(0,0, {title: '_chkbox', name: '_chkbox', type: 'custom'}, {title: '_id', name: '_id', type: 'custom'}, {title: '_info', name: '_info', type: 'custom'})
+                const columnsMap = columns.length > 0 && columns.splice(0,0, 
+                    {title: '_chkbox', name: '_chkbox', type: 'custom', ishidden: false, info: customFieldsInfo?.checkbox}, 
+                    {title: '_id', name: '_id', type: 'custom', ishidden: false, info: customFieldsInfo?.id}, 
+                    {title: '_info', name: '_info', type: 'custom', ishidden: false, info: customFieldsInfo?.info})
 
                 // const columns = jsonData.length > 0 ? Object.keys(jsonData[0]).map((key) => ({
                 //     title: key,

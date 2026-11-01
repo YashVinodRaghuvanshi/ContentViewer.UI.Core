@@ -7,6 +7,8 @@ import { MdOutlineBorderClear } from "react-icons/md";
 import { HiArrowTurnDownRight } from "react-icons/hi2";
 import { HiEye } from "react-icons/hi";
 import { BsFillEyeSlashFill } from "react-icons/bs";
+import { GrDrag } from "react-icons/gr";
+import { PiSparkleDuotone } from "react-icons/pi";
 
 import useDataStore from '../store/dataStore';
 
@@ -18,7 +20,7 @@ const EditColumns = ({setOpenFilter}) => {
     }
 
     const applyFilter = () => {
-        if(localSelectedColumn.length === 0) {
+        if(localSelectedColumn.every(val => val.ishidden === true)) {
             return
         }
 
@@ -33,6 +35,7 @@ const EditColumns = ({setOpenFilter}) => {
     const sheets = useDataStore((state) => state.sheets)
     const activeSheet = useDataStore((state) => state.activeSheet)
 
+    const [draggedItem, setDraggedItem] = useState(null)
     const columns = sheets[activeSheet]?.columns
 
 
@@ -42,13 +45,19 @@ const EditColumns = ({setOpenFilter}) => {
     const setSelectedColumns = useDataStore((state) => state.setSelectedColumn)
 
     const handleSelection = (columnName, columnType) => {
-        const present = localSelectedColumn?.some((val) => val.name === columnName)
+        const visibilityMangedColumn = localSelectedColumn.map((val, ind) => {
+            if(val.name === columnName) {
+                return {
+                    ...val,
+                    ishidden: !val.ishidden
+                }
+            }
 
-        if(present)
-            setLocalSelectedColumn((prev) => prev.filter((val) => val.name != columnName))
-        else {
-            setLocalSelectedColumn((prev) => [...prev, {title: columnName, name: columnName, type: columnType}])
-        }
+            return val
+        })
+        
+        setLocalSelectedColumn(visibilityMangedColumn)
+
     }
 
     const selectAllFields = () => {
@@ -56,8 +65,26 @@ const EditColumns = ({setOpenFilter}) => {
     }
 
     const clearAllFields = () => {
-        setLocalSelectedColumn([])
+        const setAllHidden = localSelectedColumn.map((val, ind) => {
+            return ({
+                ...val,
+                ishidden: true
+            })
+        })
+
+        setLocalSelectedColumn(setAllHidden)
     }
+
+    const handleDropItem = (dropIndex) => {
+        const newList = [...localSelectedColumn]
+        const [dropItem] = newList.splice(draggedItem, 1)
+        newList.splice(dropIndex, 0, dropItem)
+        setLocalSelectedColumn(newList)
+
+        setDraggedItem(null)
+    }
+
+    const visibilityFields = selectedColumn[activeSheet] !== undefined ? selectedColumn[activeSheet] : columns
 
     useEffect(() => {
         
@@ -68,17 +95,19 @@ const EditColumns = ({setOpenFilter}) => {
     }, [activeSheet, selectedColumn, columns])
 
     useEffect(() => {
-        if(localSelectedColumn.length > 0)
+        if(localSelectedColumn.every(val => val.ishidden === false))
             setShowValidation(false)
-        else {
+        else if (localSelectedColumn.every(val => val.ishidden === true)) {
             setShowValidation(true)
         }
         
     }, [localSelectedColumn])
 
+    
+
   return (
     <div className='w-screen h-screen bg-black/30 inset-0 absolute z-30 flex items-center justify-center'>
-        <div className='px-4 py-2 bg-white outline-1 outline-black/10 w-140 rounded-2xl shadow-lg'>
+        <div className='px-4 py-2 bg-white outline-1 outline-black/10 w-160 rounded-2xl shadow-lg'>
             
             <div className='p-2 border-b-1 border-black/10 flex items-center justify-between'>
                 <p className='font-medium text-lg text-black/80'>Manage Columns</p>
@@ -90,19 +119,29 @@ const EditColumns = ({setOpenFilter}) => {
             <div className='px-2 py-4'>
                 <div className='flex items-center justify-between'>
                     <p className='text-sm'>Visible Columns</p>
-                    <p className='text-xs text-black/50'>{localSelectedColumn.length} of {columns.length} Selected</p>
+                    <p className='text-xs text-black/50'>{localSelectedColumn.filter(val => val.ishidden == false).length} of {columns.length} Selected</p>
                 </div>
                 <div className='flex flex-wrap gap-3 mt-4'>
                     {
-                        columns?.map((col, ind) => {
-                            const isSelected = localSelectedColumn?.some((val) => val.name === col.name)
+                        localSelectedColumn?.map((col, ind) => {
+                            const isSelected = localSelectedColumn?.some((val) => val.name === col.name && val.ishidden === false)
                             
                             return (
-                                <button key={col+ind} onClick={() => handleSelection(col?.name, col?.type)} className={` outline-1 ${isSelected ? 'outline-green-500 bg-green-100' : 'text-black/50 outline-black/10'} flex items-center pl-3 pr-5 py-2 gap-2 rounded-xl text-xs hover:cursor-pointer`}>
+                                <button 
+                                    draggable
+                                    onDragStart={() => setDraggedItem(ind)}
+                                    onDragOver={(event) => event.preventDefault()}
+                                    onDrop={() => handleDropItem(ind)} 
+                                    key={col+ind} 
+                                    onClick={() => handleSelection(col?.name, col?.type)} 
+                                    className={` outline-1 ${isSelected ? 'outline-black/20 shadow-md' : 'text-black/50 outline-black/10'} flex items-center pl-3 pr-5 py-2 gap-2 rounded-xl text-xs hover:cursor-pointer`}>
+                                    <GrDrag className='text-black/30'/>
                                     {
-                                        isSelected ? <HiEye className='text-green-600 text-lg'/>  : <BsFillEyeSlashFill className='text-black/20 text-lg'/>
+                                        isSelected ? <HiEye className='text-black/70 text-lg'/>  : <BsFillEyeSlashFill className='text-black/20 text-lg'/>
                                     }
-                                    {col?.name}
+                                    {col?.name[0]?.toUpperCase() + col?.name?.slice(1)?.toLowerCase()}
+
+                                    {col?.info && <PiSparkleDuotone title={col?.info} className={`text-base ${isSelected ? 'text-green-600' : 'text-black/30'} `}/>}
                                 </button>
                             )})
                     }

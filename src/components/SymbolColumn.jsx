@@ -86,7 +86,7 @@ const SymbolColumn = ({isSorted, isFrozen, columnType, title, index, setDraggedC
                     
                 </button>
                 
-                {title[0].toUpperCase() + title.slice(1).toLowerCase() || ''}
+                {title[0]?.toUpperCase() + title?.slice(1)?.toLowerCase() || ''}
                 {(sortOrder?.name === title && sortOrder?.order === 'asc') ? <LiaArrowDownSolid title='Ascending' className='text-green-700'/> : 
                     (sortOrder?.name === title && sortOrder?.order === 'desc') ? <LiaArrowUpSolid title='Descending' className='text-green-700'/> : <LiaArrowsAltVSolid title='Unsorted' className='text-black/50'/>}
             </div>
