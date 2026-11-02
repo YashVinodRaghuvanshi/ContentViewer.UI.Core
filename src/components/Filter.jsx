@@ -1,19 +1,52 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { RxCross2 } from "react-icons/rx";
+import { HiArrowTurnDownRight } from "react-icons/hi2";
+import { PiPlusCircleDuotone } from "react-icons/pi";
+import { PiListPlusDuotone } from "react-icons/pi";
+import { HiOutlinePlus } from "react-icons/hi";
+import { MdOutlineDragIndicator } from "react-icons/md";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { FaAngleDown } from "react-icons/fa6";
+import { RiSearchLine } from "react-icons/ri";
+import useDataStore from '../store/dataStore';
+import FilterDropdown from './FilterDropdown';
+import FilterHandle from './FilterHandle';
+import { SlPlus } from "react-icons/sl";
+import { HiPlus } from "react-icons/hi";
 
 const Filter = ({setOpenFilter}) => {
+
+    const activeSheet = useDataStore((state) => state.activeSheet)
+    const selectedColumn = useDataStore((state) => state.selectedColumn)
+    const filter = useDataStore((state) => state.filter)
+    const setFilter = useDataStore((state) => state.setFilter)
+    const [tempFilter, setTempFilter] = useState(filter || [])
 
     const closePopup = () => {
         setOpenFilter(false)
     }
 
+    const addWhereFilter = () => {
+        setTempFilter([...tempFilter, {
+                id: Date.now(),
+                column:null,
+                datatype:null,
+                operator:null,
+                value:null,
+                operand: 'And'
+            }
+        ])
+    }
+
     const applyFilter = () => {
+        setFilter(tempFilter)
         closePopup()
     }
 
+
   return (
     <div className='w-screen h-screen bg-black/30 inset-0 absolute z-30 flex items-center justify-center'>
-        <div className='px-4 py-2 bg-white outline-1 outline-black/10 w-140 rounded-2xl shadow-lg'>
+        <div className='px-4 py-2 bg-white outline-1 outline-black/10 w-180 rounded-2xl shadow-lg'>
             
             <div className='p-2 border-b-1 border-black/10 flex items-center justify-between'>
                 <p className='font-medium text-lg text-black/80'>Filters</p>
@@ -22,8 +55,34 @@ const Filter = ({setOpenFilter}) => {
                 </button>
             </div>
 
-            <div className='p-6'>
-                
+            <div className='flex flex-col items-start gap-2.5 py-6'>
+                {
+                    tempFilter?.map((val, ind) => {
+                        return (
+                            <div className='w-full flex flex-col items-start gap-2'>
+                                <div className='w-full flex items-center gap-2'>                               
+                                    <FilterHandle
+                                        id = {val?.id}
+                                        column = {val?.column}
+                                        datatype = {val?.datatype}
+                                        operator = {val?.operator}
+                                        value = {val?.value} 
+                                        operatorIsHide = {ind == 0}
+                                        tempFilter = {tempFilter}
+                                        setTempFilter = {setTempFilter}
+                                        operand = {val?.operand}
+                                    />
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+
+                <button onClick={() => addWhereFilter()} className='cursor-pointer flex items-center gap-1.5 mt-2 rounded-lg text-black/70 hover:bg-gray-100 px-2 py-0.5'>
+                    <HiPlus className='text-xs'/>
+                    <p className='text-xs'>Add condition</p>
+                </button>
+
             </div>
 
             <div className='flex items-center border-t-1 border-black/10 gap-2 justify-end w-full px-4 pb-2 pt-4'>

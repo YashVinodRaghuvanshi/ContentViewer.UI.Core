@@ -4,6 +4,14 @@ const useDataStore = create((set) => ({
     filename: '',
     columns : [],
     data : [],
+    filter: [{
+        id: Date.now(),
+        column:null,
+        datatype:null,
+        operator:null,
+        value:null,
+        operand: 'And'
+    }],
 
     sheets: {},
     activeSheet: null,
@@ -25,6 +33,7 @@ const useDataStore = create((set) => ({
     setFrozenColumn: (frozenColumn) => set({frozenColumn}),
     setSortOrder: (sortOrder) => set({sortOrder}),
     setData : (data) => set({data}),
+    setFilter : (filter) => set({filter}),
     setSheets : (sheets) => set({sheets}),
     setActiveSheet : (activeSheet) => set({activeSheet}),
     clearRowData: () => set({selectedRow: {}}),
@@ -38,7 +47,15 @@ const useDataStore = create((set) => ({
         selectedRow: {},
         filename: '',
         sortOrder: null,
-        frozenColumn: null
+        frozenColumn: null,
+        filter: [{
+            id: Date.now(),
+            column:null,
+            datatype:null,
+            operator:null,
+            value:null,
+            operand: 'And'
+        }]
     })
 
 }))
