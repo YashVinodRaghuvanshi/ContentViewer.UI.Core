@@ -4,14 +4,7 @@ const useDataStore = create((set) => ({
     filename: '',
     columns : [],
     data : [],
-    filter: [{
-        id: Date.now(),
-        column:null,
-        datatype:null,
-        operator:null,
-        value:null,
-        operand: 'And'
-    }],
+    filter: [],
 
     sheets: {},
     activeSheet: null,
@@ -48,14 +41,7 @@ const useDataStore = create((set) => ({
         filename: '',
         sortOrder: null,
         frozenColumn: null,
-        filter: [{
-            id: Date.now(),
-            column:null,
-            datatype:null,
-            operator:null,
-            value:null,
-            operand: 'And'
-        }]
+        filter: []
     })
 
 }))

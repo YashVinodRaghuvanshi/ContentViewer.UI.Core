@@ -31,7 +31,6 @@ const ViewDetails = ({setOpenFilter}) => {
     const applyFilter = () => {
         closePopup()
         clearRowData()
-        console.log(selectedRow)
     }
 
   return (

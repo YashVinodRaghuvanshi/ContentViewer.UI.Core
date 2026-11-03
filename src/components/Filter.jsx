@@ -20,13 +20,22 @@ const Filter = ({setOpenFilter}) => {
     const selectedColumn = useDataStore((state) => state.selectedColumn)
     const filter = useDataStore((state) => state.filter)
     const setFilter = useDataStore((state) => state.setFilter)
-    const [tempFilter, setTempFilter] = useState(filter || [])
+    const [tempFilter, setTempFilter] = useState(filter[activeSheet] || [])
+    const [nullValue, setNullValue] = useState(-1)
 
     const closePopup = () => {
         setOpenFilter(false)
     }
 
     const addWhereFilter = () => {
+
+        const pickedIndex = tempFilter.length - 1
+
+        if(tempFilter.length > 0 && tempFilter[pickedIndex]?.value == null) {
+            setNullValue(pickedIndex)
+            return
+        }
+
         setTempFilter([...tempFilter, {
                 id: Date.now(),
                 column:null,
@@ -36,10 +45,23 @@ const Filter = ({setOpenFilter}) => {
                 operand: 'And'
             }
         ])
+
+        setNullValue(-1)
     }
 
     const applyFilter = () => {
-        setFilter(tempFilter)
+        const pickedIndex = tempFilter.length - 1
+
+        if(tempFilter.length > 0 && tempFilter[pickedIndex]?.value == null) {
+            setNullValue(pickedIndex)
+            return
+        }
+
+        setFilter({
+            ...filter,
+            [activeSheet]: tempFilter
+        })
+
         closePopup()
     }
 
@@ -59,21 +81,19 @@ const Filter = ({setOpenFilter}) => {
                 {
                     tempFilter?.map((val, ind) => {
                         return (
-                            <div className='w-full flex flex-col items-start gap-2'>
-                                <div className='w-full flex items-center gap-2'>                               
-                                    <FilterHandle
-                                        id = {val?.id}
-                                        column = {val?.column}
-                                        datatype = {val?.datatype}
-                                        operator = {val?.operator}
-                                        value = {val?.value} 
-                                        operatorIsHide = {ind == 0}
-                                        tempFilter = {tempFilter}
-                                        setTempFilter = {setTempFilter}
-                                        operand = {val?.operand}
-                                    />
-                                </div>
-                            </div>
+                            <FilterHandle
+                                key={val?.id}
+                                id = {val?.id}
+                                column = {val?.column}
+                                datatype = {val?.datatype}
+                                operator = {val?.operator}
+                                value = {val?.value} 
+                                operatorIsHide = {ind == 0}
+                                tempFilter = {tempFilter}
+                                setTempFilter = {setTempFilter}
+                                operand = {val?.operand}
+                                showValidation = {nullValue == ind}
+                            />
                         )
                     })
                 }

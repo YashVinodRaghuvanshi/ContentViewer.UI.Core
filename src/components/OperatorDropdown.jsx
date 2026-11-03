@@ -42,8 +42,8 @@ const OperatorDropdown = ({displayList = [], hint, id, tempFilter, setTempFilter
                         {
                             searchableList?.map((val, ind) => {
                                 return (
-                                    <button onClick={() => setOperandValue(val.name)} className='px-1.5 py-1 rounded-sm flex hover:bg-gray-100 hover:cursor-pointer'>
-                                        <p className='text-xs text-black/70'>{val.name}</p>
+                                    <button onClick={() => setOperandValue(val.name)} className={`px-1.5 py-1 rounded-sm flex hover:bg-gray-100 hover:cursor-pointer ${hint == val.name ? 'bg-green-100 hover:bg-green-100 text-green-700' : 'text-black/70'}`}>
+                                        <p className='text-xs'>{val.name}</p>
                                     </button>
                                 )
                             })

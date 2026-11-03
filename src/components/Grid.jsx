@@ -50,6 +50,9 @@ const Grid = ({children}) => {
     const selectedRowTab = useDataStore((state) => state.selectedRowTab)
     const setSelectedRowTab = useDataStore((state) => state.setSelectedRowTab)
 
+    const filter = useDataStore((state) => state.filter)
+    const setFilter = useDataStore((state) => state.setFilter)
+
     const frozenColumn = useDataStore((state) => state.frozenColumn)
 
     const selectedRow = useDataStore((state) => state.selectedRow)
@@ -210,6 +213,24 @@ const Grid = ({children}) => {
         setCurrentPage(1)
     }
 
+    const handleAddFilter = () => {
+        if (filter[activeSheet] == undefined) {
+            setFilter({
+                ...filter,
+                [activeSheet]: [{
+                    id: Date.now(),
+                    column:null,
+                    datatype:null,
+                    operator:null,
+                    value:null,
+                    operand: 'And'
+                }]
+            })
+        }
+        setOpenFilter(true)
+
+    }
+
     const handleDrop = (dropIndex) => {
         const newColumns = [...visibleColumns]
         const [movedColumn] = newColumns.splice(draggedColumn, 1)
@@ -311,7 +332,7 @@ const Grid = ({children}) => {
 
                 <div className='w-[1px] h-5 bg-black/10'></div>
                 
-                <button onClick={() => setOpenFilter(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
+                <button onClick={() => handleAddFilter()} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
                     <LuSettings2 className={`text-black/60`}/>
                     <p className={`text-sm text-black/70 font-medium`}>Add Filters</p>
                 </button>
