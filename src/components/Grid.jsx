@@ -59,10 +59,52 @@ const Grid = ({children}) => {
     const sortOrder = useDataStore((state) => state.sortOrder)
     const setSelectedRow = useDataStore((state) => state.setSelectedRow)
 
-    const filteredData = data.filter((row) => {
+    const searchedData = data.filter((row) => {
         return Object.values(row).some((value) =>
             String(value).toLowerCase().includes(searchTerm.toLowerCase())
         )
+    })
+
+    const activeSheetFilter = filter?.[activeSheet] || []
+
+    const filteredData = searchedData.filter((row) => {
+
+        const validFilter = activeSheetFilter?.filter((condition) => 
+            condition.column &&
+            condition.operator &&
+            condition.value !== null &&
+            String(condition.value).trim() !== ""
+        )
+
+        if (validFilter.length === 0) {
+            return true;
+        }
+            
+        return validFilter?.reduce((result, val, ind) => {
+            const rowValue = row[val?.column]
+            let isMatched = false
+
+            if (val.operator === 'Equal') {
+                isMatched = String( rowValue ?? "").toLowerCase() 
+                    === String(val?.value ?? "").toLowerCase()
+            }
+            else if (val.operator === 'Not Equal') {
+                isMatched = String( rowValue ?? "").toLowerCase() 
+                !== String(val?.value ?? "").toLowerCase()
+            }
+
+            if (ind === 0) {
+                return isMatched
+            }
+
+            if(val.operand === "Or") {
+                return result || isMatched
+            }
+        
+            return result && isMatched
+
+        }, false)
+
     })
 
     const sortedData = [...filteredData].sort((a,b) => {
@@ -247,7 +289,7 @@ const Grid = ({children}) => {
         {
             id:1,
             title: 'All rows:',
-            count: data?.length,
+            count: filteredData?.length,
             icon: AiTwotoneDatabase,
             handler: actionAllRows
         },
@@ -327,14 +369,14 @@ const Grid = ({children}) => {
             <div className='flex items-center gap-2'>
                 <button onClick={() => setOpenFieldSetting(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
                     <TbTableColumn className={`text-black/60`}/>
-                    <p className={`text-sm text-black/70 font-medium`}>Hide Columns</p>
+                    <p className={`text-sm text-black/70 font-medium`}>Hide Columns {selectedColumn[activeSheet]?.some(val => val.ishidden == true) ? '(' + selectedColumn[activeSheet]?.filter(val => val.ishidden == true).length + ')' : ''}</p>
                 </button>
 
                 <div className='w-[1px] h-5 bg-black/10'></div>
                 
                 <button onClick={() => handleAddFilter()} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
                     <LuSettings2 className={`text-black/60`}/>
-                    <p className={`text-sm text-black/70 font-medium`}>Add Filters</p>
+                    <p className={`text-sm text-black/70 font-medium`}>Add Filters {filter[activeSheet]?.length > 0 ? '('+filter[activeSheet]?.length + ')' : ''}</p>
                 </button>
 
                 <div className='w-[1px] h-5 bg-black/10'></div>
@@ -480,10 +522,19 @@ const Grid = ({children}) => {
             }
 
             {
-                (searchTerm && filteredData.length === 0) && 
+                (searchTerm && searchedData.length === 0) && 
                 <div className='flex items-center text-sm mt-4 justify-center p-4 text-black/70'>
                     {
                         data.length > 0 && <p>No matching records found in "{activeSheet}" for "{searchTerm}"</p>
+                    }
+                </div>
+            }
+
+            {
+                (filter[activeSheet]?.length > 0 && filteredData.length === 0) && 
+                <div className='flex items-center text-sm mt-4 justify-center p-4 text-black/70'>
+                    {
+                        data.length > 0 && <p>No matching records found in "{activeSheet}" for the applied filters</p>
                     }
                 </div>
             }
@@ -567,7 +618,7 @@ const Grid = ({children}) => {
                 <div>
                     {
                         data.length > 0 ? 
-                        <p className='text-sm'>Rows {startIndex + 1} - {endRow} of {data.length}</p>
+                        <p className='text-sm'>Rows {startIndex + 1} - {endRow} of {filteredData.length}</p>
                         :
                         <p className='text-sm'>Rows 0 - 0 of 0</p>
                     }

@@ -22,9 +22,17 @@ const Filter = ({setOpenFilter}) => {
     const setFilter = useDataStore((state) => state.setFilter)
     const [tempFilter, setTempFilter] = useState(filter[activeSheet] || [])
     const [nullValue, setNullValue] = useState(-1)
+    const [draggedItem, setDraggedItem] = useState(null)
 
     const closePopup = () => {
         setOpenFilter(false)
+    }
+
+    const handleDropInFIlter = (droppedIndex) => {
+        const dragableFilter = [...tempFilter]
+        const [draggedFilter] = dragableFilter.splice(draggedItem, 1)
+        dragableFilter.splice(droppedIndex, 0, draggedFilter)
+        setTempFilter(dragableFilter)
     }
 
     const addWhereFilter = () => {
@@ -82,7 +90,10 @@ const Filter = ({setOpenFilter}) => {
                     tempFilter?.map((val, ind) => {
                         return (
                             <FilterHandle
+                                setDraggedItem = {setDraggedItem}
+                                onDrop = {handleDropInFIlter}
                                 key={val?.id}
+                                ind = {ind}
                                 id = {val?.id}
                                 column = {val?.column}
                                 datatype = {val?.datatype}

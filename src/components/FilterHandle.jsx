@@ -7,7 +7,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { RiErrorWarningLine } from "react-icons/ri";
 import OperatorDropdown from './OperatorDropdown';
 
-const FilterHandle = ({id = null, column = null, datatype = null, operator = null, value = null, operatorIsHide = false, tempFilter, setTempFilter, operand, showValidation}) => {
+const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, datatype = null, operator = null, value = null, operatorIsHide = false, tempFilter, setTempFilter, operand, showValidation}) => {
     const activeSheet = useDataStore((state) => state.activeSheet)
     const selectedColumn = useDataStore((state) => state.selectedColumn)
     const sheets = useDataStore((state) => state.sheets)
@@ -50,7 +50,12 @@ const FilterHandle = ({id = null, column = null, datatype = null, operator = nul
         
             {!operatorIsHide && <OperatorDropdown id = {id} displayList={operators} hint={operand} tempFilter = {tempFilter} setTempFilter = {setTempFilter}/>}
 
-            <div className='w-full flex flex-col gap-2'>
+            <div 
+                draggable
+                onDragStart={() => setDraggedItem(ind)}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={() => onDrop(ind)} 
+                className='w-full flex flex-col gap-2'>
 
                 <div className='w-full flex items-center outline-1 bg-gray-50 outline-black/10 rounded-md'>
                         
