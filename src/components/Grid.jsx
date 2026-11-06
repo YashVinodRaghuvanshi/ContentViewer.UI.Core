@@ -256,7 +256,7 @@ const Grid = ({children}) => {
     }
 
     const handleAddFilter = () => {
-        if (filter[activeSheet] == undefined) {
+        if (filter[activeSheet] == undefined || filter[activeSheet].length == 0) {
             setFilter({
                 ...filter,
                 [activeSheet]: [{
@@ -376,7 +376,7 @@ const Grid = ({children}) => {
                 
                 <button onClick={() => handleAddFilter()} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
                     <LuSettings2 className={`text-black/60`}/>
-                    <p className={`text-sm text-black/70 font-medium`}>Add Filters {filter[activeSheet]?.length > 0 ? '('+filter[activeSheet]?.length + ')' : ''}</p>
+                    <p className={`text-sm text-black/70 font-medium`}>Add Filters {filter[activeSheet]?.length > 0 && (filter[activeSheet]?.every(val => val.column && val.operator && val.value && val.operand)) ? '('+filter[activeSheet]?.length + ')' : ''}</p>
                 </button>
 
                 <div className='w-[1px] h-5 bg-black/10'></div>
