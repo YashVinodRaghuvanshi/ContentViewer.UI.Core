@@ -303,7 +303,7 @@ const Grid = ({children}) => {
         {
             id:3,
             title: 'Unmark rows:',
-            count: data.length - (selectedRows[activeSheet]?.length || 0),
+            count: filteredData.length - (selectedRows[activeSheet]?.length || 0),
             icon: PiSelectionBold,
             handler: actionUnselectedRows
         }
