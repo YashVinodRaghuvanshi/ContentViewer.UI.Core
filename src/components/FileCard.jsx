@@ -6,7 +6,7 @@ import { TbFileNeutralFilled } from "react-icons/tb";
 import { FaCircle } from "react-icons/fa";
 import useDataStore from '../store/dataStore';
 
-const FileCard = ({selectedFileInfo, setFileUploaded, type, className, invalid = false}) => {
+const FileCard = ({file, selectedFileInfo, setFileUploaded, type, className, invalid = false}) => {
   
     const sheets = useDataStore((state) => state.sheets)
     const totalSheets = Object.keys(sheets).length
@@ -35,7 +35,7 @@ const FileCard = ({selectedFileInfo, setFileUploaded, type, className, invalid =
                     <p className='text-black/60 text-sm'>{selectedFileInfo?.size || ''}</p>
                     <div className='flex items-center gap-1.5'>
                         <FaCircle size={6} className='text-black/60'/>
-                        <p className='text-black/60 text-sm'>Sheets: {totalSheets}</p>
+                        <p className='text-black/60 text-sm'>Sheets: {totalSheets || file?.sheets}</p>
                     </div>
                 </div>
             </div>

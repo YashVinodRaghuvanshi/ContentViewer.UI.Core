@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 const useDataStore = create((set) => ({
     filename: '',
+    file: null,
     columns : [],
     data : [],
     filter: [],
@@ -17,6 +18,7 @@ const useDataStore = create((set) => ({
 
     frozenColumn: null,
 
+    setFile: (file) => set({file}),
     setFilename: (filename) => set({filename}),
     setSelectedRowTab: (selectedRowTab) => set({selectedRowTab}),
     setSelectedRow: (selectedRow) => set({selectedRow}),

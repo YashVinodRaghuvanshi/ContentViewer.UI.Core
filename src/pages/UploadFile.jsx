@@ -21,16 +21,20 @@ import useDataStore from '../store/dataStore';
 
 const UploadFile = () => {
 
-    const [fileUploaded, setFileUploaded] = useState(false)
-    const [selectedFileInfo, setSelectedFileInfo] = useState(null)
-
     const columns = useDataStore((state) => state.columns)
+    const file = useDataStore((state) => state.file)
+    const sheets = useDataStore((state) => state.sheets)
+    const setFile = useDataStore((state) => state.setFile)
     const setFilename = useDataStore((state) => state.setFilename)
     const setColumns = useDataStore((state) => state.setColumns)
     const setSheets = useDataStore((state) => state.setSheets)
     const setActiveSheet = useDataStore((state) => state.setActiveSheet)
     const setData = useDataStore((state) => state.setData)
     const clearPrevData = useDataStore((state) => state.clearData)
+
+    const [fileUploaded, setFileUploaded] = useState(file || false)
+    const [selectedFileInfo, setSelectedFileInfo] = useState(null)
+
 
     const navigate = useNavigate();
 
@@ -142,22 +146,28 @@ const UploadFile = () => {
 
         fileReader.readAsArrayBuffer(file)
 
-        setFileUploaded(true)
-
+        
         setSelectedFileInfo({
             name : file?.name,
             size : formateFileSize(file?.size),
             type : file?.name?.split('.').pop()
         })
-
+        
         setFilename(file?.name)
-
+        setFile({
+            name: file?.name,
+            size : formateFileSize(file?.size),
+            type : file?.name?.split('.').pop(),
+            sheets: Object.keys(sheets).length
+        })
+        
+        setFileUploaded(true)
     }
 
   return (
     <>
     {
-        !fileUploaded ?
+        !fileUploaded || !file ?
         <div className='w-screen h-screen flex items-center justify-center'>
             <div className='flex flex-col items-center'>
                 {/* <img src={imglogo} alt="img logo" className='w-30'/> */}
@@ -198,9 +208,9 @@ const UploadFile = () => {
 
                 <UploadImageNested >
                     <FileCard 
-                        selectedFileInfo={selectedFileInfo}
+                        selectedFileInfo={selectedFileInfo || file}
                         setFileUploaded={setFileUploaded}
-                        type={selectedFileInfo?.type}
+                        type={selectedFileInfo?.type || file?.type}
                         className={'absolute bg-white'}
                         invalid = {columns.length == 0}
                     />
@@ -226,10 +236,10 @@ const UploadFile = () => {
                                 <FaTable size={20}/>
                                 View Data
                             </button>
-                            <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
+                            {/* <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
                                 <BsDatabaseFillGear size={20}/>
                                 Process Data
-                            </button>
+                            </button> */}
                         </div>
                         :
                         <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
