@@ -34,29 +34,29 @@ import useDataStore from '../store/dataStore';
 const SymbolColumn = ({isSorted, isFrozen, columnType, title, index, setDraggedColumn, handleDrop}) => {
     const sortOrder = useDataStore((state) => state.sortOrder)
     const setSortOrder = useDataStore((state) => state.setSortOrder)
-
+    const activeSheet = useDataStore((state) => state.activeSheet)
     const frozenColumn = useDataStore((state) => state.frozenColumn)
     const setFrozenColumn = useDataStore((state) => state.setFrozenColumn)
 
     const handleFreezeColumn = (columnName) => {
-        if (frozenColumn === columnName) {
-            setFrozenColumn(null)
+        if (frozenColumn?.[activeSheet] === columnName) {
+            setFrozenColumn({...frozenColumn, [activeSheet]: null})
         }
         else {
-            setFrozenColumn(columnName)
+            setFrozenColumn({...frozenColumn, [activeSheet]: columnName})
         }
     }
     
     const handleSortOrder = (columnName) => {
         
-        if(sortOrder?.name === columnName && sortOrder?.order === 'asc') {
-            setSortOrder({name: columnName, order: 'desc'})
+        if(sortOrder?.[activeSheet]?.name === columnName && sortOrder?.[activeSheet]?.order === 'asc') {
+            setSortOrder({...sortOrder, [activeSheet]: {name: columnName, order: 'desc'}})
         }
-        else if(sortOrder?.name === columnName && sortOrder?.order === 'desc') {
-            setSortOrder(null)
+        else if(sortOrder?.[activeSheet]?.name === columnName && sortOrder?.[activeSheet]?.order === 'desc') {
+            setSortOrder({...sortOrder, [activeSheet]: null})
         }
         else {
-            setSortOrder({name: columnName, order: 'asc'})
+            setSortOrder({...sortOrder, [activeSheet]: {name: columnName, order: 'asc'}})
         }
     }
 
@@ -76,7 +76,7 @@ const SymbolColumn = ({isSorted, isFrozen, columnType, title, index, setDraggedC
                     {
                         isFrozen ? 
                         <HiOutlineLockClosed
-                            className={frozenColumn === title ? 'text-green-600' : 'text-black/40'}
+                            className={frozenColumn?.[activeSheet] === title ? 'text-green-600' : 'text-black/40'}
                         />
                         :
                         <HiOutlineLockOpen
@@ -87,8 +87,8 @@ const SymbolColumn = ({isSorted, isFrozen, columnType, title, index, setDraggedC
                 </button>
                 
                 {title[0]?.toUpperCase() + title?.slice(1)?.toLowerCase() || ''}
-                {(sortOrder?.name === title && sortOrder?.order === 'asc') ? <LiaArrowDownSolid title='Ascending' className='text-green-700'/> : 
-                    (sortOrder?.name === title && sortOrder?.order === 'desc') ? <LiaArrowUpSolid title='Descending' className='text-green-700'/> : <LiaArrowsAltVSolid title='Unsorted' className='text-black/50'/>}
+                {(sortOrder?.[activeSheet]?.name === title && sortOrder?.[activeSheet]?.order === 'asc') ? <LiaArrowDownSolid title='Ascending' className='text-green-700'/> : 
+                    (sortOrder?.[activeSheet]?.name === title && sortOrder?.[activeSheet]?.order === 'desc') ? <LiaArrowUpSolid title='Descending' className='text-green-700'/> : <LiaArrowsAltVSolid title='Unsorted' className='text-black/50'/>}
             </div>
         }
 

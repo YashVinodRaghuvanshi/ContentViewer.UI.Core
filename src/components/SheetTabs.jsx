@@ -20,6 +20,7 @@ const SheetTabs = () => {
     const selectedRowTab = useDataStore((state) => state.selectedRowTab)
     const setSelectedRowTab = useDataStore((state) => state.setSelectedRowTab)
     const setSortOrder = useDataStore((state) => state.setSortOrder)
+    const setFrozenColumn = useDataStore((state) => state.setFrozenColumn)
 
     const [currentPageGroup, setCurrentPageGroup] = useState(0)
     const pageNames = Object.keys(sheets)
@@ -45,7 +46,6 @@ const SheetTabs = () => {
         setActiveSheet(sheetName)
         setColumns(selectedSheet.columns)
         setData(selectedSheet.data)
-        setSortOrder(null)
     }
 
   return (

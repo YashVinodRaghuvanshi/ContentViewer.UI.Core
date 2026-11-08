@@ -111,10 +111,10 @@ const Grid = ({children}) => {
 
     const sortedData = [...filteredData].sort((a,b) => {
        
-            if (!sortOrder?.order) return
+            if (!sortOrder?.[activeSheet]?.order) return
 
-            const valueA = a[sortOrder?.name]
-            const valueB = b[sortOrder?.name]
+            const valueA = a[sortOrder?.[activeSheet]?.name]
+            const valueB = b[sortOrder?.[activeSheet]?.name]
 
             let result = 0
 
@@ -135,7 +135,7 @@ const Grid = ({children}) => {
             }
 
             if (result !== 0) {
-                return sortOrder?.order == 'desc' ? -result : result
+                return sortOrder?.[activeSheet]?.order == 'desc' ? -result : result
             }
 
         return 0
@@ -472,8 +472,8 @@ const Grid = ({children}) => {
                                         index = {ind} 
                                         title={col.title} 
                                         columnType = {col.type} 
-                                        isFrozen = {frozenColumn === col.title} 
-                                        isSorted = {sortOrder?.name === col.title}
+                                        isFrozen = {frozenColumn?.[activeSheet] === col.title} 
+                                        isSorted = {sortOrder?.[activeSheet]?.name === col.title}
                                         setDraggedColumn = {setDraggedColumn} 
                                         handleDrop={handleDrop}
                                     />
@@ -487,12 +487,12 @@ const Grid = ({children}) => {
                    paginatedData?.map((rows, index) => {
                     const isSelectedRow = selectedRows[activeSheet]?.some((val) => val === rows._id)
                     return (
-                        <tr onClick={() => rowSelection(rows)} key={rows._id} className={`hover:bg-green-50 ${isSelectedRow ? 'bg-green-100' : ''}`}>
+                        <tr onClick={() => rowSelection(rows)} key={rows._id} className={`group hover:bg-green-50 ${isSelectedRow ? 'bg-green-100' : ''}`}>
 
                             {
                                 visibleColumns?.filter(val => val?.ishidden === false).map((item, inde) => {
                                     return (
-                                        <td key={inde} className={` ${frozenColumn === item.name ? 'sticky left-0 z-20 bg-white' : ''}  px-6 py-3 text-xs font-medium border-b-1 border-r-1 text-black/70 border-gray-200`}>
+                                        <td key={inde} className={` ${frozenColumn?.[activeSheet] === item.name ? `sticky left-0 z-20 ${isSelectedRow ? 'bg-green-100' : 'bg-white'}` : ''} px-6 py-3 text-xs group-hover:bg-green-50 font-medium border-b-1 border-r-1 text-black/70 border-gray-200`}>
                                             {item.type === 'system' && <p title={rows[item.name]} className='max-w-120 truncate'>{rows[item.name]}</p>}
                                             {item.name === '_id' && rows._id}
                                             {item.name === '_chkbox' && (isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/10'/>)}
