@@ -141,7 +141,9 @@ const Grid = ({children}) => {
         return 0
     })
 
-    const [selectedRows, setSelectedRows] = useState({})
+    const selectedRows = useDataStore((state) => state.selectedRows)
+    const setSelectedRows = useDataStore((state) => state.setSelectedRows)
+    
     const selectedRowIds = selectedRows[activeSheet] || []
     const rowFilteredData = sortedData.filter((row) => {
 

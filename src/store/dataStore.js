@@ -31,8 +31,9 @@ const useDataStore = create(
             selectedRowTab : 1,
 
             selectedRow: {},
-            sortOrder: null,
+            selectedRows: {},
 
+            sortOrder: null,
             frozenColumn: null,
 
             hasHydrated: false,
@@ -44,6 +45,9 @@ const useDataStore = create(
             setFilename: (filename) => set({filename}),
             setSelectedRowTab: (selectedRowTab) => set({selectedRowTab}),
             setSelectedRow: (selectedRow) => set({selectedRow}),
+            setSelectedRows: (selectedRows) => set((state) => ({
+                selectedRows: typeof selectedRows === 'function' ? selectedRows(state.selectedRows) : selectedRows
+            })),
             setSelectedColumn: (selectedColumn) => set({selectedColumn}),
 
             setColumns: (columns) => set({columns}),
@@ -67,7 +71,8 @@ const useDataStore = create(
                 frozenColumn: null,
                 filter: [],
                 file: null,
-                selectedRowTab:1
+                selectedRowTab:1,
+                selectedRows: {}
             })
 
         }), 
@@ -85,6 +90,7 @@ const useDataStore = create(
                 selectedColumn: state.selectedColumn,
                 selectedRowTab: state.selectedRowTab,
                 selectedRow: state.selectedRow,
+                selectedRows: state.selectedRows,
                 sortOrder: state.sortOrder,
                 frozenColumn: state.frozenColumn
             }),
