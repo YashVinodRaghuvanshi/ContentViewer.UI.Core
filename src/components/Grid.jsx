@@ -47,7 +47,9 @@ const Grid = ({children}) => {
     const activeSheet = useDataStore((state) => state.activeSheet)
     const sheets = useDataStore((state) => state.sheets)
 
-    const [searchTerm, setSearchTerm] = useState('')
+    const searchTerm = useDataStore((state) => state.searchTerm)
+    const setSearchTerm = useDataStore((state) => state.setSearchTerm)
+
     const selectedRowTab = useDataStore((state) => state.selectedRowTab)
     const setSelectedRowTab = useDataStore((state) => state.setSelectedRowTab)
 
@@ -63,7 +65,7 @@ const Grid = ({children}) => {
 
     const searchedData = data.filter((row) => {
         return Object.values(row).some((value) =>
-            String(value).toLowerCase().includes(searchTerm.toLowerCase())
+            String(value).toLowerCase().includes((searchTerm?.[activeSheet]) == undefined ? '' : searchTerm?.[activeSheet]?.toLowerCase())
         )
     })
 
@@ -211,7 +213,7 @@ const Grid = ({children}) => {
 
     useEffect(() => {
         setCurrentPage(1)
-    }, [searchTerm])
+    }, [searchTerm?.[activeSheet]])
 
     const goToFirstPage = () => {
         setCurrentGroupPage(0)
@@ -403,10 +405,10 @@ const Grid = ({children}) => {
                     showSearch && 
                     <div className='outline-1 relative flex-1 ml-4 outline-black/10 px-3 h-9 flex items-center rounded-lg'>
                         <CiSearch className='absolute text-black/60 text-lg'/>
-                        <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search Your Data...' className='pl-6 w-full min-w-80 text-sm focus:outline-0'/>
+                        <input value={searchTerm?.[activeSheet] ?? ''} onChange={(e) => setSearchTerm({...searchTerm, [activeSheet]: e.target.value})} placeholder='Search Your Data...' className='pl-6 w-full min-w-80 text-sm focus:outline-0'/>
                         {
-                            searchTerm.length > 0 &&
-                            <button onClick={() => setSearchTerm('')} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
+                            searchTerm?.[activeSheet]?.length > 0 &&
+                            <button onClick={() => setSearchTerm({...searchTerm, [activeSheet]: ''})} className='text-black/50 hover:bg-gray-100 p-1 rounded-lg hover:cursor-pointer'>
                                 <RxCross2 />
                             </button>
                         }
@@ -532,10 +534,10 @@ const Grid = ({children}) => {
             }
 
             {
-                (searchTerm && searchedData.length === 0) && 
+                (searchTerm?.[activeSheet] && searchedData.length === 0) && 
                 <div className='flex items-center text-sm mt-4 justify-center p-4 text-black/70'>
                     {
-                        data.length > 0 && <p>No matching records found in "{activeSheet}" for "{searchTerm}"</p>
+                        data.length > 0 && <p>No matching records found in "{activeSheet}" for "{searchTerm?.[activeSheet] ?? ''}"</p>
                     }
                 </div>
             }

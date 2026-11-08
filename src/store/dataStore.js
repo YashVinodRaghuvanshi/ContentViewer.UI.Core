@@ -23,6 +23,7 @@ const useDataStore = create(
             columns : [],
             data : [],
             filter: [],
+            searchTerm: {},
 
             sheets: {},
             activeSheet: null,
@@ -43,6 +44,7 @@ const useDataStore = create(
 
             setFile: (file) => set({file}),
             setFilename: (filename) => set({filename}),
+            setSearchTerm: (searchTerm) => set({searchTerm}),
             setSelectedRowTab: (selectedRowTab) => set({selectedRowTab}),
             setSelectedRow: (selectedRow) => set({selectedRow}),
             setSelectedRows: (selectedRows) => set((state) => ({
@@ -72,7 +74,8 @@ const useDataStore = create(
                 filter: [],
                 file: null,
                 selectedRowTab:1,
-                selectedRows: {}
+                selectedRows: {},
+                searchTerm: {}
             })
 
         }), 
@@ -85,6 +88,7 @@ const useDataStore = create(
                 columns: state.columns,
                 data: state.data,
                 filter: state.filter,
+                searchTerm: state.searchTerm,
                 sheets: state.sheets,
                 activeSheet: state.activeSheet,
                 selectedColumn: state.selectedColumn,
