@@ -16,6 +16,8 @@ import useDataStore from '../store/dataStore';
 
 const MainPage = () => {
     const existedFile = useDataStore((state) => state.file)
+    const columns = useDataStore((state) => state.columns)
+
     const navLinks = [
         {
             id:1,
@@ -44,7 +46,7 @@ const MainPage = () => {
                 <div className='flex flex-col gap-2 mt-4'>
                     
                     {
-                        navLinks?.filter(val => !existedFile ? val.name == 'Upload' : val ).map((val, ind) => {
+                        navLinks?.filter(val => !existedFile || columns?.length === 0 ? val.name == 'Upload' : val ).map((val, ind) => {
                             return (
                                 <NavLink 
                                     key={val.id} 

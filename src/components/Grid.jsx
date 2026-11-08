@@ -37,6 +37,7 @@ import SymbolColumn from './SymbolColumn';
 import Filter from './Filter';
 import EditColumns from './EditColumns';
 import ViewDetails from './ViewDetails';
+import RestoringWorkspace from './RestoringWorkspace';
 
 const Grid = ({children}) => {
 
@@ -58,6 +59,7 @@ const Grid = ({children}) => {
     const selectedRow = useDataStore((state) => state.selectedRow)
     const sortOrder = useDataStore((state) => state.sortOrder)
     const setSelectedRow = useDataStore((state) => state.setSelectedRow)
+    const hasHydrated = useDataStore((state) => state.hasHydrated)
 
     const searchedData = data.filter((row) => {
         return Object.values(row).some((value) =>
@@ -342,6 +344,12 @@ const Grid = ({children}) => {
     //        </div>
     //     )
     // }
+
+    if(!hasHydrated) {
+        return (
+            <RestoringWorkspace />
+        )
+    }
 
   return (
     <>

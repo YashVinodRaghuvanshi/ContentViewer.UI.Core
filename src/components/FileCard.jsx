@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BsFillFileEarmarkExcelFill } from "react-icons/bs";
 import { FaFileCsv } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
@@ -6,7 +6,7 @@ import { TbFileNeutralFilled } from "react-icons/tb";
 import { FaCircle } from "react-icons/fa";
 import useDataStore from '../store/dataStore';
 
-const FileCard = ({file, selectedFileInfo, setFileUploaded, type, className, invalid = false}) => {
+const FileCard = ({file, setDeletionPopup, selectedFileInfo, setFileUploaded, type, className, invalid = false}) => {
   
     const sheets = useDataStore((state) => state.sheets)
     const totalSheets = Object.keys(sheets).length
@@ -40,7 +40,7 @@ const FileCard = ({file, selectedFileInfo, setFileUploaded, type, className, inv
                 </div>
             </div>
         </div>
-        <button onClick={() => setFileUploaded(false)} className='my-1 mx-2 text-black/60 hover:cursor-pointer'>
+        <button onClick={() => setDeletionPopup(true)} className='my-1 mx-2 text-black/60 hover:cursor-pointer'>
             <RxCross2/>
         </button>
     </div>

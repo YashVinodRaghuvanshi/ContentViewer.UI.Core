@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import imglogo from '../assets/img file.png'
 import { CiFileOn } from "react-icons/ci";
 import { BsFillFileEarmarkExcelFill } from "react-icons/bs";
@@ -18,9 +18,13 @@ import UploadImageNested from '../components/UploadImageNested';
 import {useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import useDataStore from '../store/dataStore';
+import RestoringWorkspace from '../components/RestoringWorkspace';
+import AlertPopup from '../components/AlertPopup';
 
 const UploadFile = () => {
 
+    const hasHydrated = useDataStore((state) => state.hasHydrated)
+    const [deletionPopup, setDeletionPopup] = useState(false)
     const columns = useDataStore((state) => state.columns)
     const file = useDataStore((state) => state.file)
     const sheets = useDataStore((state) => state.sheets)
@@ -32,9 +36,17 @@ const UploadFile = () => {
     const setData = useDataStore((state) => state.setData)
     const clearPrevData = useDataStore((state) => state.clearData)
 
-    const [fileUploaded, setFileUploaded] = useState(file || false)
+    const [fileUploaded, setFileUploaded] = useState(false)
     const [selectedFileInfo, setSelectedFileInfo] = useState(null)
 
+    const handleFileRemoved = () => {
+        setFileUploaded(false)
+        clearPrevData()
+    }
+
+    useEffect(() => {
+        setFileUploaded(Boolean(file))
+    }, [file])
 
     const navigate = useNavigate();
 
@@ -142,6 +154,14 @@ const UploadFile = () => {
             setColumns(sheets[firstSheet].columns)
             setData(sheets[firstSheet].data)
 
+            setFilename(file?.name)
+            setFile({
+                name: file?.name,
+                size : formateFileSize(file?.size),
+                type : file?.name?.split('.').pop(),
+                sheets: Object.keys(sheets).length
+            })
+
         }
 
         fileReader.readAsArrayBuffer(file)
@@ -153,19 +173,33 @@ const UploadFile = () => {
             type : file?.name?.split('.').pop()
         })
         
-        setFilename(file?.name)
-        setFile({
-            name: file?.name,
-            size : formateFileSize(file?.size),
-            type : file?.name?.split('.').pop(),
-            sheets: Object.keys(sheets).length
-        })
+        // setFilename(file?.name)
+        // setFile({
+        //     name: file?.name,
+        //     size : formateFileSize(file?.size),
+        //     type : file?.name?.split('.').pop(),
+        //     sheets: Object.keys(sheets).length
+        // })
         
         setFileUploaded(true)
     }
 
+    // if(!hasHydrated) {
+    //     return (
+    //         <RestoringWorkspace />
+    //     )
+    // }
+
   return (
     <>
+    {
+        deletionPopup && 
+        <AlertPopup 
+            setOpenFilter = {setDeletionPopup} 
+            handleFileRemoved = {handleFileRemoved}
+        />
+    }
+
     {
         !fileUploaded || !file ?
         <div className='w-screen h-screen flex items-center justify-center'>
@@ -209,6 +243,7 @@ const UploadFile = () => {
                 <UploadImageNested >
                     <FileCard 
                         selectedFileInfo={selectedFileInfo || file}
+                        setDeletionPopup = {setDeletionPopup}
                         setFileUploaded={setFileUploaded}
                         type={selectedFileInfo?.type || file?.type}
                         className={'absolute bg-white'}
