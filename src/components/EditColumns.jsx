@@ -134,7 +134,7 @@ const EditColumns = ({setOpenFilter}) => {
                                     onDrop={() => handleDropItem(ind)} 
                                     key={col+ind} 
                                     onClick={() => handleSelection(col?.name, col?.type)} 
-                                    className={` outline-1 ${isSelected ? 'outline-black/20 shadow-md' : 'text-black/50 outline-black/10'} flex items-center pl-3 pr-5 py-2 gap-2 rounded-xl text-xs hover:cursor-pointer`}>
+                                    className={` outline-1 ${isSelected ? 'outline-black/20 shadow-md' : 'text-black/50 outline-black/10'} flex items-center pl-2 pr-5 py-2 gap-2 rounded-lg text-xs hover:cursor-pointer`}>
                                     <GrDrag className='text-black/30'/>
                                     {
                                         isSelected ? <HiEye className='text-black/70 text-lg'/>  : <BsFillEyeSlashFill className='text-black/20 text-lg'/>

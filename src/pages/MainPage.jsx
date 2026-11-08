@@ -50,7 +50,7 @@ const MainPage = () => {
                                     key={val.id} 
                                     to={val?.link} 
                                     title={val.name} 
-                                    className={({isActive}) => `p-2 hover:bg-gray-100 rounded-lg ${isActive ? 'bg-green-100 text-green-600' : 'text-black/40'}`}>
+                                    className={({isActive}) => `p-2 hover:bg-gray-100 rounded-lg ${isActive ? 'bg-green-100 text-green-600 hover:bg-green-100' : 'text-black/40'}`}>
                                     {val.icon}
                                 </NavLink>
                             )

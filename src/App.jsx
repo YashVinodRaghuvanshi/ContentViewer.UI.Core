@@ -9,8 +9,8 @@ const App = () => {
   const existedFile = useDataStore((state) => state.file)
   return (
     <Routes>
-      {/* <Route element = {<UploadFile />} path='/'/> */}
       <Route element = {<MainPage />} path='/'>
+        <Route index element = {<Navigate to={"/upload"} replace/>} />
         <Route path = "upload" element = {<UploadFile />}/>
         <Route path = "viewdata" element = {<ViewData />}/>
       </Route>
