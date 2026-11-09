@@ -6,11 +6,14 @@ import useDataStore from '../store/dataStore';
 import { IoIosArrowDown } from "react-icons/io";
 import { RiErrorWarningLine } from "react-icons/ri";
 import OperatorDropdown from './OperatorDropdown';
+import FilterDeletePopup from './FilterDeletePopup';
 
 const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, datatype = null, operator = null, value = null, operatorIsHide = false, tempFilter, setTempFilter, operand, showValidation}) => {
     const activeSheet = useDataStore((state) => state.activeSheet)
     const selectedColumn = useDataStore((state) => state.selectedColumn)
     const sheets = useDataStore((state) => state.sheets)
+    const [openDeleteFilterHandle, setOpenDeleteFilterHandle] = useState(false)
+
     const operators = [
         {id:1, name: 'And'},
         {id:2, name: 'Or'},
@@ -18,13 +21,22 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
 
     const columnList = (selectedColumn[activeSheet] || sheets[activeSheet]?.columns || [])?.filter(val => val.type === 'system')
     const dataTypeList = [
-        {id:1, name: 'text'},
-        {id:2, name: 'number'},
+        {id:1, name: 'Text'},
+        {id:2, name: 'Number'},
+        {id:3, name: 'Date'},
     ]
-    const operatorList = [
-        {id:1, name: 'Equal'},
-        {id:2, name: 'Not Equal'},
-    ]
+    const operatorList = {
+        'Text' : [
+            {id:1, name: 'Equal'},
+            {id:2, name: 'Not Equal'},
+        ],
+        'Number' : [
+            {id:1, name: 'Equal'},
+        ],
+        'Date' : [
+            {id:1, name: 'Equal'},
+        ],
+    }
 
     const setDynamicValue = (dynamicValue) => {
         const filterValue = tempFilter.map((val, ind) => {
@@ -48,6 +60,8 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
   return (
         <div className='w-full flex items-center gap-2'>
         
+            {openDeleteFilterHandle && <FilterDeletePopup setOpenFilter={setOpenDeleteFilterHandle} handleFileRemoved={() => handleRemoveFilter(id)}/>}
+
             {!operatorIsHide && <OperatorDropdown id = {id} displayList={operators} hint={operand} tempFilter = {tempFilter} setTempFilter = {setTempFilter}/>}
 
             <div 
@@ -67,7 +81,11 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
                         <FilterDropdown key={id+'_column'} id = {id+'_column'} tempFilter = {tempFilter} setTempFilter = {setTempFilter} value = {column} displayList = {columnList} hint = {'Select column'}/>
                         {
                             column != null &&
-                            <FilterDropdown key={id+'_operator'} id = {id+'_operator'} tempFilter = {tempFilter} setTempFilter = {setTempFilter} value = {operator} displayList = {operatorList} hint = {'Select operator'}/>
+                            <FilterDropdown key={id+'_datatype'} id = {id+'_datatype'} tempFilter = {tempFilter} setTempFilter = {setTempFilter} value = {datatype} displayList = {dataTypeList} hint = {'Select datatype'}/>
+                        }
+                        {
+                            datatype != null &&
+                            <FilterDropdown key={id+'_operator'} id = {id+'_operator'} tempFilter = {tempFilter} setTempFilter = {setTempFilter} value = {operator} displayList = {operatorList?.[datatype]} hint = {'Select operator'}/>
                         }
                         {
                             operator != null &&
@@ -75,8 +93,8 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
                         }
                     </div>
 
-                    <button onClick={() => handleRemoveFilter(id)} className='px-2 py-3 border-l-1 hover:cursor-pointer border-black/10'>
-                        <RiDeleteBinLine className='text-black/30'/>
+                    <button onClick={() => setOpenDeleteFilterHandle(true)} className='px-2 py-3 border-l-1 hover:cursor-pointer border-black/10'>
+                        <RiDeleteBinLine className='text-red-500'/>
                     </button>
 
                 </div>

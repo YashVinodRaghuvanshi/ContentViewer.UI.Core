@@ -11,12 +11,22 @@ import { RiSearchLine } from "react-icons/ri";
 import useDataStore from '../store/dataStore';
 import FilterDropdown from './FilterDropdown';
 import FilterHandle from './FilterHandle';
+import { PiSelectionDuotone } from "react-icons/pi";
+import { AiTwotonePlusCircle } from "react-icons/ai";
+import { MdOutlineBorderClear } from "react-icons/md";
+import { PiAlignCenterHorizontalSimpleDuotone } from "react-icons/pi";
+import { BsPlusSquare } from "react-icons/bs";
+import { PiPlusDuotone } from "react-icons/pi";
+import { CiCirclePlus } from "react-icons/ci";
+import { TbFilterPlus } from "react-icons/tb";
 import { SlPlus } from "react-icons/sl";
 import { HiPlus } from "react-icons/hi";
+import FilterDeletePopup from './FilterDeletePopup';
 
 const Filter = ({setOpenFilter}) => {
 
     const activeSheet = useDataStore((state) => state.activeSheet)
+    const [clearFilter, setClearFilter] = useState(false)
     const selectedColumn = useDataStore((state) => state.selectedColumn)
     const filter = useDataStore((state) => state.filter)
     const setFilter = useDataStore((state) => state.setFilter)
@@ -57,6 +67,10 @@ const Filter = ({setOpenFilter}) => {
         setNullValue(-1)
     }
 
+    const clearAllFilter = () => {
+        setTempFilter([])
+    }
+
     const applyFilter = () => {
         const pickedIndex = tempFilter.length - 1
 
@@ -77,7 +91,6 @@ const Filter = ({setOpenFilter}) => {
   return (
     <div className='w-screen h-screen bg-black/30 inset-0 absolute z-30 flex items-center justify-center'>
         <div className='px-4 py-2 bg-white outline-1 outline-black/10 w-180 rounded-2xl shadow-lg'>
-            
             <div className='p-2 border-b-1 border-black/10 flex items-center justify-between'>
                 <p className='font-medium text-lg text-black/80'>Filters</p>
                 <button onClick={closePopup} className='hover:cursor-pointer'>
@@ -85,7 +98,9 @@ const Filter = ({setOpenFilter}) => {
                 </button>
             </div>
 
-            <div className='flex flex-col items-start gap-2.5 py-6'>
+            {clearFilter && <FilterDeletePopup setOpenFilter={setClearFilter} handleFileRemoved={clearAllFilter} fromBulkDelete = {'bulkDelete'}/>}
+
+            <div className='flex flex-col items-start gap-2.5 pt-6 pb-3'>
                 {
                     tempFilter?.map((val, ind) => {
                         return (
@@ -109,10 +124,23 @@ const Filter = ({setOpenFilter}) => {
                     })
                 }
 
-                <button onClick={() => addWhereFilter()} className='cursor-pointer flex items-center gap-1.5 mt-2 rounded-lg text-black/70 hover:bg-gray-100 px-2 py-0.5'>
-                    <HiPlus className='text-xs'/>
-                    <p className='text-xs'>Add condition</p>
-                </button>
+                <div className='flex items-center gap-1 px-2 py-2 mt-2'>
+                    <HiArrowTurnDownRight className='text-black/40'/>
+    
+                    <div className='flex items-center gap-2'>
+                        <button onClick={() => addWhereFilter()} className='flex items-center gap-1.5 px-1.5 rounded-sm hover:cursor-pointer hover:bg-gray-100'>
+                            <HiOutlinePlus className='text-black/70'/>
+                            <p className='text-sm text-black/70 '>Add condition</p>
+                        </button>
+    
+                        <div className='w-[1px] h-5 bg-black/10'></div>
+    
+                        <button  onClick={() => setClearFilter(true)} className='flex items-center gap-1.5 px-1.5 rounded-sm  hover:cursor-pointer hover:bg-gray-100'>
+                            <MdOutlineBorderClear className='text-black/70'/>
+                            <p className='text-sm text-black/70'>Clear all</p>
+                        </button>
+                    </div>
+                </div>
 
             </div>
 

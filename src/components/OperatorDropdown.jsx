@@ -30,9 +30,9 @@ const OperatorDropdown = ({displayList = [], hint, id, tempFilter, setTempFilter
             <div onClick={() => {setOpenMenu(false); setMenuSearch('')}} className='w-screen h-screen inset-0 absolute z-10'></div>
         }
         <div className='relative'>
-            <button onClick={() => setOpenMenu(true)} className='text-xs outline-1 flex items-center gap-1 outline-black/30 rounded-full px-1.5 py-0.5'>
-                <p className='text-xs text-black/70'>{hint}</p>
-                <FaAngleDown className='text-black/30 text-xs'/>
+            <button onClick={() => setOpenMenu(true)} className='text-xs outline-1 flex items-center gap-1 outline-green-500 bg-green-50 rounded-full px-1.5 py-0.5'>
+                <p className='text-xs text-green-700 font-medium'>{hint}</p>
+                <FaAngleDown className='text-green-700 text-xs'/>
             </button>
             {
                 openMenu &&

@@ -23,6 +23,12 @@ const FilterDropdown = ({displayList = [], hint, id, value, tempFilter, setTempF
                         operator: value
                     })
                 }
+                else if(id.split('_')[1] == 'datatype') {
+                    return ({
+                        ...val,
+                        datatype: value
+                    })
+                }
             }
 
             return val;
@@ -40,7 +46,7 @@ const FilterDropdown = ({displayList = [], hint, id, value, tempFilter, setTempF
         }
         <div className='relative'>
             <button onClick={() => setOpenMenu(true)} className='flex items-center gap-2 justify-between outline-1 outline-black/20 px-2.5 py-1.5 rounded-md bg-white'>
-                <p className='text-xs text-black/70'>{value === null ? hint : value}</p>
+                <p className='text-xs text-black/70 font-medium'>{value === null ? hint : value}</p>
                 <FaAngleDown className='text-black/30 text-xs'/>
             </button>
             {
@@ -60,7 +66,7 @@ const FilterDropdown = ({displayList = [], hint, id, value, tempFilter, setTempF
                         {
                             searchableList?.map((val, ind) => {
                                 return (
-                                    <button onClick={() => setValueForDropdowns(val.name)} className={`px-1.5 py-1 rounded-sm flex hover:bg-gray-100 hover:cursor-pointer ${value == val.name ? 'bg-green-100 hover:bg-green-100 text-green-700' : 'text-black/70'}`}>
+                                    <button key={ind} onClick={() => setValueForDropdowns(val.name)} className={`px-1.5 py-1 rounded-sm flex hover:bg-gray-100 hover:cursor-pointer ${value == val.name ? 'bg-green-100 hover:bg-green-100 text-green-700' : 'text-black/70'}`}>
                                         <p className='text-xs'>{val.name}</p>
                                     </button>
                                 )
