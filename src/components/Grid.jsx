@@ -97,15 +97,27 @@ const Grid = ({children}) => {
             
         return validFilter?.reduce((result, val, ind) => {
             const rowValue = row[val?.column]
+            const textValue = String( rowValue ?? "").toLowerCase()
+            const searchValue = String(val?.value ?? "").toLowerCase()
             let isMatched = false
 
             if (val.operator === 'Equal') {
-                isMatched = String( rowValue ?? "").toLowerCase() 
-                    === String(val?.value ?? "").toLowerCase()
+                isMatched = textValue === searchValue
             }
             else if (val.operator === 'Not Equal') {
-                isMatched = String( rowValue ?? "").toLowerCase() 
-                !== String(val?.value ?? "").toLowerCase()
+                isMatched = textValue !== searchValue
+            }
+            else if (val.operator === 'Contains') {
+                isMatched = textValue.includes(searchValue)
+            }
+            else if (val.operator === 'Does Not Contain') {
+                isMatched = !textValue.includes(searchValue)
+            }
+            else if (val.operator === 'Starts With') {
+                isMatched = textValue.startsWith(searchValue)
+            }
+            else if (val.operator === 'Ends With') {
+                isMatched = textValue.endsWith(searchValue)
             }
 
             if (ind === 0) {

@@ -14,19 +14,25 @@ const FilterDropdown = ({displayList = [], hint, id, value, tempFilter, setTempF
                 if(id.split('_')[1] == 'column') {
                     return ({
                         ...val,
-                        column: value
+                        column: value,
+                        datatype: null,
+                        operator: null,
+                        value: null
                     })
                 }
                 else if(id.split('_')[1] == 'operator') {
                     return ({
                         ...val,
-                        operator: value
+                        operator: value,
+                        value: null
                     })
                 }
                 else if(id.split('_')[1] == 'datatype') {
                     return ({
                         ...val,
-                        datatype: value
+                        datatype: value,
+                        operator: null,
+                        value: null
                     })
                 }
             }

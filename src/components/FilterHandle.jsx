@@ -29,6 +29,10 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
         'Text' : [
             {id:1, name: 'Equal'},
             {id:2, name: 'Not Equal'},
+            {id:3, name: 'Contains'},
+            {id:4, name: 'Does Not Contain' },
+            {id:5, name: 'Starts With'},
+            {id:6, name: 'Ends With'},
         ],
         'Number' : [
             {id:1, name: 'Equal'},
