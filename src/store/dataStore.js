@@ -35,7 +35,7 @@ const useDataStore = create(
             selectedRows: {},
 
             sortOrder: null,
-            frozenColumn: null,
+            frozenColumn: {},
 
             hasHydrated: false,
             setHasHydrated: (value) => set({
@@ -70,7 +70,7 @@ const useDataStore = create(
                 selectedRow: {},
                 filename: '',
                 sortOrder: null,
-                frozenColumn: null,
+                frozenColumn: {},
                 filter: [],
                 file: null,
                 selectedRowTab:1,

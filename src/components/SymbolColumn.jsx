@@ -31,7 +31,7 @@ import { LuView } from "react-icons/lu";
 import { IoInformationOutline } from "react-icons/io5";
 import useDataStore from '../store/dataStore';
 
-const SymbolColumn = ({isSorted, isFrozen, columnType, title, index, setDraggedColumn, handleDrop}) => {
+const SymbolColumn = ({isSorted, isFrozen, leftPosition, columnType, title, index, setDraggedColumn, handleDrop, setColumnRef}) => {
     const sortOrder = useDataStore((state) => state.sortOrder)
     const setSortOrder = useDataStore((state) => state.setSortOrder)
     const activeSheet = useDataStore((state) => state.activeSheet)
@@ -39,11 +39,14 @@ const SymbolColumn = ({isSorted, isFrozen, columnType, title, index, setDraggedC
     const setFrozenColumn = useDataStore((state) => state.setFrozenColumn)
 
     const handleFreezeColumn = (columnName) => {
-        if (frozenColumn?.[activeSheet] === columnName) {
-            setFrozenColumn({...frozenColumn, [activeSheet]: null})
+        const currentCol = frozenColumn?.[activeSheet] || []
+
+        if (currentCol?.includes(columnName)) {
+            const excludeColumn = currentCol?.filter(val => val !== columnName)
+            setFrozenColumn({...frozenColumn, [activeSheet]: excludeColumn})
         }
         else {
-            setFrozenColumn({...frozenColumn, [activeSheet]: columnName})
+            setFrozenColumn({...frozenColumn, [activeSheet]: [...currentCol, columnName]})
         }
     }
     
@@ -62,21 +65,25 @@ const SymbolColumn = ({isSorted, isFrozen, columnType, title, index, setDraggedC
 
     return (
     <td 
+        ref={(element) => setColumnRef(title, element)}
+        style={{
+            left: isFrozen ? `${leftPosition}px` : undefined
+        }}
         draggable
         onDragStart={() => setDraggedColumn(index)}
         onDragOver={(event) => event.preventDefault()}
         onDrop={() => handleDrop(index)}
-        className={`px-6 border-r-1 py-2 ${isSorted ? 'bg-green-50' : ''} ${isFrozen ? 'sticky left-0 z-20 bg-green-50' : ''} ${title === '_chkbox' ? 'w-10' : ''} ${(title === '_id' ? 'w-20' : '')} ${(title === '_info' ? 'w-10' : '')} bg-gray-50 whitespace-nowrap sticky border-t-1 border-b-1 border-gray-200/80 top-0 z-10 text-xs text-black/70 font-medium`}
+        className={`px-6 border-r-1 py-2 ${isSorted ? 'bg-green-50' : ''} ${isFrozen ? 'sticky z-20 bg-green-50' : ''} ${title === '_chkbox' ? 'w-10' : ''} ${(title === '_id' ? 'w-20' : '')} ${(title === '_info' ? 'w-10' : '')} bg-gray-50 whitespace-nowrap sticky border-t-1 border-b-1 border-gray-200/80 top-0 z-10 text-xs text-black/70 font-medium`}
       >
         {
           columnType === 'system' && 
             <div onClick={() => handleSortOrder(title)} className='flex items-center gap-3'>
                 
-                <button className='hover: cursor-pointer' title={frozenColumn === title ? 'Column Locked' : 'Column Unlocked'} onClick={(e) => {e.stopPropagation(); handleFreezeColumn(title);}}>
+                <button className='hover: cursor-pointer' title={frozenColumn?.[activeSheet]?.includes(title) ? 'Column Locked' : 'Column Unlocked'} onClick={(e) => {e.stopPropagation(); handleFreezeColumn(title);}}>
                     {
                         isFrozen ? 
                         <HiOutlineLockClosed
-                            className={frozenColumn?.[activeSheet] === title ? 'text-green-600' : 'text-black/40'}
+                            className={frozenColumn?.[activeSheet]?.includes(title) ? 'text-green-600' : 'text-black/40'}
                         />
                         :
                         <HiOutlineLockOpen

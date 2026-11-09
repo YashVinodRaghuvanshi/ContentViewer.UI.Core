@@ -57,6 +57,17 @@ const Grid = ({children}) => {
     const setFilter = useDataStore((state) => state.setFilter)
 
     const frozenColumn = useDataStore((state) => state.frozenColumn)
+    const columnRefs = useRef({})
+    const [columnWidths, setColumnWidths] = useState({})
+
+    const setColumnRef = (columnName, element) => {
+        if (element) {
+            columnRefs.current[columnName] = element
+        }
+        else {
+            delete columnRefs.current[columnName]
+        }
+    }
 
     const selectedRow = useDataStore((state) => state.selectedRow)
     const sortOrder = useDataStore((state) => state.sortOrder)
@@ -200,7 +211,8 @@ const Grid = ({children}) => {
 
     const paginatedData = rowFilteredData?.slice(startIndex, endIndex)
 
-    const totalColumns = sheets[activeSheet]?.columns || []
+    const EMPTY_COLUMNS = []
+    const totalColumns = sheets[activeSheet]?.columns || EMPTY_COLUMNS
     const selectedColumn = useDataStore((state) => state.selectedColumn)
     const visibleColumns = selectedColumn[activeSheet] || totalColumns
     const setSelectedColumn = useDataStore((state) => state.setSelectedColumn)
@@ -210,6 +222,19 @@ const Grid = ({children}) => {
     const dropdownRef = useRef(null)
 
     const [draggedColumn, setDraggedColumn] = useState(null)
+
+    const displayedColumns = visibleColumns?.filter((val) => val?.ishidden === false) || []
+
+    const getStickyLeft = (columnIndex) => {
+        const previousColumns = displayedColumns.slice(0, columnIndex)
+        return previousColumns.reduce((total, column) => {
+            if (frozenColumn?.[activeSheet]?.includes(column.name)) {
+                return total + (columnWidths[column?.name] || 0)
+            }
+
+            return total
+        }, 0)
+    }
 
     useEffect(() => {
         setCurrentPage(1)
@@ -339,6 +364,40 @@ const Grid = ({children}) => {
 
     }, [])
 
+    useEffect(() => {
+        if (!hasHydrated) return
+        const updateWidths = () => {
+            const widths = {}
+            Object.entries(columnRefs.current).forEach(([name, element]) => {
+                if (element) {
+                    widths[name] = Math.round(element.getBoundingClientRect().width)
+                }
+            })
+
+            setColumnWidths((prev) => {
+                const isSame = Object.keys(widths).length === Object.keys(prev).length &&
+                    Object.entries(widths).every(([name, width]) => prev[name] === width)
+
+                return isSame ? prev : widths
+            })
+        }
+
+        requestAnimationFrame(updateWidths)
+
+        const observer = new ResizeObserver(() => {
+            updateWidths()
+        })
+
+        Object.values(columnRefs.current).forEach((element) => {
+            if (element) {
+                observer.observe(element)
+            }
+        })
+
+        return () => observer.disconnect()
+
+    }, [visibleColumns, activeSheet, hasHydrated])
+
     // if (columns.length === 0) {
     //     return (
     //        <div className='flex'>
@@ -467,17 +526,19 @@ const Grid = ({children}) => {
                 <thead>
                         <tr className=''>
                         {
-                            visibleColumns?.filter(val => val?.ishidden === false).map((col, ind) => {
+                            displayedColumns?.map((col, ind) => {
                                 return (
                                     <SymbolColumn 
                                         key={col.name+ind} 
                                         index = {ind} 
                                         title={col.title} 
                                         columnType = {col.type} 
-                                        isFrozen = {frozenColumn?.[activeSheet] === col.title} 
+                                        isFrozen = {frozenColumn?.[activeSheet]?.includes(col.title)} 
                                         isSorted = {sortOrder?.[activeSheet]?.name === col.title}
                                         setDraggedColumn = {setDraggedColumn} 
                                         handleDrop={handleDrop}
+                                        setColumnRef = {setColumnRef}
+                                        leftPosition = {getStickyLeft(ind)}
                                     />
                                 )
                             })
@@ -492,9 +553,16 @@ const Grid = ({children}) => {
                         <tr onClick={() => rowSelection(rows)} key={rows._id} className={`group hover:bg-green-50 ${isSelectedRow ? 'bg-green-100' : ''}`}>
 
                             {
-                                visibleColumns?.filter(val => val?.ishidden === false).map((item, inde) => {
+                                displayedColumns?.map((item, inde) => {
+                                    const isFrozen = frozenColumn?.[activeSheet]?.includes(item.name)
                                     return (
-                                        <td key={inde} className={` ${frozenColumn?.[activeSheet] === item.name ? `sticky left-0 z-20 ${isSelectedRow ? 'bg-green-100' : 'bg-white'}` : ''} px-6 py-3 text-xs group-hover:bg-green-50 font-medium border-b-1 border-r-1 text-black/70 border-gray-200`}>
+                                        <td 
+                                            key={inde}
+                                            style={{
+                                                left: isFrozen ? `${getStickyLeft(inde)}px` : undefined
+                                            }} 
+                                            className={` ${frozenColumn?.[activeSheet]?.includes(item.name) ? `sticky z-20 ${isSelectedRow ? 'bg-green-100' : 'bg-white'}` : ''} px-6 py-3 text-xs group-hover:bg-green-50 font-medium border-b-1 border-r-1 text-black/70 border-gray-200`}
+                                        >
                                             {item.type === 'system' && <p title={rows[item.name]} className='max-w-120 truncate'>{rows[item.name]}</p>}
                                             {item.name === '_id' && rows._id}
                                             {item.name === '_chkbox' && (isSelectedRow ? <FaSquareCheck className='text-lg text-green-600'/> : <FiSquare className='text-lg text-black/10'/>)}
