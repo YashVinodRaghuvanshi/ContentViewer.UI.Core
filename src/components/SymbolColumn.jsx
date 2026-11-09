@@ -102,6 +102,19 @@ const SymbolColumn = ({isSorted, isFrozen, leftPosition, columnType, title, inde
         {
             title === '_chkbox' && 
             <div className='flex items-center gap-1'>
+                <button className='hover: cursor-pointer' title={frozenColumn?.[activeSheet]?.includes(title) ? 'Column Locked' : 'Column Unlocked'} onClick={(e) => {e.stopPropagation(); handleFreezeColumn(title);}}>
+                    {
+                        isFrozen ? 
+                        <HiOutlineLockClosed
+                            className={frozenColumn?.[activeSheet]?.includes(title) ? 'text-green-600' : 'text-black/40'}
+                        />
+                        :
+                        <HiOutlineLockOpen
+                            className={`text-black/40`}
+                        />
+                    }
+                    
+                </button>
                 <HiOutlineCursorClick className='text-lg text-black/50'/>
             </div>
         }
@@ -109,6 +122,19 @@ const SymbolColumn = ({isSorted, isFrozen, leftPosition, columnType, title, inde
         {
             title == '_id' &&
             <div className='flex items-center gap-1'>
+                <button className='hover: cursor-pointer' title={frozenColumn?.[activeSheet]?.includes(title) ? 'Column Locked' : 'Column Unlocked'} onClick={(e) => {e.stopPropagation(); handleFreezeColumn(title);}}>
+                        {
+                            isFrozen ? 
+                            <HiOutlineLockClosed
+                                className={frozenColumn?.[activeSheet]?.includes(title) ? 'text-green-600' : 'text-black/40'}
+                            />
+                            :
+                            <HiOutlineLockOpen
+                                className={`text-black/40`}
+                            />
+                        }
+                    
+                </button>
                 <MdOutlineNumbers className='text-lg text-black/50'/>
             </div>
         }
@@ -116,6 +142,19 @@ const SymbolColumn = ({isSorted, isFrozen, leftPosition, columnType, title, inde
         {
             title == '_info' &&
             <div className='flex items-center gap-1'>
+                <button className='hover: cursor-pointer' title={frozenColumn?.[activeSheet]?.includes(title) ? 'Column Locked' : 'Column Unlocked'} onClick={(e) => {e.stopPropagation(); handleFreezeColumn(title);}}>
+                        {
+                            isFrozen ? 
+                            <HiOutlineLockClosed
+                                className={frozenColumn?.[activeSheet]?.includes(title) ? 'text-green-600' : 'text-black/40'}
+                            />
+                            :
+                            <HiOutlineLockOpen
+                                className={`text-black/40`}
+                            />
+                        }
+                    
+                </button>
                 <IoInformationOutline className='text-lg text-black/50'/>
             </div>
         }

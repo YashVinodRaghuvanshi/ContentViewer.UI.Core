@@ -550,7 +550,7 @@ const Grid = ({children}) => {
                    paginatedData?.map((rows, index) => {
                     const isSelectedRow = selectedRows[activeSheet]?.some((val) => val === rows._id)
                     return (
-                        <tr onClick={() => rowSelection(rows)} key={rows._id} className={`group hover:bg-green-50 ${isSelectedRow ? 'bg-green-100' : ''}`}>
+                        <tr onClick={() => rowSelection(rows)} key={rows._id} className={`group ${isSelectedRow ? 'bg-green-100 hover:bg-green-100' : 'hover:bg-green-50'}`}>
 
                             {
                                 displayedColumns?.map((item, inde) => {
@@ -561,7 +561,7 @@ const Grid = ({children}) => {
                                             style={{
                                                 left: isFrozen ? `${getStickyLeft(inde)}px` : undefined
                                             }} 
-                                            className={` ${frozenColumn?.[activeSheet]?.includes(item.name) ? `sticky z-20 ${isSelectedRow ? 'bg-green-100' : 'bg-white'}` : ''} px-6 py-3 text-xs group-hover:bg-green-50 font-medium border-b-1 border-r-1 text-black/70 border-gray-200`}
+                                            className={` ${frozenColumn?.[activeSheet]?.includes(item.name) ? `sticky z-20 ${isSelectedRow ? 'bg-green-100 group-hover:bg-green-100' : 'bg-white group-hover:bg-green-50'}` : ''} px-6 py-3 text-xs  font-medium border-b-1 border-r-1 text-black/70 border-gray-200`}
                                         >
                                             {item.type === 'system' && <p title={rows[item.name]} className='max-w-120 truncate'>{rows[item.name]}</p>}
                                             {item.name === '_id' && rows._id}
