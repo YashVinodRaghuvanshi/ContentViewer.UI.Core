@@ -73,6 +73,10 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
         setTempFilter(deleteFilter)
     }
 
+    const isEmptyVal = (value) => {
+        return value === null || value === undefined || String(value).trim() === ""
+    }
+
   return (
         <div className='w-full flex items-center gap-2'>
         
@@ -116,11 +120,18 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
                 </div>
 
                  {
-                    (showValidation && !value) && 
+                    (showValidation && isEmptyVal(value)) && 
                     <div className='flex'>
                         <div className='flex items-center gap-1 px-2 py-1 rounded-lg outline-1 outline-red-200 text-red-600 bg-red-100'>
                             <RiErrorWarningLine />
-                            <p className='text-xs'>Please enter a value.</p>
+                            <p className='text-xs'>
+                            {
+                                isEmptyVal(column) ? 'Choose a column' :
+                                    isEmptyVal(datatype) ? 'Choose a datatype' :
+                                        isEmptyVal(operator) ? 'Choose a operator' : 
+                                            isEmptyVal(value) ? 'Please enter a value.' : ''
+                            }
+                            </p>
                         </div>
                     </div>
                 }

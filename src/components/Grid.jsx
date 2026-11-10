@@ -493,7 +493,7 @@ const Grid = ({children}) => {
             <div className='flex items-center gap-2'>
                 <button onClick={() => setOpenFieldSetting(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
                     <TbTableColumn className={`text-black/60`}/>
-                    <p className={`text-sm text-black/70 font-medium`}>Hide Columns {selectedColumn[activeSheet]?.some(val => val.ishidden == true) ? '(' + selectedColumn[activeSheet]?.filter(val => val.ishidden == true).length + ')' : ''}</p>
+                    <p className={`text-sm text-black/70 font-medium`}>Hide Columns {selectedColumn[activeSheet]?.some(val => val?.ishidden == true) ? '(' + selectedColumn[activeSheet]?.filter(val => val?.ishidden == true)?.length + ')' : ''}</p>
                 </button>
 
                 <div className='w-[1px] h-5 bg-black/10'></div>

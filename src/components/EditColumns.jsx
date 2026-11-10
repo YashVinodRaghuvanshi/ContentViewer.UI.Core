@@ -46,10 +46,10 @@ const EditColumns = ({setOpenFilter}) => {
 
     const handleSelection = (columnName, columnType) => {
         const visibilityMangedColumn = localSelectedColumn.map((val, ind) => {
-            if(val.name === columnName) {
+            if(val?.name === columnName) {
                 return {
                     ...val,
-                    ishidden: !val.ishidden
+                    ishidden: !val?.ishidden
                 }
             }
 
@@ -95,9 +95,9 @@ const EditColumns = ({setOpenFilter}) => {
     }, [activeSheet, selectedColumn, columns])
 
     useEffect(() => {
-        if(localSelectedColumn.every(val => val.ishidden === false))
+        if(localSelectedColumn.every(val => val?.ishidden === false))
             setShowValidation(false)
-        else if (localSelectedColumn.every(val => val.ishidden === true)) {
+        else if (localSelectedColumn.every(val => val?.ishidden === true)) {
             setShowValidation(true)
         }
         
@@ -119,12 +119,12 @@ const EditColumns = ({setOpenFilter}) => {
             <div className='px-2 py-4'>
                 <div className='flex items-center justify-between'>
                     <p className='text-sm'>Visible Columns</p>
-                    <p className='text-xs text-black/50'>{localSelectedColumn.filter(val => val.ishidden == false).length} of {columns.length} Selected</p>
+                    <p className='text-xs text-black/50'>{localSelectedColumn.filter(val => val?.ishidden == false).length} of {columns.length} Selected</p>
                 </div>
                 <div className='flex flex-wrap gap-3 mt-4'>
                     {
                         localSelectedColumn?.map((col, ind) => {
-                            const isSelected = localSelectedColumn?.some((val) => val.name === col.name && val.ishidden === false)
+                            const isSelected = localSelectedColumn?.some((val) => val?.name === col?.name && val?.ishidden === false)
                             
                             return (
                                 <button 

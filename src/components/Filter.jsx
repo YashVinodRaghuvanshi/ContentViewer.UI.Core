@@ -50,7 +50,7 @@ const Filter = ({setOpenFilter}) => {
         const pickedIndex = tempFilter.length - 1
 
         if(tempFilter.length > 0 && tempFilter[pickedIndex]?.value == null) {
-            setNullValue(pickedIndex)
+            setNullValue(tempFilter[pickedIndex]?.id)
             return
         }
 
@@ -71,11 +71,18 @@ const Filter = ({setOpenFilter}) => {
         setTempFilter([])
     }
 
+    const isEmptyVal = (value) => {
+        return value === null || value === undefined || String(value).trim() === ""
+    }
+
     const applyFilter = () => {
         const pickedIndex = tempFilter.length - 1
 
-        if(tempFilter.length > 0 && tempFilter[pickedIndex]?.value == null) {
-            setNullValue(pickedIndex)
+        const isAnyFilterValueEmpty = tempFilter.some(val => isEmptyVal(val.value))
+        const filterHavingValueEmptyList = tempFilter.filter(val => isEmptyVal(val.value))
+
+        if(tempFilter.length > 0 && isAnyFilterValueEmpty) {
+            setNullValue(filterHavingValueEmptyList?.[0]?.id)
             return
         }
 
@@ -118,7 +125,7 @@ const Filter = ({setOpenFilter}) => {
                                 tempFilter = {tempFilter}
                                 setTempFilter = {setTempFilter}
                                 operand = {val?.operand}
-                                showValidation = {nullValue == ind}
+                                showValidation = {nullValue == val?.id}
                             />
                         )
                     })
