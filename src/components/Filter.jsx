@@ -176,9 +176,12 @@ const Filter = ({setOpenFilter}) => {
                 <button onClick={closePopup} className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/20 px-3 py-2 rounded-lg text-sm'>
                     Cancel
                 </button>
-                <button onClick={applyFilter} className='flex items-center hover:cursor-pointer gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm'>
-                    Apply
-                </button>
+                {
+                    tempFilter.length > 0 &&
+                    <button onClick={applyFilter} className='flex items-center hover:cursor-pointer gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm'>
+                        Apply
+                    </button>
+                }
             </div>
 
         </div>
