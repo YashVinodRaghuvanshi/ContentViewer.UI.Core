@@ -82,6 +82,10 @@ const Grid = ({children}) => {
 
     const activeSheetFilter = filter?.[activeSheet] || []
 
+    const isValueEmpty = (value) => {
+        return value === null || value === undefined || String(value).trim() === ""
+    }
+
     const filteredData = searchedData.filter((row) => {
 
         const validFilter = activeSheetFilter?.filter((condition) => 
@@ -101,6 +105,8 @@ const Grid = ({children}) => {
             const searchValue = String(val?.value ?? "").toLowerCase()
             let isMatched = false
 
+            // for Text data type
+
             if (val.operator === 'Equal') {
                 isMatched = textValue === searchValue
             }
@@ -119,6 +125,8 @@ const Grid = ({children}) => {
             else if (val.operator === 'Ends With') {
                 isMatched = textValue.endsWith(searchValue)
             }
+
+            // for Number data type
 
             if (val.operator == 'Greater Than' || val.operator == 'Less Than' ||
                 val.operator == 'Greater Than or Equal' || val.operator == 'Less Than or Equal'
@@ -142,6 +150,15 @@ const Grid = ({children}) => {
                 else if (val.operator == "Less Than or Equal") {
                     isMatched = rowNumber <= searchNumber
                 }
+            }
+
+            // Common for all data type
+
+            if (val.operator == "Is Empty") {
+                isMatched = isValueEmpty(textValue)
+            }
+            else if (val.operator == "Is Not Empty") {
+                isMatched = !isValueEmpty(textValue)
             }
 
             if (ind === 0) {

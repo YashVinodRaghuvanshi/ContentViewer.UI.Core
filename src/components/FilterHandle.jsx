@@ -19,7 +19,7 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
         {id:2, name: 'Or'},
     ]
 
-    const columnList = (selectedColumn[activeSheet] || sheets[activeSheet]?.columns || [])?.filter(val => val.type === 'system')
+    const columnList = (selectedColumn[activeSheet] || sheets[activeSheet]?.columns || [])?.filter(val => val?.type === 'system')
     const dataTypeList = [
         {id:1, name: 'Text'},
         {id:2, name: 'Number'},
@@ -33,6 +33,8 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
             {id:4, name: 'Does Not Contain' },
             {id:5, name: 'Starts With'},
             {id:6, name: 'Ends With'},
+            {id:7, name: 'Is Empty'},
+            {id:8, name: 'Is Not Empty'},
         ],
         'Number' : [
             {id:1, name: 'Equal'},
@@ -41,9 +43,14 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
             {id:4, name: 'Less Than'},
             {id:5, name: 'Greater Than or Equal'},
             {id:6, name: 'Less Than or Equal'},
+            {id:7, name: 'Is Empty'},
+            {id:8, name: 'Is Not Empty'},
         ],
         'Date' : [
             {id:1, name: 'Equal'},
+            {id:2, name: 'Not Equal'},
+            {id:3, name: 'Is Empty'},
+            {id:4, name: 'Is Not Empty'},
         ],
     }
 
@@ -97,7 +104,7 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
                             <FilterDropdown key={id+'_operator'} id = {id+'_operator'} tempFilter = {tempFilter} setTempFilter = {setTempFilter} value = {operator} displayList = {operatorList?.[datatype]} hint = {'Select operator'}/>
                         }
                         {
-                            operator != null &&
+                            (operator != null && (operator != 'Is Empty' && operator != 'Is Not Empty')) &&
                             <input value={value ?? ''} onChange={(e) => setDynamicValue(e.target.value)} type="text" className='outline-1 outline-black/20 px-2.5 py-1.5 text-xs rounded-md bg-white' placeholder='Search value'/>
                         }
                     </div>

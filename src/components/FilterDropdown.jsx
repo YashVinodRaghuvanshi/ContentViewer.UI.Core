@@ -24,7 +24,7 @@ const FilterDropdown = ({displayList = [], hint, id, value, tempFilter, setTempF
                     return ({
                         ...val,
                         operator: value,
-                        value: null
+                        value: value === 'Is Empty' || value === 'Is Not Empty' ? 'Empty' : null
                     })
                 }
                 else if(id.split('_')[1] == 'datatype') {
