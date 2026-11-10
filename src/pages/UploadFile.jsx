@@ -93,7 +93,8 @@ const UploadFile = () => {
         fileReader.onload = (event) => {
 
             const workbook = XLSX.read(event.target.result, {
-                type: 'array'
+                type: 'array',
+                cellDates: true
             })
 
             const sheets = {}
@@ -101,7 +102,9 @@ const UploadFile = () => {
             //For multiple sheets
             workbook.SheetNames.forEach((sheetName) => {
                 const worksheet = workbook.Sheets[sheetName]
-                const jsonData = XLSX.utils.sheet_to_json(worksheet)
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                    raw: false,
+                })
                 
                 const dataWithId = jsonData.map((row, index) => ({
                     _chkbox: '_chkbox',
