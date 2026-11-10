@@ -139,8 +139,8 @@ const Filter = ({setOpenFilter}) => {
                             <div className='text-2xl p-3 text-green-600 bg-green-100 rounded-2xl mb-2'>
                                 <FiFilter />
                             </div>
-                            <p className='text-base text-black/90'>No filters applied yet</p>
-                            <p className='text-sm text-black/50'>Start filtering your data to find exactly what you're looking for. Add conditions to narrow down your records.</p>
+                            <p className='text-base text-black/90'>All filters cleared</p>
+                            <p className='text-sm text-black/50'>Your filters have been removed. All records are now displayed. You can add new filters anytime.</p>
                             <button onClick={() => addWhereFilter()} className='text-sm outline-1 mt-4 flex items-center gap-1 outline-black/10 px-3 py-1 text-green-700 hover:cursor-pointer rounded-full'>
                                 <HiOutlinePlus/>
                                 Add condition
@@ -176,12 +176,10 @@ const Filter = ({setOpenFilter}) => {
                 <button onClick={closePopup} className='flex items-center hover:cursor-pointer gap-2 outline-1 outline-black/20 px-3 py-2 rounded-lg text-sm'>
                     Cancel
                 </button>
-                {
-                    tempFilter.length > 0 &&
-                    <button onClick={applyFilter} className='flex items-center hover:cursor-pointer gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm'>
-                        Apply
-                    </button>
-                }
+               
+                <button onClick={applyFilter} className='flex items-center hover:cursor-pointer gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm'>
+                    Apply
+                </button>
             </div>
 
         </div>

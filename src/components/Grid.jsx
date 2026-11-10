@@ -38,6 +38,7 @@ import Filter from './Filter';
 import EditColumns from './EditColumns';
 import ViewDetails from './ViewDetails';
 import RestoringWorkspace from './RestoringWorkspace';
+import RowDropdown from './RowDropdown';
 
 const Grid = ({children}) => {
 
@@ -491,23 +492,26 @@ const Grid = ({children}) => {
             <div className='flex items-center gap-2'>
 
             <div className='flex items-center gap-2'>
-                <button onClick={() => setOpenFieldSetting(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
-                    <TbTableColumn className={`text-black/60`}/>
-                    <p className={`text-sm text-black/70 font-medium`}>Hide Columns {selectedColumn[activeSheet]?.some(val => val?.ishidden == true) ? '(' + selectedColumn[activeSheet]?.filter(val => val?.ishidden == true)?.length + ')' : ''}</p>
-                </button>
+                <div className='flex items-center gap-3'>
+                    <button onClick={() => setOpenFieldSetting(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-md hover:cursor-pointer hover:bg-gray-100 bg-white`}>
+                        <TbTableColumn className={`text-black/60`}/>
+                        <p className={`text-sm text-black/70 font-medium`}>Columns {selectedColumn[activeSheet]?.some(val => val?.ishidden == true) ? '(' + selectedColumn[activeSheet]?.filter(val => val?.ishidden == true)?.length + ')' : ''}</p>
+                    </button>
 
-                <div className='w-[1px] h-5 bg-black/10'></div>
-                
-                <button onClick={() => handleAddFilter()} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
-                    <LuSettings2 className={`text-black/60`}/>
-                    <p className={`text-sm text-black/70 font-medium`}>Add Filters {filter[activeSheet]?.length > 0 && (filter[activeSheet]?.every(val => val.column && val.operator && val.value && val.operand)) ? '('+filter[activeSheet]?.length + ')' : ''}</p>
-                </button>
+                    <button onClick={() => handleAddFilter()} className={`flex items-center gap-1.5 px-3 py-1 rounded-md hover:cursor-pointer hover:bg-gray-100 bg-white`}>
+                        <LuSettings2 className={`text-black/60`}/>
+                        <p className={`text-sm text-black/70 font-medium`}>Filter {filter[activeSheet]?.length > 0 && (filter[activeSheet]?.every(val => val.column && val.operator && val.value && val.operand)) ? '('+filter[activeSheet]?.length + ')' : ''}</p>
+                    </button>
 
-                <div className='w-[1px] h-5 bg-black/10'></div>
+                    <RowDropdown 
+                        displayList={rowSelectionPanel} 
+                        selectedRowTab = {selectedRowTab}
+                    />
+                </div>
                 
                 {
                     !showSearch &&
-                    <button onClick={() => setShowSearch(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-full hover:cursor-pointer hover:bg-gray-100`}>
+                    <button onClick={() => setShowSearch(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-md hover:cursor-pointer hover:bg-gray-100 bg-white`}>
                         <FiSearch className={`text-black/60`}/>
                         <p className={`text-sm text-black/70 font-medium`}>Search</p>
                     </button>
@@ -533,33 +537,7 @@ const Grid = ({children}) => {
                     </div>
                 }
             </div>
-            {
-                <div className={`flex items-center gap-1 px-2 ${columns.length === 0 && 'hidden'}`}>
-                    <div className='flex items-center gap-2 flex-wrap'>
-                        
-                        <div className='flex items-center gap-2 flex-wrap outline-1 outline-black/10 p-1 rounded-lg bg-gray-50'>
-                        {
-                            rowSelectionPanel?.map((item, index) => {
-                                const Icon = item.icon
-                                const isTabSelected = selectedRowTab === item.id
-                                return (
-                                <div key={item.id} className='flex items-center gap-2 flex-wrap'>
-                                        <button onClick={() => item.handler(item.id)} className={`flex items-center gap-1.5 px-3 py-1 rounded-md hover:cursor-pointer hover:bg-gray-100 ${isTabSelected ? 'bg-white outline-1 outline-black/10' : ''}`}>
-                                            <Icon className={`${isTabSelected ? 'text-green-600' :'text-black/40'}`}/>
-                                            <p className={`text-sm ${isTabSelected ? 'text-black/70' : 'text-black/40'}`}>{item.title}</p>
-                                            <p className={`text-sm font-medium ${isTabSelected ? 'text-green-600' : 'text-black/40'}`}>{item.count}</p>
-                                        </button>
-                                    { item.id < rowSelectionPanel.length && <div className='w-[1px] h-5 bg-black/10'></div>}
-                                </div>
-                            )})
-                        }
-                        </div>
-
-                        {/* <div className='w-[1px] h-5 bg-black/10'></div> */}
-
-                    </div>
-                </div>
-            }
+           
              </div>
         </div>
         
@@ -677,50 +655,57 @@ const Grid = ({children}) => {
         {/* pagination */}
         <div className='px-3 py-3 flex items-center justify-between border-t-1 border-black/10'>
 
-            <div className='flex items-center'>
-                <button onClick={goToFirstPage} disabled={currentPage === 1} className={`p-2 rounded-l-md text-sm border-1 border-gray-300 hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/50'}`}>
-                    <FaAnglesLeft />
-                </button>
-                <button onClick={goToPreviousPage} disabled={currentPage === 1} className={`p-2 text-sm rounded-r-md outline-1 outline-gray-300 hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/50'}`}>
-                    <FaAngleLeft />
-                </button>
-                
-                <div className='flex flex-wrap items-center gap-2 px-3'>
-
-                    {
-                        paginationViewPages.map((page) => (
-                            <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-7.5 h-7.5 flex rounded-lg items-center hover:cursor-pointer justify-center ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/80 text-sm'}`}>
-                                <p>{page}</p>
-                            </button>
-                        ))
-                    }
+            <div className='flex items-center gap-2'>
+               
+                <div className='flex items-center'>
+                    <button onClick={goToFirstPage} disabled={currentPage === 1} className={`p-2 rounded-l-md text-sm border-1 border-gray-300 hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/50'}`}>
+                        <FaAnglesLeft />
+                    </button>
+                    <button onClick={goToPreviousPage} disabled={currentPage === 1} className={`p-2 text-sm rounded-r-md outline-1 outline-gray-300 hover:cursor-pointer hover:bg-gray-100 ${currentPage === 1 ? 'text-black/15' : 'text-black/50'}`}>
+                        <FaAngleLeft />
+                    </button>
                     
-                    {
-                        (currentPage < paginationPages[paginationPages.length-1] && (currentGroupPage !== totalGroups-1) ) &&
-                        <div className='flex items-end ml-1 gap-1'>
-                            <BsThreeDots className='text-black/70 mb-0.5'/>
-                            <button onClick={() => goToLastPage()} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer justify-center text-black/80 text-sm`}>
-                                <p>{paginationPages[paginationPages.length-1]}</p>
-                            </button>
-                        </div>
-                    }
+                    <div className='flex flex-wrap items-center gap-2 px-3'>
 
+                        {
+                            paginationViewPages.map((page) => (
+                                <button onClick={() => setCurrentPage(page)} key={page} className={`p-2 w-7.5 h-7.5 flex rounded-lg items-center hover:cursor-pointer justify-center ${(currentPage == page) ? 'bg-green-600 text-green-100 font-semibold text-base' : 'text-black/80 text-sm'}`}>
+                                    <p>{page}</p>
+                                </button>
+                            ))
+                        }
+                        
+                        {
+                            (currentPage < paginationPages[paginationPages.length-1] && (currentGroupPage !== totalGroups-1) ) &&
+                            <div className='flex items-end ml-1 gap-1'>
+                                <BsThreeDots className='text-black/70 mb-0.5'/>
+                                <button onClick={() => goToLastPage()} className={`p-2 w-7.5 h-7.5 flex rounded-md items-center hover:cursor-pointer justify-center text-black/80 text-sm`}>
+                                    <p>{paginationPages[paginationPages.length-1]}</p>
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+                    
+                    <button onClick={goToNextPage} disabled={(currentPage === totalPages || data.length === 0)} className={`p-2 rounded-l-md text-sm hover:cursor-pointer border-1 border-gray-300 hover:bg-gray-100 ${(currentPage === totalPages || data.length === 0) ? 'text-black/15' : 'text-black/50'}`}>
+                        <FaAngleRight />
+                    </button>
+                    <button onClick={goToLastPage} disabled={(currentPage == totalPages || data.length === 0)} className={`p-2 rounded-r-md text-sm hover:cursor-pointer outline-1 outline-gray-300 hover:bg-gray-100 ${(currentPage === totalPages || data.length === 0) ? 'text-black/15' : 'text-black/50'}`}>
+                        <FaAnglesRight />
+                    </button>
                 </div>
-                
-                <button onClick={goToNextPage} disabled={(currentPage === totalPages || data.length === 0)} className={`p-2 rounded-l-md text-sm hover:cursor-pointer border-1 border-gray-300 hover:bg-gray-100 ${(currentPage === totalPages || data.length === 0) ? 'text-black/15' : 'text-black/50'}`}>
-                    <FaAngleRight />
-                </button>
-                <button onClick={goToLastPage} disabled={(currentPage == totalPages || data.length === 0)} className={`p-2 rounded-r-md text-sm hover:cursor-pointer outline-1 outline-gray-300 hover:bg-gray-100 ${(currentPage === totalPages || data.length === 0) ? 'text-black/15' : 'text-black/50'}`}>
-                    <FaAnglesRight />
-                </button>
             </div>
 
             <div className='flex items-center gap-4'>
                 
+                
+
+                {/* <div className='w-[2px] h-7 bg-black/10'></div> */}
+                
                 {
                     data?.length > 0 &&
-                    <div className='flex items-center gap-2 pl-4'>
-                        <p className='text-sm'>Rows per page</p>
+                    <div className='flex items-center gap-2'>
+                        <p className='text-sm'>Page Size</p>
                         <div ref={dropdownRef} className='relative'>
                             <button onClick={() => setOpenDrp(val => !val)} className='flex items-center gap-2 outline-1 outline-black/20 px-3 py-1 rounded-lg'>
                                 {currentPageSize}
@@ -756,6 +741,7 @@ const Grid = ({children}) => {
                         <p className='text-sm'>Rows 0 - 0 of 0</p>
                     }
                 </div>
+                
 
             </div>
 
