@@ -36,6 +36,11 @@ const FilterHandle = ({onDrop, setDraggedItem, ind, id = null, column = null, da
         ],
         'Number' : [
             {id:1, name: 'Equal'},
+            {id:2, name: 'Not Equal'},
+            {id:3, name: 'Greater Than'},
+            {id:4, name: 'Less Than'},
+            {id:5, name: 'Greater Than or Equal'},
+            {id:6, name: 'Less Than or Equal'},
         ],
         'Date' : [
             {id:1, name: 'Equal'},

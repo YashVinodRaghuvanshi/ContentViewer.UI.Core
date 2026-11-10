@@ -120,6 +120,30 @@ const Grid = ({children}) => {
                 isMatched = textValue.endsWith(searchValue)
             }
 
+            if (val.operator == 'Greater Than' || val.operator == 'Less Than' ||
+                val.operator == 'Greater Than or Equal' || val.operator == 'Less Than or Equal'
+            ) {
+                const rowNumber = Number(textValue)
+                const searchNumber = Number(searchValue)
+
+                if(!Number.isFinite(rowNumber) || !Number.isFinite(searchNumber)) {
+                    return false
+                }
+
+                if (val.operator == "Greater Than") {
+                    isMatched = rowNumber > searchNumber
+                }
+                else if (val.operator == "Less Than") {
+                    isMatched = rowNumber < searchNumber
+                }
+                else if (val.operator == "Greater Than or Equal") {
+                    isMatched = rowNumber >= searchNumber
+                }
+                else if (val.operator == "Less Than or Equal") {
+                    isMatched = rowNumber <= searchNumber
+                }
+            }
+
             if (ind === 0) {
                 return isMatched
             }

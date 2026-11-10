@@ -72,7 +72,7 @@ const FilterDropdown = ({displayList = [], hint, id, value, tempFilter, setTempF
                         {
                             searchableList?.map((val, ind) => {
                                 return (
-                                    <button key={ind} onClick={() => setValueForDropdowns(val.name)} className={`px-1.5 py-1 rounded-sm flex hover:bg-gray-100 hover:cursor-pointer ${value == val.name ? 'bg-green-100 hover:bg-green-100 text-green-700' : 'text-black/70'}`}>
+                                    <button key={ind} onClick={() => setValueForDropdowns(val.name)} className={`px-1.5 py-1 rounded-sm flex text-start hover:bg-gray-100 hover:cursor-pointer ${value == val.name ? 'bg-green-100 hover:bg-green-100 text-green-700' : 'text-black/70'}`}>
                                         <p className='text-xs'>{val.name}</p>
                                     </button>
                                 )
