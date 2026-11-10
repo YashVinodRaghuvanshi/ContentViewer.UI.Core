@@ -19,6 +19,7 @@ import { BsPlusSquare } from "react-icons/bs";
 import { PiPlusDuotone } from "react-icons/pi";
 import { CiCirclePlus } from "react-icons/ci";
 import { TbFilterPlus } from "react-icons/tb";
+import { FiFilter } from "react-icons/fi";
 import { SlPlus } from "react-icons/sl";
 import { HiPlus } from "react-icons/hi";
 import FilterDeletePopup from './FilterDeletePopup';
@@ -131,23 +132,43 @@ const Filter = ({setOpenFilter}) => {
                     })
                 }
 
-                <div className='flex items-center gap-1 px-2 py-2 mt-2'>
-                    <HiArrowTurnDownRight className='text-black/40'/>
-    
-                    <div className='flex items-center gap-2'>
-                        <button onClick={() => addWhereFilter()} className='flex items-center gap-1.5 px-1.5 rounded-sm hover:cursor-pointer hover:bg-gray-100'>
-                            <HiOutlinePlus className='text-black/70'/>
-                            <p className='text-sm text-black/70 '>Add condition</p>
-                        </button>
-    
-                        <div className='w-[1px] h-5 bg-black/10'></div>
-    
-                        <button  onClick={() => setClearFilter(true)} className='flex items-center gap-1.5 px-1.5 rounded-sm  hover:cursor-pointer hover:bg-gray-100'>
-                            <MdOutlineBorderClear className='text-black/70'/>
-                            <p className='text-sm text-black/70'>Clear all</p>
-                        </button>
+                {
+                    tempFilter.length === 0 &&
+                    <div className='w-full flex items-center justify-center mb-4'>
+                        <div className='w-110 flex flex-col items-center text-center gap-1.5'>
+                            <div className='text-2xl p-3 text-green-600 bg-green-100 rounded-2xl mb-2'>
+                                <FiFilter />
+                            </div>
+                            <p className='text-base text-black/90'>No filters applied yet</p>
+                            <p className='text-sm text-black/50'>Start filtering your data to find exactly what you're looking for. Add conditions to narrow down your records.</p>
+                            <button onClick={() => addWhereFilter()} className='text-sm outline-1 mt-4 flex items-center gap-1 outline-black/10 px-3 py-1 text-green-700 hover:cursor-pointer rounded-full'>
+                                <HiOutlinePlus/>
+                                Add condition
+                            </button>
+                        </div>
                     </div>
-                </div>
+                }
+
+                {
+                    tempFilter.length > 0 &&
+                    <div className='flex items-center gap-1 px-2 py-2 mt-2'>
+                        <HiArrowTurnDownRight className='text-black/40'/>
+        
+                        <div className='flex items-center gap-2'>
+                            <button onClick={() => addWhereFilter()} className='flex items-center gap-1.5 px-1.5 rounded-sm hover:cursor-pointer hover:bg-gray-100'>
+                                <HiOutlinePlus className='text-black/70'/>
+                                <p className='text-sm text-black/70 '>Add condition</p>
+                            </button>
+        
+                            <div className='w-[1px] h-5 bg-black/10'></div>
+        
+                            <button  onClick={() => setClearFilter(true)} className='flex items-center gap-1.5 px-1.5 rounded-sm  hover:cursor-pointer hover:bg-gray-100'>
+                                <MdOutlineBorderClear className='text-black/70'/>
+                                <p className='text-sm text-black/70'>Clear all</p>
+                            </button>
+                        </div>
+                    </div>
+                }
 
             </div>
 
