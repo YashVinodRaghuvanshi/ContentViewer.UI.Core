@@ -17,7 +17,11 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { BsThreeDots } from "react-icons/bs";
 import { TbListDetails } from "react-icons/tb";
+import { CgLock } from "react-icons/cg";
 import { CgEye } from "react-icons/cg";
+import { IoSearch } from "react-icons/io5";
+import { HiOutlineLockClosed } from "react-icons/hi2";
+import { TbArrowsSort } from "react-icons/tb";
 
 import { AiTwotoneDatabase } from "react-icons/ai";
 import { MdOutlineTabUnselected } from "react-icons/md";
@@ -39,6 +43,7 @@ import EditColumns from './EditColumns';
 import ViewDetails from './ViewDetails';
 import RestoringWorkspace from './RestoringWorkspace';
 import RowDropdown from './RowDropdown';
+import ExportButton from './ExportButton';
 
 const Grid = ({children}) => {
 
@@ -394,6 +399,51 @@ const Grid = ({children}) => {
         }
     ]
 
+    const exportIncludeList = [
+        {
+            id:1,
+            title: 'Column',
+            count: selectedColumn[activeSheet]?.filter(val => val?.ishidden == true)?.length || 0,
+            icon: TbTableColumn,
+            handler: null
+        },
+        {
+            id:2,
+            title: 'Filter',
+            count: filter[activeSheet]?.length || 0,
+            icon: LuSettings2,
+            handler: null
+        },
+        {
+            id:3,
+            title: 'Mark rows',
+            count: selectedRows[activeSheet]?.length || 0,
+            icon: PiSelectionInverseDuotone,
+            handler: null
+        },
+        {
+            id:4,
+            title: 'Frozen Column',
+            count: frozenColumn[activeSheet]?.length || 0,
+            icon: CgLock,
+            handler: null
+        },
+        {
+            id:5,
+            title: 'Sort Column',
+            count: sortOrder && Object.entries(sortOrder[activeSheet] ?? {})?.length == 2 ? 1 : 0,
+            icon: TbArrowsSort,
+            handler: null
+        },
+        {
+            id:6,
+            title: 'Search',
+            count: isValueEmpty(searchTerm[activeSheet]) ? 0 : 1,
+            icon: IoSearch,
+            handler: null
+        },
+    ]
+
     const paginationPages = Array.from({length: totalPages}, (_, index) => index + 1)
     const [currentGroupPage, setCurrentGroupPage] = useState(0)
     const groupPageSize = 4
@@ -502,6 +552,10 @@ const Grid = ({children}) => {
                         <LuSettings2 className={`text-black/60`}/>
                         <p className={`text-sm text-black/70 font-medium`}>Filter {filter[activeSheet]?.length > 0 && (filter[activeSheet]?.every(val => val.column && val.operator && val.value && val.operand)) ? '('+filter[activeSheet]?.length + ')' : ''}</p>
                     </button>
+
+                    <ExportButton 
+                        displayList={exportIncludeList} 
+                    />
 
                     <RowDropdown 
                         displayList={rowSelectionPanel} 
