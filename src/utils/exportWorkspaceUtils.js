@@ -2,7 +2,10 @@ import useDataStore from "../store/dataStore"
 
 const exportCustomWorkspace = (exportSelectedTab) => {
     const state = useDataStore.getState()
-
+    const activeSheets = state.activeSheet
+    const sheets = state.sheets
+    const currentTab = exportSelectedTab === 1
+    const selectedSheet = sheets[activeSheets]
     const preparedExportedData = {
         version: 1,
         exportedAt: new Date().toISOString(),
@@ -13,7 +16,7 @@ const exportCustomWorkspace = (exportSelectedTab) => {
             data: state.data,
             filter: state.filter,
             searchTerm: state.searchTerm,
-            sheets: state.sheets,
+            sheets: currentTab ? {[activeSheets] : selectedSheet} : state.sheets,
             activeSheet: state.activeSheet,
             selectedColumn: state.selectedColumn,
             selectedRowTab: state.selectedRowTab,

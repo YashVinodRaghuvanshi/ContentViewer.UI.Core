@@ -96,7 +96,7 @@ const ExportButton = ({displayList = [], hint, id, value, tempFilter, setTempFil
                                     return (
                                         <button 
                                             onClick={() => setExportSelectedTab(val?.id)} key={val?.id} 
-                                            className={`text-xs flex-1 hover:cursor-pointer px-2 py-1 rounded-sm ${selectedTab ? 'bg-white outline-1 outline-black/10 text-black/90' : 'text-black/40'}`}
+                                            className={`text-xs flex-1 hover:cursor-pointer px-2 py-1 rounded-sm ${selectedTab ? 'bg-white outline-1 outline-black/10 text-black/90 font-medium' : 'text-black/40'}`}
                                         >
                                             {val?.name}
                                         </button>
@@ -111,8 +111,8 @@ const ExportButton = ({displayList = [], hint, id, value, tempFilter, setTempFil
                                     <div key={item.id} className='flex items-center text-start gap-2 flex-wrap'>
                                             <button className={`w-full flex items-center justify-between gap-1.5 px-2 py-1 rounded-md`}>
                                                 <div className='flex items-center gap-1.5'>
-                                                    <Icon className={`text-black/60`}/>
-                                                    <p className={`text-sm text-black/60`}>{item.title}</p>
+                                                    <Icon className={`text-black/80`}/>
+                                                    <p className={`text-sm text-black/80`}>{item.title}</p>
                                                 </div>
                                                 {/* <p className={`text-sm font-medium text-black/60`}>{item.count}</p> */}
                                                 <FaCheck className='text-sm text-black/40'/>
@@ -122,8 +122,8 @@ const ExportButton = ({displayList = [], hint, id, value, tempFilter, setTempFil
                         }
                         <div className='border-t-1 border-black/10 mt-2'>
                             <button onClick={exportWorkspace} className={`w-full flex items-center gap-1.5 px-3 py-1 mt-1 rounded-md hover:cursor-pointer hover:bg-gray-100 bg-white`}>
-                                <CgSoftwareUpload className={`text-black/70`}/>
-                                <p className={`text-sm text-black/70`}>Export</p>
+                                <CgSoftwareUpload className={`text-black/80`}/>
+                                <p className={`text-sm text-black/80`}>Export</p>
                             </button>
                         </div>
                     </div>
