@@ -6,6 +6,7 @@ import { FaFileCsv } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { MdArrowOutward } from "react-icons/md";
 import { FaTable } from "react-icons/fa";
+import { TbFileImport } from "react-icons/tb";
 import { BsDatabaseFillGear } from "react-icons/bs";
 import FileCard from '../components/FileCard';
 import InfoButton from '../components/InfoButton';
@@ -57,9 +58,14 @@ const UploadFile = () => {
     }
 
     const fileInputRef = useRef(null)
+    const importFileInputRef = useRef(null)
 
     const handleUploadClick = () => {
         fileInputRef.current.click();
+    }
+
+    const importWorkspaceData = () => {
+        importFileInputRef.current.click();
     }
 
     const formateFileSize = (bytes) => {
@@ -187,6 +193,43 @@ const UploadFile = () => {
         setFileUploaded(true)
     }
 
+    const importHandleFileChange = (event) => {
+
+        const file = event.target.files[0]
+        
+        if (!file) return 
+
+        const fileReader = new FileReader()
+        
+        fileReader.onload = (event) => {
+            try {
+                const textData = event.target.result
+                const jsonString = JSON.parse(textData)
+
+                const workspace = jsonString?.workspace
+
+                if (Object.keys(jsonString ?? {}).length !== 3 ||
+                    jsonString?.version !== 1 ||
+                    !workspace ||
+                    !Array.isArray(workspace?.columns) ||
+                    !Array.isArray(workspace?.data) ||
+                    !workspace?.sheets ||
+                    typeof workspace?.sheets !== "object" ||
+                    Array.isArray(workspace?.sheets)) {
+                        throw new Error("Invalid workspace backup")
+                    }
+
+                useDataStore.getState().restoreWorkspace(workspace)
+            }   
+            catch(ex) {
+                console.error("Import Error:", ex)
+            }
+        }
+
+        fileReader.readAsText(file)
+
+    }
+
     // if(!hasHydrated) {
     //     return (
     //         <RestoringWorkspace />
@@ -229,10 +272,24 @@ const UploadFile = () => {
                         className='hidden'
                     />
 
-                    <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
-                        <TbUpload size={20}/>
-                        Choose a file
-                    </button>
+                    <input 
+                        type="file" 
+                        ref={importFileInputRef} 
+                        accept=".json" 
+                        onChange={importHandleFileChange} 
+                        className='hidden'
+                    />
+
+                    <div className='flex items-center gap-4'>
+                        <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
+                            <TbUpload size={20}/>
+                            Choose a file
+                        </button>
+                        <button onClick={importWorkspaceData} className='text-base bg-white text-black flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
+                            <TbFileImport size={20}/>
+                            Import Workspace
+                        </button>
+                    </div>
                     
                     <p className='mt-8 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types : .XLS, .XLSX</p>
 
@@ -267,6 +324,13 @@ const UploadFile = () => {
                         onChange={handleFileChange} 
                         className='hidden'
                     />
+                    <input 
+                        type="file" 
+                        ref={importFileInputRef} 
+                        accept=".json" 
+                        onChange={importHandleFileChange} 
+                        className='hidden'
+                    />
                     {
                         columns.length > 0 ?
                         <div className='flex items-center gap-4'>
@@ -280,10 +344,16 @@ const UploadFile = () => {
                             </button> */}
                         </div>
                         :
-                        <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
-                            <TbUpload size={20}/>
-                            Choose a file
-                        </button>
+                        <div className='flex items-center gap-4'>
+                            <button onClick={handleUploadClick} className='text-base bg-black text-white flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
+                                <TbUpload size={20}/>
+                                Choose a file
+                            </button>
+                            <button onClick={importWorkspaceData} className='text-base bg-white text-black flex items-center gap-2 font-medium mt-6 hover:cursor-pointer hover:shadow-lg outline-1 py-3 px-5 rounded-xl outline-black/20'>
+                                <TbFileImport size={20}/>
+                                Import Workspace
+                            </button>
+                        </div>
                     }
 
                     {/* <div className='flex flex-row gap-4 mt-2'>

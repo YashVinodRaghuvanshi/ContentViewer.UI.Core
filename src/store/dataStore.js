@@ -60,7 +60,22 @@ const useDataStore = create(
             setSheets : (sheets) => set({sheets}),
             setActiveSheet : (activeSheet) => set({activeSheet}),
             clearRowData: () => set({selectedRow: {}}),
-
+            restoreWorkspace: (workspace) => set({
+                filename: workspace.filename ?? '',
+                file: workspace.file ?? null,
+                columns: workspace.columns,
+                data: workspace.data,
+                filter: workspace.filter ?? [],
+                searchTerm: workspace.searchTerm ?? {},
+                sheets: workspace.sheets,
+                activeSheet: workspace.activeSheet,
+                selectedColumn: workspace.selectedColumn ?? {},
+                selectedRowTab: workspace.selectedRowTab ?? 1,
+                selectedRow: workspace.selectedRow ?? {},
+                selectedRows: workspace.selectedRows ?? {},
+                sortOrder: workspace.sortOrder ?? null,
+                frozenColumn: workspace.frozenColumn ?? {}
+            }),
             clearData : () => set({
                 columns: [],
                 data : [],

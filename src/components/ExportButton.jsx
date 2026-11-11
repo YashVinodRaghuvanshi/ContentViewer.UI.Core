@@ -7,6 +7,7 @@ import { FaCheck } from "react-icons/fa6";
 import { FaRegSquareCheck } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import useDataStore from '../store/dataStore';
+import exportCustomWorkspace from '../utils/exportWorkspaceUtils';
 
 const ExportButton = ({displayList = [], hint, id, value, tempFilter, setTempFilter}) => {
     const [openMenu, setOpenMenu] = useState(false)
@@ -63,6 +64,7 @@ const ExportButton = ({displayList = [], hint, id, value, tempFilter, setTempFil
     }
 
     const exportWorkspace = () => {
+        exportCustomWorkspace(exportSelectedTab)
         setOpenMenu(false)
     }
 
