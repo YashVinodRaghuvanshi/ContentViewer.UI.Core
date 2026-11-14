@@ -9,6 +9,7 @@ import { TbFileUploadFilled } from "react-icons/tb";
 import { PiUploadBold } from "react-icons/pi";
 import { BsFileEarmarkBreak } from "react-icons/bs";
 import { BsFileEarmarkPostFill } from "react-icons/bs";
+import { LuFileSpreadsheet } from "react-icons/lu";
 import { BsFileEarmarkBreakFill } from "react-icons/bs";
 import UploadFile from './UploadFile';
 import { NavLink, Outlet } from 'react-router-dom';
@@ -42,8 +43,7 @@ const MainPage = () => {
     <div className='flex items-center'>
         <div className='h-screen bg-gray-100 pl-2 pr-1 py-2'>
             <div className='w-full h-full flex flex-col items-center gap-2 p-3 bg-white outline-1 outline-black/10 rounded-xl'>
-                <BsFileEarmarkBreakFill className='text-lg mt-2'/>
-                <div className='flex flex-col gap-2 mt-4'>
+                <div className='flex flex-col gap-2'>
                     
                     {
                         navLinks?.filter(val => !existedFile || columns?.length === 0 ? val.name == 'Upload' : val ).map((val, ind) => {
