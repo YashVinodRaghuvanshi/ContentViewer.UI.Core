@@ -536,13 +536,13 @@ const Grid = ({children}) => {
         <ViewDetails setOpenFilter = {setOpenView}/>
     }
 
-        <div className='flex items-center justify-between mb-4 gap-10'>
+        <div className='flex items-center justify-between mb-4 gap-10 flex-wrap'>
             {children}
 
-            <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-2 flex-wrap'>
 
-            <div className='flex items-center gap-2'>
-                <div className='flex items-center gap-3'>
+            <div className='flex items-center gap-2 flex-wrap'>
+                <div className='flex items-center gap-3 flex-wrap'>
                     <button onClick={() => setOpenFieldSetting(true)} className={`flex items-center gap-1.5 px-3 py-1 rounded-md hover:cursor-pointer hover:bg-gray-100 bg-white`}>
                         <TbTableColumn className={`text-black/60`}/>
                         <p className={`text-sm text-black/70 font-medium`}>Columns {selectedColumn[activeSheet]?.some(val => val?.ishidden == true) ? '(' + selectedColumn[activeSheet]?.filter(val => val?.ishidden == true)?.length + ')' : ''}</p>
@@ -573,7 +573,7 @@ const Grid = ({children}) => {
 
                 {
                     showSearch && 
-                    <div className='outline-1 relative flex-1 ml-4 outline-black/10 px-3 h-9 flex items-center rounded-lg'>
+                    <div className='outline-1 relative flex-1 outline-black/10 px-3 h-9 flex items-center rounded-lg'>
                         <CiSearch className='absolute text-black/60 text-lg'/>
                         <input value={searchTerm?.[activeSheet] ?? ''} onChange={(e) => setSearchTerm({...searchTerm, [activeSheet]: e.target.value})} placeholder='Search Your Data...' className='pl-6 w-full min-w-80 text-sm focus:outline-0'/>
                         {
