@@ -25,6 +25,8 @@ import AlertPopup from '../components/AlertPopup';
 const UploadFile = () => {
 
     const hasHydrated = useDataStore((state) => state.hasHydrated)
+    const SIZE_IN_MB = 10 
+    const MAX_FILE_SIZE = SIZE_IN_MB * 1024 * 1024 //10 MB
     const [deletionPopup, setDeletionPopup] = useState(false)
     const columns = useDataStore((state) => state.columns)
     const file = useDataStore((state) => state.file)
@@ -91,6 +93,12 @@ const UploadFile = () => {
         const file = event.target.files[0];
 
         if(!file) return
+
+        if (file.size > MAX_FILE_SIZE) {
+            console.log("File size must be 10 MB or less.")
+            event.target.value = ""
+            return
+        }
 
 
         //read file and extract content
@@ -199,6 +207,12 @@ const UploadFile = () => {
         
         if (!file) return 
 
+        if (file.size > MAX_FILE_SIZE) {
+            console.log("File size must be 10 MB or less.")
+            event.target.value = ""
+            return
+        }
+
         const fileReader = new FileReader()
         
         fileReader.onload = (event) => {
@@ -291,7 +305,7 @@ const UploadFile = () => {
                         </button>
                     </div>
                     
-                    <p className='mt-8 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types : .XLS, .XLSX</p>
+                    <p className='mt-8 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types: .XLS, .XLSX | Maximum file size: {SIZE_IN_MB} MB</p>
 
                 </div>
             </div>
