@@ -8,7 +8,12 @@ const indexedDBStorage = {
         return value ?? null
     },
     setItem: async (name, value) => {
-        await idbSet(name, value)
+        try {
+            await idbSet(name, value)
+        }
+        catch (error) {
+            console.log(error)
+        }
     },
     removeItem: async (name) => {
         await idbDel(name)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Grid from '../components/Grid'
 import SheetTabs from '../components/SheetTabs'
 import { HiOutlineSlash } from "react-icons/hi2";
@@ -7,11 +7,18 @@ import { RiHome6Line } from "react-icons/ri";
 import { LuFileSpreadsheet } from "react-icons/lu";
 import useDataStore from '../store/dataStore';
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ViewData = () => {
 
     const filename = useDataStore((state) => state.filename)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(!filename) {
+            navigate('/upload', {replace: true})
+        }
+    }, [filename, navigate])
 
   return (
         <div className='w-full h-full flex flex-col items-start overflow-hidden bg-white'>

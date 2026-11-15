@@ -25,8 +25,8 @@ import AlertPopup from '../components/AlertPopup';
 const UploadFile = () => {
 
     const hasHydrated = useDataStore((state) => state.hasHydrated)
-    const SIZE_IN_MB = 10 
-    const MAX_FILE_SIZE = SIZE_IN_MB * 1024 * 1024 //10 MB
+    const SIZE_IN_MB = 5 
+    const MAX_FILE_SIZE = SIZE_IN_MB * 1024 * 1024 //5 MB
     const [deletionPopup, setDeletionPopup] = useState(false)
     const columns = useDataStore((state) => state.columns)
     const file = useDataStore((state) => state.file)
@@ -87,118 +87,128 @@ const UploadFile = () => {
     }
 
     const handleFileChange = (event) => {
-        //clear previous data
-        clearPrevData()
+        try {
+            const file = event.target.files[0];
 
-        const file = event.target.files[0];
+            if(!file) return
 
-        if(!file) return
+            if (file.size > MAX_FILE_SIZE) {
+                console.log("File size must be 10 MB or less.")
+                event.target.value = ""
+                return
+            }
 
-        if (file.size > MAX_FILE_SIZE) {
-            console.log("File size must be 10 MB or less.")
-            event.target.value = ""
-            return
-        }
+            if (file) {
+                clearPrevData()
+            }
 
 
-        //read file and extract content
-        const fileReader = new FileReader()
+            //read file and extract content
+            const fileReader = new FileReader()
 
-        fileReader.onload = (event) => {
+            fileReader.onload = (event) => {
 
-            const workbook = XLSX.read(event.target.result, {
-                type: 'array',
-                cellDates: true
-            })
+                const workbook = XLSX.read(event.target.result, {
+                    type: 'array',
+                    cellDates: true
+                })
 
-            const sheets = {}
+                const sheets = {}
 
-            //For multiple sheets
-            workbook.SheetNames.forEach((sheetName) => {
-                const worksheet = workbook.Sheets[sheetName]
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-                    raw: false,
+                //For multiple sheets
+                workbook.SheetNames.forEach((sheetName) => {
+                    const worksheet = workbook.Sheets[sheetName]
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                        raw: false,
+                    })
+                    
+                    const dataWithId = jsonData.map((row, index) => ({
+                        _chkbox: '_chkbox',
+                        _id: index + 1,
+                        _info: '_info',
+                        ...row
+                    }))
+
+                    const columnsWhenNoDataRows = XLSX.utils.sheet_to_json(worksheet, {
+                        header: 1,
+                    })
+
+                    const columnsWhenNoData = columnsWhenNoDataRows[0] || []
+
+                    const columns = columnsWhenNoData?.map((col) => ({
+                        title: col,
+                        name: col,
+                        type: 'system',
+                        ishidden: false
+                    }))
+
+                    const columnsMap = columns.length > 0 && columns.splice(0,0, 
+                        {title: '_chkbox', name: '_chkbox', type: 'custom', ishidden: false, info: customFieldsInfo?.checkbox}, 
+                        {title: '_id', name: '_id', type: 'custom', ishidden: false, info: customFieldsInfo?.id}, 
+                        {title: '_info', name: '_info', type: 'custom', ishidden: false, info: customFieldsInfo?.info})
+
+                    // const columns = jsonData.length > 0 ? Object.keys(jsonData[0]).map((key) => ({
+                    //     title: key,
+                    //     name: key
+                    // })) 
+                    // : (columnsWhenNoDataRows.length > 0) ? columnsWhenNoData?.map((col) => ({
+                    //     title: col,
+                    //     name: col
+                    // })) : []
+
+                    sheets[sheetName] = {
+                        columns,
+                        data: dataWithId,
+                        rows: dataWithId?.length || 0,
+                        invalid: columns.length === 0
+                    }
+
                 })
                 
-                const dataWithId = jsonData.map((row, index) => ({
-                    _chkbox: '_chkbox',
-                    _id: index + 1,
-                    _info: '_info',
-                    ...row
-                }))
+                const firstSheet = workbook.SheetNames[0]
 
-                const columnsWhenNoDataRows = XLSX.utils.sheet_to_json(worksheet, {
-                    header: 1,
+                setSheets(sheets)
+                setActiveSheet(firstSheet)
+
+                setColumns(sheets[firstSheet].columns)
+                setData(sheets[firstSheet].data)
+
+                setFilename(file?.name)
+                setFile({
+                    name: file?.name,
+                    size : formateFileSize(file?.size),
+                    type : file?.name?.split('.').pop(),
+                    sheets: Object.keys(sheets).length
                 })
 
-                const columnsWhenNoData = columnsWhenNoDataRows[0] || []
+            }
 
-                const columns = columnsWhenNoData?.map((col) => ({
-                    title: col,
-                    name: col,
-                    type: 'system',
-                    ishidden: false
-                }))
+            fileReader.onerror = (er) => {
+                console.log(onerror)
+            }
 
-                const columnsMap = columns.length > 0 && columns.splice(0,0, 
-                    {title: '_chkbox', name: '_chkbox', type: 'custom', ishidden: false, info: customFieldsInfo?.checkbox}, 
-                    {title: '_id', name: '_id', type: 'custom', ishidden: false, info: customFieldsInfo?.id}, 
-                    {title: '_info', name: '_info', type: 'custom', ishidden: false, info: customFieldsInfo?.info})
+            fileReader.readAsArrayBuffer(file)
 
-                // const columns = jsonData.length > 0 ? Object.keys(jsonData[0]).map((key) => ({
-                //     title: key,
-                //     name: key
-                // })) 
-                // : (columnsWhenNoDataRows.length > 0) ? columnsWhenNoData?.map((col) => ({
-                //     title: col,
-                //     name: col
-                // })) : []
-
-                sheets[sheetName] = {
-                    columns,
-                    data: dataWithId,
-                    rows: dataWithId?.length || 0,
-                    invalid: columns.length === 0
-                }
-
+            
+            setSelectedFileInfo({
+                name : file?.name,
+                size : formateFileSize(file?.size),
+                type : file?.name?.split('.').pop()
             })
             
-            const firstSheet = workbook.SheetNames[0]
-
-            setSheets(sheets)
-            setActiveSheet(firstSheet)
-
-            setColumns(sheets[firstSheet].columns)
-            setData(sheets[firstSheet].data)
-
-            setFilename(file?.name)
-            setFile({
-                name: file?.name,
-                size : formateFileSize(file?.size),
-                type : file?.name?.split('.').pop(),
-                sheets: Object.keys(sheets).length
-            })
-
+            // setFilename(file?.name)
+            // setFile({
+            //     name: file?.name,
+            //     size : formateFileSize(file?.size),
+            //     type : file?.name?.split('.').pop(),
+            //     sheets: Object.keys(sheets).length
+            // })
+            
+            setFileUploaded(true)
         }
-
-        fileReader.readAsArrayBuffer(file)
-
-        
-        setSelectedFileInfo({
-            name : file?.name,
-            size : formateFileSize(file?.size),
-            type : file?.name?.split('.').pop()
-        })
-        
-        // setFilename(file?.name)
-        // setFile({
-        //     name: file?.name,
-        //     size : formateFileSize(file?.size),
-        //     type : file?.name?.split('.').pop(),
-        //     sheets: Object.keys(sheets).length
-        // })
-        
-        setFileUploaded(true)
+        catch (ex) {
+            console.log(ex)
+        }
     }
 
     const importHandleFileChange = (event) => {
