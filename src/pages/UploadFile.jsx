@@ -183,8 +183,8 @@ const UploadFile = () => {
 
             }
 
-            fileReader.onerror = (er) => {
-                console.log(onerror)
+            fileReader.onerror = (event) => {
+                console.log(event.target.error)
             }
 
             fileReader.readAsArrayBuffer(file)
