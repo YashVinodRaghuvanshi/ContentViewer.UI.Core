@@ -391,7 +391,7 @@ const UploadFile = () => {
                     </div> */}
                 </div>
             </div>
-            <p className='text-base absolute bottom-10 text-black/30'>ExploreExcelSheet.com | Version 1.0.0</p>
+            <p className='text-base absolute bottom-10 text-black/30'>ExploreExcelSheet | Version 1.0.0</p>
         </div>
     }
     
