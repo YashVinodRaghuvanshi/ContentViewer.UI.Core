@@ -97,7 +97,7 @@ const UploadFile = () => {
             if(!file) return
 
             if (file.size > MAX_FILE_SIZE) {
-                console.log("File size must be 10 MB or less.")
+                setUploadError("File size must be 5 MB or less.");
                 event.target.value = ""
                 return
             }
@@ -359,6 +359,12 @@ const UploadFile = () => {
                             Import Workspace
                         </button>
                     </div>
+
+                    {uploadError && (
+                        <p role="alert" className="mt-4 text-sm text-red-600">
+                            {uploadError}
+                        </p>
+                    )}
                     
                     <p className='mt-8 bg-green-100 text-green-700 font-medium py-1.5 px-3 rounded-full text-sm'>ⓘ Supported file types: .XLS, .XLSX | Maximum file size: {SIZE_IN_MB} MB</p>
 
@@ -423,7 +429,15 @@ const UploadFile = () => {
                                 Import Workspace
                             </button>
                         </div>
+
+                        
                     }
+
+                    {uploadError && (
+                        <p role="alert" className="mt-4 text-sm text-red-600">
+                            {uploadError}
+                        </p>
+                    )}
 
                     {/* <div className='flex flex-row gap-4 mt-2'>
 
