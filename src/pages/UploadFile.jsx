@@ -262,6 +262,8 @@ const UploadFile = () => {
         
         if (!file) return 
 
+        setUploadError("");
+
         if (file.size > MAX_FILE_SIZE) {
             console.log("File size must be 10 MB or less.")
             event.target.value = ""
@@ -292,6 +294,9 @@ const UploadFile = () => {
             }   
             catch(ex) {
                 console.error("Import Error:", ex)
+                setUploadError(
+                    ex.message || "Unable to import workspace. Please check your file."
+                );
             }
         }
 
