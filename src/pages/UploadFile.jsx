@@ -308,6 +308,11 @@ const UploadFile = () => {
                     typeof workspace.sheets === "object" &&
                     !Array.isArray(workspace.sheets) &&
                     Object.keys(workspace.sheets).length > 0 &&
+                    typeof workspace.activeSheet === "string" &&
+                    Object.prototype.hasOwnProperty.call(
+                        workspace.sheets,
+                        workspace.activeSheet
+                    ) &&
                     Object.values(workspace.sheets).every(isValidSheet);
 
                 if (!hasValidSheets) {
