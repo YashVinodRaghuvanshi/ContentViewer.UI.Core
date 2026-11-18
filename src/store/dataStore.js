@@ -1,22 +1,36 @@
 import { create } from "zustand";
 import {get as idbGet, set as idbSet, del as idbDel} from 'idb-keyval'
 import { createJSONStorage, persist } from "zustand/middleware";
+import { handlerPersistenceError } from "../utils/persistenceError";
 
 const indexedDBStorage = {
     getItem: async (name) => {
-        const value = await idbGet(name)
-        return value ?? null
+        try {
+            const value = await idbGet(name)
+            return value ?? null
+        }
+        catch (error) {
+            handlerPersistenceError(error)
+            throw error
+        }
     },
     setItem: async (name, value) => {
         try {
             await idbSet(name, value)
         }
         catch (error) {
-            console.log(error)
+            handlerPersistenceError(error)
+            throw error
         }
     },
     removeItem: async (name) => {
-        await idbDel(name)
+        try {
+            await idbDel(name)
+        }
+        catch(error) {
+            handlerPersistenceError(error)
+            throw error
+        }
     }
 }
 

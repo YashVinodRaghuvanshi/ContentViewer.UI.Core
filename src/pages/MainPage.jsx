@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ViewData from './ViewData'
 import { RiFolderUploadLine } from "react-icons/ri";
 import { CiViewTable } from "react-icons/ci";
@@ -14,10 +14,22 @@ import { BsFileEarmarkBreakFill } from "react-icons/bs";
 import UploadFile from './UploadFile';
 import { NavLink, Outlet } from 'react-router-dom';
 import useDataStore from '../store/dataStore';
+import { registerPersistenceErrorHandler } from '../utils/persistenceError';
 
 const MainPage = () => {
     const existedFile = useDataStore((state) => state.file)
     const columns = useDataStore((state) => state.columns)
+    const [persistenceError, setPersistenceError] = useState(false)
+
+
+    useEffect(() => {
+        const unregister = registerPersistenceErrorHandler(() => {
+            setPersistenceError(true)
+        })
+
+        return unregister
+
+    }, [])
 
     const navLinks = [
         {
@@ -63,6 +75,24 @@ const MainPage = () => {
         </div>
         <div className='w-screen h-screen flex flex-col items-start overflow-hidden bg-gray-100 py-2 pl-1 pr-2'>
             <div className='w-full h-full flex flex-col items-start overflow-hidden outline-1 outline-black/10 rounded-xl bg-white'>
+                {persistenceError && (
+                    <div
+                        role="alert"
+                        className="w-full flex items-center justify-between gap-3 
+                        px-4 py-3 bg-red-50 text-red-700 border-b border-red-200"
+                    >
+                        <p className="text-sm">
+                            Unable to save your changes. Your latest updates may not be saved.
+                        </p>
+
+                        <button
+                            onClick={() => setPersistenceError(false)}
+                            className="font-semibold text-sm"
+                        >
+                            Dismiss
+                        </button>
+                    </div>
+                )}
                 <Outlet />
                 {/* <UploadFile /> */}
             </div>
