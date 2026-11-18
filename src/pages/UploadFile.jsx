@@ -292,7 +292,10 @@ const UploadFile = () => {
                             (column) =>
                                 column !== null &&
                                 typeof column === "object" &&
-                                !Array.isArray(column)
+                                !Array.isArray(column) &&
+                                typeof column.name === "string" &&
+                                column.name.trim() !== "" &&
+                                typeof column.title === "string"
                         ) &&
                         sheet.data.every(
                             (row) =>
