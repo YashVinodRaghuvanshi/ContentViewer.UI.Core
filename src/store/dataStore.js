@@ -133,9 +133,10 @@ const useDataStore = create(
                 frozenColumn: state.frozenColumn
             }),
             onRehydrateStorage: () => (state, error) => {
-                if(!error) {
-                    state?.setHasHydrated(true)
+                if(error) {
+                    console.error("Workspace restoration failed:", error);
                 }
+                state?.setHasHydrated(true)
             }
         }
     ))
