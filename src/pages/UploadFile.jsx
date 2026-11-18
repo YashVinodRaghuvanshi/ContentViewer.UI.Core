@@ -39,6 +39,10 @@ const UploadFile = () => {
     const setData = useDataStore((state) => state.setData)
     const clearPrevData = useDataStore((state) => state.clearData)
 
+    const MAX_ROWS = 10000;
+    const MAX_COLUMNS = 100;
+    const MAX_TOTAL_CELLS = 500000;
+
     const [fileUploaded, setFileUploaded] = useState(false)
     const [selectedFileInfo, setSelectedFileInfo] = useState(null)
 
@@ -111,10 +115,41 @@ const UploadFile = () => {
                 try {
                     const workbook = XLSX.read(event.target.result, {
                         type: 'array',
-                        cellDates: true
+                        cellDates: true,
+                        sheetRows: MAX_ROWS + 1
                     })
 
-                    const sheets = {}
+                    // Validate workbook dimensions
+                    let totalCells = 0;
+
+                    workbook.SheetNames.forEach((sheetName) => {
+                        const worksheet = workbook.Sheets[sheetName];
+
+                        const range = XLSX.utils.decode_range(
+                            worksheet['!fullref'] || worksheet['!ref'] || 'A1'
+                        );
+
+                        const rows = range.e.r - range.s.r + 1;
+                        const columns = range.e.c - range.s.c + 1;
+
+                        const cells = rows * columns;
+
+                        if (rows > MAX_ROWS || columns > MAX_COLUMNS) {
+                            throw new Error(
+                                `Sheet "${sheetName}" exceeds the supported dimensions.`
+                            );
+                        }
+
+                        totalCells += cells;
+                    });
+
+                    if (totalCells > MAX_TOTAL_CELLS) {
+                        throw new Error(
+                            "This workbook contains too much data to process safely."
+                        );
+                    }
+
+                    const sheets = {};
 
                     //For multiple sheets
                     workbook.SheetNames.forEach((sheetName) => {
