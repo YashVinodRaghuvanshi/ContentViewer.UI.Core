@@ -281,6 +281,40 @@ const UploadFile = () => {
 
                 const workspace = jsonString?.workspace
 
+                const isValidSheet = (sheet) => {
+                    return (
+                        sheet !== null &&
+                        typeof sheet === "object" &&
+                        !Array.isArray(sheet) &&
+                        Array.isArray(sheet.columns) &&
+                        Array.isArray(sheet.data) &&
+                        sheet.columns.every(
+                            (column) =>
+                                column !== null &&
+                                typeof column === "object" &&
+                                !Array.isArray(column)
+                        ) &&
+                        sheet.data.every(
+                            (row) =>
+                                row !== null &&
+                                typeof row === "object" &&
+                                !Array.isArray(row)
+                        )
+                    );
+                };
+
+                const hasValidSheets =
+                    workspace?.sheets &&
+                    typeof workspace.sheets === "object" &&
+                    !Array.isArray(workspace.sheets) &&
+                    Object.keys(workspace.sheets).length > 0 &&
+                    Object.values(workspace.sheets).every(isValidSheet);
+
+                if (!hasValidSheets) {
+                    throw new Error("Invalid workspace sheet data.");
+                }
+
+
                 if (Object.keys(jsonString ?? {}).length !== 3 ||
                     jsonString?.version !== 1 ||
                     !workspace ||
