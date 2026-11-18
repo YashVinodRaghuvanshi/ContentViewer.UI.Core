@@ -38,7 +38,7 @@ const UploadFile = () => {
     const setActiveSheet = useDataStore((state) => state.setActiveSheet)
     const setData = useDataStore((state) => state.setData)
     const clearPrevData = useDataStore((state) => state.clearData)
-
+    const [uploadError, setUploadError] = useState("");
     const MAX_ROWS = 10000;
     const MAX_COLUMNS = 100;
     const MAX_TOTAL_CELLS = 500000;
@@ -104,6 +104,7 @@ const UploadFile = () => {
 
             if (file) {
                 clearPrevData()
+                setUploadError("");
             }
 
 
@@ -218,13 +219,17 @@ const UploadFile = () => {
                     })
                 }
                 catch(ex) {
-                    console.log(ex)
+                    console.error("File parsing error:", ex);
+
+                    setUploadError(
+                        ex.message || "Unable to read this file. Please try another file."
+                    );
                 }
 
             }
 
             fileReader.onerror = (event) => {
-                console.log(event.target.error)
+                setUploadError("Unable to read the selected file. Please try again.");
             }
 
             fileReader.readAsArrayBuffer(file)
