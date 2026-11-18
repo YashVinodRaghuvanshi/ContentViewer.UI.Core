@@ -265,7 +265,9 @@ const UploadFile = () => {
         setUploadError("");
 
         if (file.size > MAX_FILE_SIZE) {
-            console.log("File size must be 10 MB or less.")
+            setUploadError(
+                `Workspace file size must be ${SIZE_IN_MB} MB or less.`
+            );
             event.target.value = ""
             return
         }
