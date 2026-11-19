@@ -14,12 +14,6 @@ const ViewData = () => {
     const filename = useDataStore((state) => state.filename)
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if(!filename) {
-            navigate('/upload', {replace: true})
-        }
-    }, [filename, navigate])
-
   return (
         <div className='w-full h-full flex flex-col items-start overflow-hidden bg-white'>
             <div className='w-full flex items-center mt-2 gap-1 border-black/10 py-3 px-6'>

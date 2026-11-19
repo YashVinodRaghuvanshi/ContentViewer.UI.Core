@@ -7,12 +7,18 @@ import useDataStore from './store/dataStore'
 
 const App = () => {
   const existedFile = useDataStore((state) => state.file)
+  const hasHydrated = useDataStore((state) => state.hasHydrated)
+
+  if (!hasHydrated) {
+    return null
+  }
+  
   return (
     <Routes>
       <Route element = {<MainPage />} path='/'>
         <Route index element = {<Navigate to={"/upload"} replace/>} />
         <Route path = "upload" element = {<UploadFile />}/>
-        <Route path = "viewdata" element = {<ViewData />}/>
+        <Route path = "viewdata" element = {existedFile ? <ViewData /> : <Navigate to={"/upload"} replace/> }/>
       </Route>
     </Routes>
   )
