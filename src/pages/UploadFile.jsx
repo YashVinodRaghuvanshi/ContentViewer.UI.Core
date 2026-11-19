@@ -462,7 +462,7 @@ const UploadFile = () => {
 
                 </div>
             </div>
-            <p className='text-base absolute bottom-10 text-black/30'>Version 1.0.0</p>
+            <p className='text-base absolute bottom-10 text-black/30'>ExploreExcelSheet | Version 1.0.0</p>
         </div> :
         <div className='w-screen h-screen flex items-center justify-center'>
             <div className='flex flex-col items-center'>

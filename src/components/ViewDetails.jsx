@@ -34,7 +34,7 @@ const ViewDetails = ({setOpenFilter}) => {
     }
 
   return (
-    <div className='w-screen h-screen bg-black/30 inset-0 absolute z-30 flex items-start justify-end p-4'>
+    <div className='w-screen h-screen bg-black/30 inset-0 absolute z-30 flex items-start justify-end p-2'>
         <div className='px-4 py-2 bg-white outline-1 relative flex flex-col outline-black/10 w-200 h-full rounded-xl shadow-lg overflow-hidden'>
             
             <div className='p-3.5 border-b-1 border-black/10 flex items-start justify-between'>
