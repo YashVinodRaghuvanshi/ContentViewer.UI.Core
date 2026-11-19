@@ -155,27 +155,36 @@ const UploadFile = () => {
                     //For multiple sheets
                     workbook.SheetNames.forEach((sheetName) => {
                         const worksheet = workbook.Sheets[sheetName];
+                        
+                        const range = XLSX.utils.decode_range(worksheet["!ref"]);
 
-                        // Get the first row containing column headers
-                        const headerRows = XLSX.utils.sheet_to_json(worksheet, {
-                            header: 1
-                        });
+                        const hasInvalidHeaders = [];
 
-                        const headers = headerRows[0] || [];
+                        for (let col = range.s.c; col <= range.e.c; col++) {
+                            const cellAddress = XLSX.utils.encode_cell({
+                                r: range.s.r,
+                                c: col
+                            });
 
-                        // Reject blank column headers
-                        const hasInvalidHeaders = headers.some(
-                            (header) =>
-                                header === null ||
+                            const cell = worksheet[cellAddress];
+
+                            const header = cell?.v;
+
+                            if (
                                 header === undefined ||
+                                header === null ||
                                 String(header).trim() === ""
-                        );
+                            ) {
+                                hasInvalidHeaders.push(col + 1);
+                            }
+                        }
 
-                        if (hasInvalidHeaders) {
+                        if (hasInvalidHeaders.length > 0) {
                             throw new Error(
                                 `Sheet "${sheetName}" contains empty column headers. Please fix them and upload again.`
                             );
                         }
+
 
                         const jsonData = XLSX.utils.sheet_to_json(worksheet, {
                             raw: false,
