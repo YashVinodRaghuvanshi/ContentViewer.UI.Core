@@ -126,8 +126,14 @@ const UploadFile = () => {
                     workbook.SheetNames.forEach((sheetName) => {
                         const worksheet = workbook.Sheets[sheetName];
 
+                        if (!worksheet['!fullref'] && !worksheet['!ref']) {
+                            throw new Error(
+                                `Sheet "${sheetName}" is empty or has no headers.`
+                            );
+                        }
+
                         const range = XLSX.utils.decode_range(
-                            worksheet['!fullref'] || worksheet['!ref'] || 'A1'
+                            worksheet['!fullref'] || worksheet['!ref']
                         );
 
                         const rows = range.e.r - range.s.r + 1;
@@ -156,6 +162,12 @@ const UploadFile = () => {
                     workbook.SheetNames.forEach((sheetName) => {
                         const worksheet = workbook.Sheets[sheetName];
                         
+                        if (!worksheet["!ref"]) {
+                            throw new Error(
+                                `Sheet "${sheetName}" is empty or has no headers.`
+                            );
+                        }
+
                         const range = XLSX.utils.decode_range(worksheet["!ref"]);
 
                         const hasInvalidHeaders = [];
