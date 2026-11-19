@@ -154,10 +154,32 @@ const UploadFile = () => {
 
                     //For multiple sheets
                     workbook.SheetNames.forEach((sheetName) => {
-                        const worksheet = workbook.Sheets[sheetName]
+                        const worksheet = workbook.Sheets[sheetName];
+
+                        // Get the first row containing column headers
+                        const headerRows = XLSX.utils.sheet_to_json(worksheet, {
+                            header: 1
+                        });
+
+                        const headers = headerRows[0] || [];
+
+                        // Reject blank column headers
+                        const hasInvalidHeaders = headers.some(
+                            (header) =>
+                                header === null ||
+                                header === undefined ||
+                                String(header).trim() === ""
+                        );
+
+                        if (hasInvalidHeaders) {
+                            throw new Error(
+                                `Sheet "${sheetName}" contains empty column headers. Please fix them and upload again.`
+                            );
+                        }
+
                         const jsonData = XLSX.utils.sheet_to_json(worksheet, {
                             raw: false,
-                        })
+                        });
                         
                         const dataWithId = jsonData.map((row, index) => ({
                             _chkbox: '_chkbox',
