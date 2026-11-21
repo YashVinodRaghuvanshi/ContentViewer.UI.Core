@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import ViewData from './pages/ViewData'
 import MainPage from './pages/MainPage'
 import useDataStore from './store/dataStore'
+import LandingPage from './pages/LandingPage'
 
 const App = () => {
   const existedFile = useDataStore((state) => state.file)
@@ -15,8 +16,8 @@ const App = () => {
   
   return (
     <Routes>
+      <Route index element = {<LandingPage />} />
       <Route element = {<MainPage />} path='/'>
-        <Route index element = {<Navigate to={"/upload"} replace/>} />
         <Route path = "upload" element = {<UploadFile />}/>
         <Route path = "viewdata" element = {existedFile ? <ViewData /> : <Navigate to={"/upload"} replace/> }/>
       </Route>
